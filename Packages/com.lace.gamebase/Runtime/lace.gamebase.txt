@@ -1,9 +1,7 @@
 {
-    "name": "MyCompany.MyPackageName",
+    "name": "lace.gamebase",
     "references": [
-        "MyCompany.MyPackageName.Tools",
-        "MyCompany.MyPackageName.Planes",
-        "Unity.RenderPipelines.HighDefinition.Runtime"
+        "lace.gamebase.GameBase",
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
