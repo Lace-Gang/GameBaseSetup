@@ -1,4 +1,7 @@
 using UnityEngine;
+//using System.Collections.Generic
+using UnityEngine.InputSystem;
+
 
 public class PlayerCharacter : MonoBehaviour
 {
@@ -14,6 +17,7 @@ public class PlayerCharacter : MonoBehaviour
     void Update()
     {
         //If key down, walk
+        if(Input.GetKeyDown)
     }
 }
 a
