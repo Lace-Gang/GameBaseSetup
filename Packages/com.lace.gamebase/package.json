@@ -1,10 +1,8 @@
 {
   "name": "com.lace.gamebase",
-  "version": "0.0.1",
   "displayName": "Game Base",
-  "description": "The contents of this package are intended to make it much easier for a person to \n
-begin production of a game by pre-establishing the basics of many games as a foundation. \n
-NOTE: Game Base is in very early production and is not yet fit for use.",
+  "version": "0.0.1",
+  "description": "The contents of this package are intended to make it much easier for a person to \n begin production of a game by pre-establishing the basics of many games as a foundation. \n NOTE: Game Base is in very early production and is not yet fit for use.",
   "unity": "6000.0",
   "documentationUrl": "https://github.com/Lace-Gang/GameBaseSetup/tree/main",
   "changelogUrl": "https://github.com/Lace-Gang/GameBaseSetup/tree/main",
