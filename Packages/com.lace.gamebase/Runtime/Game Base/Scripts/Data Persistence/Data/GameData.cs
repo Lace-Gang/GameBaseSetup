@@ -7,6 +7,7 @@ namespace GameBase
     {
         //Save System Test Variables (Will later be removed or replaced)
         public int deathcount;
+        public Vector3 playerPosition;
 
 
         //The values defined in this constructor will be the default values the game-
@@ -14,6 +15,7 @@ namespace GameBase
         public GameData()
         {
             deathcount = 0;
+            playerPosition = Vector3.one;
         }
     }
 }
