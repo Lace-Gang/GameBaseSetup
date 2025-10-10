@@ -19,7 +19,7 @@ namespace GameBase{
             //If key down, walk
             if (Input.GetKeyDown(KeyCode.W))
             {
-                this.GetComponent<Transform>().position += new Vector3(1, 0, 1);
+                this.GetComponent<Transform>().position += new Vector3(0, 0, 1);
             }
 
             if (Input.GetKeyDown(KeyCode.S))
