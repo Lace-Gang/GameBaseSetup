@@ -1,5 +1,5 @@
 {
-    "name": "GameBaseRuntimeAssembly",
+    "name": "Game Base Runtime Assembly Definition",
     "rootNamespace": "GameBase",
     "references": [
         "GUID:75469ad4d38634e559750d17036d5f7c"
