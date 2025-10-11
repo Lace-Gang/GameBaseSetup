@@ -5,10 +5,10 @@ namespace GameBase{
 
     public class PlayerCharacter : MonoBehaviour, IDataPersistence
     {
-        [SerializeField] private string m_id;
+        [SerializeField] private string m_id;   //player unique ID
 
         //Variables
-        private int counter = 0;
+        private int counter = 0;    //Test Code (will be removed later)
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
@@ -48,6 +48,12 @@ namespace GameBase{
         }
 
 
+        /// <summary>
+        /// Updates the persistent data values in the GameData (save file) in order to save the Player Character.
+        /// IMPORTANT: Any user defined variables that the user would like to save must be added to GameData.cs AND must be
+        /// updated here!
+        /// </summary>
+        /// <param name="data">Takes in a reference to the GameData object</param>
         public void SaveData(ref GameData data)
         {
             //Updates save file data to match player data
@@ -55,6 +61,12 @@ namespace GameBase{
             data.playerPosition = GetComponent<Transform>().position;
         }
 
+        /// <summary>
+        /// Loads the Player Character from the persistent data stored in the GameData object.
+        /// IMPORTANT: Any user defined variables that the user would like to save must be added to GameData.cs AND must be
+        /// updated here!
+        /// </summary>
+        /// <param name="data">Takes in the GameData object</param>
         public void LoadData(GameData data)
         {
             //Updates player data to match save file data

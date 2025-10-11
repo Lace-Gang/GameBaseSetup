@@ -10,18 +10,33 @@ namespace GameBase
     public class DataPersistenceManager : MonoBehaviour
     {
         [Header("File Storage Config")]
-        [SerializeField] private string m_fileName;
-        [SerializeField] private bool m_useEncryption;
+        [SerializeField] private string m_fileName;                                 //name of the file that persistent (save) data will be stored in
+        [SerializeField] private bool m_useEncryption;                              //indicates whether persistent (save) data should be encrypted
+        [SerializeField] private string m_encryptionCodeWord = "DefaultCodeWord";   //codeword used for encryption/decryption
 
-        private GameData m_gameData;
-        private List<IDataPersistence> m_dataPersistenceObjects; //all objects being saved/loaded through the DataPersistenceManager
-        private FileDataHandler m_dataHandler;
+        [Header("Save and Load Conditions")]
+        
+        [Tooltip("NOTE: Not all available save and load conditions can be found here! Only those activated by the DataPersistenceManager!\n" +
+            "AT MINIMUM one save condition AND one load condition must be enabled in order for the Save System to work, but those save " +
+            "and load conditions DO NOT have to be among the options listed on this component!")]
+        [SerializeField] private bool m_loadOnStart;    //indicates whether saved data should be loaded when the game starts
+        [Tooltip("NOTE: Not all available save and load conditions can be found here! Only those activated by the DataPersistenceManager!\n" +
+            "AT MINIMUM one save condition AND one load condition must be enabled in order for the Save System to work, but those save " +
+            "and load conditions DO NOT have to be among the options listed on this component!")]
+        [SerializeField] private bool m_saveOnQuit;     //indicates whether data should be saved when the game quits
 
-        public static DataPersistenceManager Instance { get; private set; }
+        private GameData m_gameData;                                //stores all persistent (save) data
+        private List<IDataPersistence> m_dataPersistenceObjects;    //all objects with data to save/load
+        private FileDataHandler m_dataHandler;                      //used to read/write files as well as serialize/deserialize and encrypt/decrypt data
 
+        public static DataPersistenceManager Instance { get; private set; }     //Singleton instance of the DataPersistenceManager
+
+        /// <summary>
+        /// Checks that only this instance of the DataPersistenceManager exists at this time and notifies the user if this is not true.
+        /// Only one instance of the DataPersistenceManager should exist at any one time.
+        /// </summary>
         private void Awake()
         {
-            //Only one intance of the DataPersistenceManager should ever exist at any given time
             if(Instance != null)
             {
                 Debug.LogError("Found more than one Data Persistence Manager in the scene.");
@@ -29,28 +44,36 @@ namespace GameBase
             Instance = this;
         }
 
-
+        /// <summary>
+        /// Creates FileDataHandler and obtains list of objects with data that needs to persist. Optionally, loads the game.
+        /// </summary>
         private void Start()
         {
             //Application.persistentDataPath gives the OS standard directory for persisting data in a Unity project. Change
             //this if you want data to be saved elsewhere on your machine, but it's advised to only do so with good reason.
-            m_dataHandler = new FileDataHandler(Application.persistentDataPath, m_fileName, m_useEncryption);
+            m_dataHandler = new FileDataHandler(Application.persistentDataPath, m_fileName, m_useEncryption, m_encryptionCodeWord);
 
             //Find all objects that save through the DataPersistenceManager
             m_dataPersistenceObjects = FindAllDataPersistenceObjects();
-
-
-            LoadGame(); //Tester line
+            
+            //if user has indicated to load data when game starts, loads data
+            if(m_loadOnStart) LoadGame();
         }
 
+        /// <summary>
+        /// Optionally, saves the game.
+        /// </summary>
         private void OnApplicationQuit()
         {
-            SaveGame(); //Tester line
+            //if user has indicated to save data when game quits, saves data
+            if (m_saveOnQuit) SaveGame();
         }
 
 
 
-
+        /// <summary>
+        /// Creates new instance of GameData to effectively create a new "save file".
+        /// </summary>
         public void NewGame()
         {
             //Create new instance of GameData
@@ -58,6 +81,10 @@ namespace GameBase
         }
 
 
+        /// <summary>
+        /// Promts all persistent data objects to update the GameData object with the proper information, then passes the GameData
+        /// object to the FileDataHandler to be saved.
+        /// </summary>
         public void SaveGame()
         {
             //Pass the data to other scripts so they can update it
@@ -70,7 +97,10 @@ namespace GameBase
             m_dataHandler.Save(m_gameData);
         }
 
-
+        /// <summary>
+        /// Promtps the FileDataHandler to load saved data from the file. If no data was found, creates new GameData (save file) and
+        /// prompts all persistent data objects to load from the information in the GameData object.
+        /// </summary>
         public void LoadGame()
         {
             //Load any saved data from a file using the data handler
@@ -97,8 +127,6 @@ namespace GameBase
         /// <returns>A list of all Monobehavior objects with the IDataPersitence Interface</returns>
         private List<IDataPersistence> FindAllDataPersistenceObjects()
         {
-            //IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();
-            //IEnumerable<IDataPersistence> IdataPersistenceObjects = FindObjectsOfType<MonoBehaviour>().OfType<IDataPersistence>();
             IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IDataPersistence>();
             return new List<IDataPersistence>(dataPersistenceObjects);
         }

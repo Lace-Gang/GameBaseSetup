@@ -6,9 +6,13 @@ namespace GameBase
     [System.Serializable]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
-        [SerializeField] private List<TKey> m_keys = new List<TKey>();
-        [SerializeField] private List<TValue> m_values = new List<TValue>();
+        [SerializeField] private List<TKey> m_keys = new List<TKey>();          //list of keys that can be serialized
+        [SerializeField] private List<TValue> m_values = new List<TValue>();    //list of values that can be serialized
 
+
+        /// <summary>
+        /// Clears the key and value lists then adds updated values to the key and value lists
+        /// </summary>
         public void OnBeforeSerialize()
         {
             m_keys.Clear();
@@ -20,10 +24,14 @@ namespace GameBase
             }
         }
 
+        /// <summary>
+        /// Clears the dictionary values then loads updated values to the dictionary from the key and value lists
+        /// </summary>
         public void OnAfterDeserialize()
         {
             this.Clear();
 
+            //Notifies user if number of keys and number of values has somehow fallen out of sync
             if(m_keys.Count != m_values.Count)
             {
                 Debug.LogError("Tried to deserialize a SerializableDictionary, but the amount of keys (" +

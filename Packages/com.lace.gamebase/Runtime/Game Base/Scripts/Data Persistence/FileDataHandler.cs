@@ -6,24 +6,28 @@ namespace GameBase
 {
     public class FileDataHandler
     {
-        private string m_dataDirPath;       //directory path
-        private string m_dataFileName;      //name of the file we want to save to 
-        private bool m_useEncryption = false;
-        private readonly string m_encryptionCodeWord = "defaultCodeWord";
+        private string m_dataDirPath;                   //directory path
+        private string m_dataFileName;                  //name of the file we want to save to 
+        private bool m_useEncryption = false;           //indicates whether encryption/decryption should be used
+        private readonly string m_encryptionCodeWord;   //codeword used for encryption/decryption
 
 
-        public FileDataHandler(string dataDirPath, string dataFileName, bool useEncryption)
+        public FileDataHandler(string dataDirPath, string dataFileName, bool useEncryption, string codeWord)
         {
             m_dataDirPath = dataDirPath;
             m_dataFileName = dataFileName;
             m_useEncryption = useEncryption;
+            m_encryptionCodeWord = codeWord;
         }
 
 
-
+        /// <summary>
+        /// Serializes the data in a GameData object and writes/saves it to a file. Optionally encrypts the data.
+        /// </summary>
+        /// <param name="data">GameData object containing the data to serialize and write</param>
         public void Save(GameData data)
         {
-            //Use Path.Combine to account for different OS's using different path seperators
+            //Generates a full file path name using Path.Combine to account for different OS's using different path seperators
             string fullPath = Path.Combine(m_dataDirPath, m_dataFileName);
 
             try
@@ -58,12 +62,12 @@ namespace GameBase
 
 
         /// <summary>
-        /// 
+        /// Reads/loads data from a file and deserializes it into a GameData object. Optionally decrypts the data.
         /// </summary>
-        /// <returns>GameData object containing deserialized save data. Returns null GameData object if save data does not exist</returns>
+        /// <returns>GameData object containing deserialized data. Returns null GameData object if data does not exist.</returns>
         public GameData Load()
         {
-            //Use Path.Combine to account for different OS's using different path seperators
+            //Generates a full file path name using Path.Combine to account for different OS's using different path seperators
             string fullPath = Path.Combine(m_dataDirPath, m_dataFileName);
 
             GameData loadedData = null;

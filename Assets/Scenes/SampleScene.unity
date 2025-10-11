@@ -566,6 +566,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_fileName: SaveFile
   m_useEncryption: 1
+  m_encryptionCodeWord: defaultCodeWord
+  m_loadOnStart: 1
+  m_saveOnQuit: 1
 --- !u!4 &899434057
 Transform:
   m_ObjectHideFlags: 0
