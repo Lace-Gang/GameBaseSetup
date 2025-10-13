@@ -45,6 +45,11 @@ namespace GameBase{
                 counter++;
                 Debug.Log("Count = " + counter);
             }
+
+            if(Input.GetKeyDown(KeyCode.R))
+            {
+                DataPersistenceManager.Instance.ResetOnNextSaveLoad();
+            }
         }
 
 
@@ -61,6 +66,7 @@ namespace GameBase{
             data.playerPosition = GetComponent<Transform>().position;
         }
 
+
         /// <summary>
         /// Loads the Player Character from the persistent data stored in the GameData object.
         /// IMPORTANT: Any user defined variables that the user would like to save must be added to GameData.cs AND must be
@@ -69,9 +75,13 @@ namespace GameBase{
         /// <param name="data">Takes in the GameData object</param>
         public void LoadData(GameData data)
         {
-            //Updates player data to match save file data
-            this.counter = data.deathcount; //Tester line
-            GetComponent<Transform>().position = data.playerPosition;
+            //If data is new (this is a new save) do not load data
+            if(!data.isNewSave)
+            {
+                //Updates player data to match save file data
+                this.counter = data.deathcount; //Tester line
+                GetComponent<Transform>().position = data.playerPosition;
+            }
         }
     }
 

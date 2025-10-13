@@ -5,6 +5,9 @@ namespace GameBase
     [System.Serializable] //Data cannot be serialized to JSON format without this! 
     public class GameData
     {
+        //It is highly advised not to remove the following two variables:
+        public bool isNewSave = true; //indicates if save file is new (doess not yet contain persistent data)
+
         //Save System Test Variables (Will later be removed or replaced)
         public int deathcount;
         public Vector3 playerPosition;
@@ -14,8 +17,9 @@ namespace GameBase
         //starts with when there is no data to Load
         public GameData()
         {
-            deathcount = 0;
-            playerPosition = Vector3.one;
+            deathcount = 25;
+            playerPosition = new Vector3(1, 20, 1);
+            //playerPosition = Vector3.one;
         }
     }
 }
