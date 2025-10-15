@@ -5,6 +5,7 @@ namespace GameBase{
 
     //Required Components
     [RequireComponent(typeof(PlayerController))]
+    [RequireComponent(typeof(Rigidbody))]
     public class PlayerCharacter : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
@@ -33,10 +34,10 @@ namespace GameBase{
 
 
 
-        //physics settings
-        [Header("Default Player Physics Settings")]
-        [SerializeField] float phy_mass = 1;
-        [SerializeField] bool phy_useGravity = true;
+        ////physics settings
+        //[Header("Default Player Physics Settings")]
+        //[SerializeField] float phy_mass = 1;
+        //[SerializeField] bool phy_useGravity = true;
 
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -50,26 +51,9 @@ namespace GameBase{
             m_playerController.setPlayerReference(this);
 
             ////Rigidbody
-            //Creates rigid body component if the player uses physics and does not already have one
-            //Also destroys rigid body component if the player does not use physics and has one (to prevent conflicts)
-            //If the player uses physics and a Rigidbody is already present, assigns RigidBody to m_rigidBody
-            //if (m_usePhysics && this.GetComponent<Rigidbody>() == null)
-            //{
-            //    m_rigidbody = this.gameObject.AddComponent<Rigidbody>();
-            //
-            //    m_rigidbody.mass = phy_mass;
-            //    m_rigidbody.useGravity = phy_useGravity;
-            //    m_rigidbody.constraints = RigidbodyConstraints.FreezeRotationX;
-            //    m_rigidbody.constraints = RigidbodyConstraints.FreezeRotationZ;
-            //}
-            //else if ((!m_usePhysics) && this.GetComponent<Rigidbody>() != null)
-            //{
-            //    Destroy(this.GetComponent<Rigidbody>());
-            //}
-            //else if (m_usePhysics && this.GetComponent<Rigidbody>() != null)
-            //{
-            //    m_rigidbody = this.GetComponent<Rigidbody>();
-            //}
+            //Creates reference to the Rigidbody component, and ensures Rigidbody is set to Kinematic
+            m_rigidbody = GetComponent<Rigidbody>();
+            m_rigidbody.isKinematic = true;
         }
 
         // Update is called once per frame
@@ -142,3 +126,26 @@ namespace GameBase{
     }
 
 }
+
+
+
+//Creates rigid body component if the player uses physics and does not already have one
+//Also destroys rigid body component if the player does not use physics and has one (to prevent conflicts)
+//If the player uses physics and a Rigidbody is already present, assigns RigidBody to m_rigidBody
+//if (m_usePhysics && this.GetComponent<Rigidbody>() == null)
+//{
+//    m_rigidbody = this.gameObject.AddComponent<Rigidbody>();
+//
+//    m_rigidbody.mass = phy_mass;
+//    m_rigidbody.useGravity = phy_useGravity;
+//    m_rigidbody.constraints = RigidbodyConstraints.FreezeRotationX;
+//    m_rigidbody.constraints = RigidbodyConstraints.FreezeRotationZ;
+//}
+//else if ((!m_usePhysics) && this.GetComponent<Rigidbody>() != null)
+//{
+//    Destroy(this.GetComponent<Rigidbody>());
+//}
+//else if (m_usePhysics && this.GetComponent<Rigidbody>() != null)
+//{
+//    m_rigidbody = this.GetComponent<Rigidbody>();
+//}
