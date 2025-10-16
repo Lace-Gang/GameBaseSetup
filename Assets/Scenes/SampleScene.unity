@@ -378,7 +378,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_target: {fileID: 1715514074}
-  m_cameraType: 0
+  m_cameraType: 1
   m_mouseSensitivity: 2
   m_heightOffset: 0.25
   m_maxTransformDistance: 10

@@ -76,6 +76,15 @@ namespace GameBase
                     m_mouseX = Input.GetAxis("Mouse X") * m_mouseSensitivity;
                     m_mouseY = Input.GetAxis("Mouse Y") * m_mouseSensitivity;
                     transform.eulerAngles += new Vector3(-m_mouseY, m_mouseX, 0);
+
+                    //If camera rotation is too steep or two shallow, adjust it to be within acceptable bounds
+                    //if(transform.rotation.x < m_minPitch || transform.rotation.x > m_maxPitch)
+                    //{
+                    //    Vector3 currentEulerAngle = transform.rotation.eulerAngles;
+                    //    currentEulerAngle.x = Mathf.Clamp(transform.rotation.x, m_minPitch, m_maxPitch);
+                    //    transform.eulerAngles = currentEulerAngle;
+                    //}
+
                     //transform.rotation.y = Mathf.Clamp(m_mouseY, m_minPitch, m_maxPitch);
                     
                     
@@ -88,7 +97,22 @@ namespace GameBase
 
                     //apply camera position
                     transform.position = idealPosition;
-                    
+
+                    //Adjust camera position to prevent other objects from blocking line of sight to target
+                    //casts ray from target to camera to check for objects that would block the camera view
+                    RaycastHit hit;
+                    Vector3 cameraDirection = transform.position - m_target.position; 
+                    //If an object is in the way, adjusts camera position to keep target in view.
+                    if(Physics.Raycast(m_target.position, cameraDirection, out hit))
+                    {
+                        //Calculates distance between camera and the object blocking the target from view.
+                        Vector3 adjustedPosition = hit.point - transform.position;
+                        float distance = adjustedPosition.magnitude;
+
+                        //Moves camera to nearest point in view of target
+                        transform.position = hit.point;
+                    }
+
 
                     break;
                 default:

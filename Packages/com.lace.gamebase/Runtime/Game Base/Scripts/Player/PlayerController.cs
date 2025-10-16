@@ -25,7 +25,6 @@ namespace GameBase
         private bool m_hasJumped = false;
 
         //Calculated at runtime
-        private float m_movementSpeed = 0f;
         private float m_timeSinceLastJump = 0f;
         Vector2 m_movementInput = Vector2.zero;
         Vector3 m_velocity = Vector3.zero;
@@ -42,7 +41,7 @@ namespace GameBase
         [SerializeField] float m_baseSpeed = 2.5f;
         [SerializeField] float m_acceleration = 20.0f;
         [SerializeField] float m_turnRate = 5f;
-        [SerializeField] float m_pushForce = 1f;
+        //[SerializeField] float m_pushForce = 1f;
 
         [Header("Jump Action")]
         [Tooltip("Player Input to jump. " +
