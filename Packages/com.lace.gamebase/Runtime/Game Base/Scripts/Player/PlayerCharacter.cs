@@ -90,6 +90,11 @@ namespace GameBase{
             {
                 DataPersistenceManager.Instance.ResetOnNextSaveLoad();
             }
+            
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
         }
 
 

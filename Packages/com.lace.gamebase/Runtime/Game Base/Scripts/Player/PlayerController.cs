@@ -1,7 +1,7 @@
-using log4net.Util;
+using UnityEngine;
+//using log4net.Util;
 using NUnit.Framework;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace GameBase
@@ -14,6 +14,7 @@ namespace GameBase
         //Required Components/References
         private PlayerCharacter m_playerCharacter;
         CharacterController controller;
+        private Transform m_view;   //take this out if we don't end up using it
 
         //Required values at start
         private float m_gravity = -9.8f;
@@ -31,6 +32,7 @@ namespace GameBase
 
 
         ////Exposed Variables
+        [SerializeField] MainCamera m_camera;
 
         //InputActions
         [Header("Move Action")]
@@ -57,7 +59,7 @@ namespace GameBase
         [SerializeField] InputAction sprintAction;
         [SerializeField] float m_sprintSpeed = 6f;
 
-
+        //public Transform View { get => view; set { view = value; } }
 
 
         /// <summary>
@@ -67,6 +69,7 @@ namespace GameBase
         {
             //Find and create references to required components
             controller = GetComponent<CharacterController>();
+            m_view = m_camera.GetComponent<Transform>();
 
             //bind input actions
             moveAction.performed += OnMove;
@@ -105,6 +108,7 @@ namespace GameBase
         }
 
 
+
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -124,11 +128,9 @@ namespace GameBase
             }
 
 
-
-
             ////Player movement
             ExecuteMovement();
-                        
+                      
 
             ////Update timers
             //Timer for Double Jump
@@ -139,7 +141,6 @@ namespace GameBase
         }
 
 
-        
         private void ExecuteMovement()
         {
             // Reset vertical velocity when grounded to prevent accumulating downward force
@@ -150,8 +151,8 @@ namespace GameBase
 
             //Camera Dependent
             //// Convert movement input into a world-space direction based on the player's view rotation
-            Vector3 movement = new Vector3(m_movementInput.y, 0, m_movementInput.x);
-            //movement = Quaternion.AngleAxis(view.rotation.eulerAngles.y, Vector3.up) * movement;
+            Vector3 movement = new Vector3(m_movementInput.x, 0, m_movementInput.y);
+            movement = Quaternion.AngleAxis(m_view.rotation.eulerAngles.y, Vector3.up) * movement;
 
             // Initialize acceleration vector for movement calculations
             Vector3 acceleration = Vector3.zero;
