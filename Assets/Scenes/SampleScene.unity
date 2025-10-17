@@ -380,11 +380,11 @@ MonoBehaviour:
   m_target: {fileID: 1715514074}
   m_cameraType: 0
   m_mouseSensitivity: 2
+  m_minPitch: -45
+  m_maxPitch: 80
   m_heightOffset: 0.6
   m_maxTransformDistance: 10
   m_minTransformDistance: 2
-  m_minPitch: -45
-  m_maxPitch: 80
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,8 +5,6 @@ using System.Linq;//Allows for finding data persistence objects
 
 namespace GameBase
 {
-
-    //The DataPersistenceManager is intended to be a Singleton class
     public class DataPersistenceManager : MonoBehaviour
     {
         [Header("File Storage Config")]
@@ -38,6 +36,7 @@ namespace GameBase
         /// </summary>
         private void Awake()
         {
+            //Sets up the data persistence manager as a singleton
             if(Instance != null)
             {
                 Debug.LogError("Found more than one Data Persistence Manager in the scene.");

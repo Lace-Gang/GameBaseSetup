@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace GameBase
 {
+    //Allows the Serialization of Dictionaries
     [System.Serializable]
     public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, ISerializationCallbackReceiver
     {
@@ -15,8 +16,11 @@ namespace GameBase
         /// </summary>
         public void OnBeforeSerialize()
         {
+            //Clear old data from key and value lists
             m_keys.Clear();
             m_values.Clear();
+
+            //Add current data to the key and value lists
             foreach(KeyValuePair<TKey, TValue> pair in this)
             {
                 m_keys.Add(pair.Key);
@@ -25,12 +29,10 @@ namespace GameBase
         }
 
         /// <summary>
-        /// Clears the dictionary values then loads updated values to the dictionary from the key and value lists
+        /// Clears the dictionary values then loads deserialized values to the dictionary from the key and value lists
         /// </summary>
         public void OnAfterDeserialize()
         {
-            this.Clear();
-
             //Notifies user if number of keys and number of values has somehow fallen out of sync
             if(m_keys.Count != m_values.Count)
             {
@@ -38,6 +40,11 @@ namespace GameBase
                     m_keys.Count + ") does not match the number of values (" + m_values.Count + ") which indicates that something went wrong");
             }
 
+            //Clear old data from dictionary
+            this.Clear();
+
+            //Add new data to dictionary from lists
+            //Matches keys with their proper values
             for(int i = 0;  i < m_keys.Count; i++)
             {
                 this.Add(m_keys[i], m_values[i]);

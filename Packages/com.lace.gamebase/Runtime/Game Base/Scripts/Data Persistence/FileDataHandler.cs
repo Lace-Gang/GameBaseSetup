@@ -11,7 +11,13 @@ namespace GameBase
         private bool m_useEncryption = false;           //indicates whether encryption/decryption should be used
         private readonly string m_encryptionCodeWord;   //codeword used for encryption/decryption
 
-
+        /// <summary>
+        /// Basic constructor
+        /// </summary>
+        /// <param name="dataDirPath">Directory path to save data file in</param>
+        /// <param name="dataFileName">Name of data file</param>
+        /// <param name="useEncryption">Whether encryption should be used</param>
+        /// <param name="codeWord">Code word used for encryption</param>
         public FileDataHandler(string dataDirPath, string dataFileName, bool useEncryption, string codeWord)
         {
             m_dataDirPath = dataDirPath;

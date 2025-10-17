@@ -3,17 +3,19 @@ using UnityEngine;
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
+using System;
 
 namespace GameBase
 {
 
     [RequireComponent(typeof(CharacterController))] //A CharacterController is required
+    [RequireComponent(typeof(PlayerCharacter))] //A CharacterController is required
     public class PlayerController : MonoBehaviour
     {
         ////Hidden Variables
         //Required Components/References
         private PlayerCharacter m_playerCharacter;
-        CharacterController controller;
+        CharacterController m_controller;
         private Transform m_view;   //take this out if we don't end up using it
 
         //Required values at start
@@ -38,27 +40,31 @@ namespace GameBase
         [Tooltip("Player Input for moving the character. " + 
             "This input MUST be an Up/Down/Left/Right Composit that evaluates to a Vector2!")]
         [SerializeField] InputAction moveAction;
+        [Tooltip("Max character movement speed under normal circumstances (not running, no power-ups etc)")]
         [SerializeField] float m_baseSpeed = 2.5f;
+        [Tooltip("Used to calculate movement")]
         [SerializeField] float m_acceleration = 20.0f;
+        [Tooltip ("How quickly the player can turn")]
         [SerializeField] float m_turnRate = 5f;
-        //[SerializeField] float m_pushForce = 1f;
+        //[SerializeField] float m_pushForce = 1f;                  /////////Either add functionality later or remove
 
         [Header("Jump Action")]
         [Tooltip("Player Input to jump. " +
-            "This input should be a binding.")]
+            "This input should be a binding!")]
         [SerializeField] InputAction jumpAction;
+        [Tooltip("Allow player to double jump")]
         [SerializeField] bool m_enableDoubleJump = false;
+        [Tooltip("Used to calculate player jump height")]
         [SerializeField] float m_jumpHeight = 2f;
-        [Tooltip("The amount of time after a jump in which a double jump may be performed")]
+        [Tooltip("The amount of time after an innitial jump in which a double jump may be performed")]
         [SerializeField] float m_doubleJumpTimer = 1f;
 
         [Header("Sprint Action")]
         [Tooltip("Player Input to start/stop sprinting. " +
             "This input should be a binding.")]
         [SerializeField] InputAction sprintAction;
+        [Tooltip("Adjusted max player movement speed used when sprinting")]
         [SerializeField] float m_sprintSpeed = 6f;
-
-        //public Transform View { get => view; set { view = value; } }
 
 
         /// <summary>
@@ -67,15 +73,16 @@ namespace GameBase
         private void Awake()
         {
             //Find and create references to required components
-            controller = GetComponent<CharacterController>();
+            m_playerCharacter = GetComponent<PlayerCharacter>();
+            m_controller = GetComponent<CharacterController>();
             m_view = m_camera.GetComponent<Transform>();
 
-            //bind input actions
+            //Bind input actions
             moveAction.performed += OnMove;
             moveAction.canceled += OnMove;
             jumpAction.performed += OnJump;
-            sprintAction.started += OnSprintStart;
-            sprintAction.canceled += OnSprintEnd;
+            sprintAction.started += OnSprint;
+            sprintAction.canceled += OnSprint;
         }
 
         /// <summary>
@@ -83,7 +90,7 @@ namespace GameBase
         /// </summary>
         private void OnEnable()
         {
-            //enable input actions
+            //Enable input actions
             moveAction.Enable();
             jumpAction.Enable();
             sprintAction.Enable();
@@ -94,18 +101,11 @@ namespace GameBase
         /// </summary>
         private void OnDisable()
         {
-            //disable input actions
+            //Disable input actions
             moveAction.Disable();
             jumpAction.Disable();
             sprintAction.Disable();
         }
-
-
-        public void setPlayerReference(PlayerCharacter playerRef)
-        {
-            m_playerCharacter = playerRef;
-        }
-
 
 
         // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -114,12 +114,14 @@ namespace GameBase
             
         }
 
-        // Update is called once per frame
+        /// <summary>
+        /// Updates player states, updates and executes player movement, and updates other frame by frame data such as timers
+        /// </summary>
         void Update()
         {
-            ////Player State
+            ////Player States
             // Check if the player is grounded
-            m_onGround = controller.isGrounded;
+            m_onGround = m_controller.isGrounded;
             /////////We'll want to move this into the OnLand function later
             if(m_onGround && m_timeSinceLastJump > 0.1) //the second check here is only necessary because this is being done in the update function
             {
@@ -139,7 +141,9 @@ namespace GameBase
             }
         }
 
-
+        /// <summary>
+        /// Calculates the movement of the player and updates the player accordingly
+        /// </summary>
         private void ExecuteMovement()
         {
             // Reset vertical velocity when grounded to prevent accumulating downward force
@@ -148,32 +152,31 @@ namespace GameBase
                 m_velocity.y = -1; // Small downward force to keep player grounded
             }
 
-            //Camera Dependent
-            //// Convert movement input into a world-space direction based on the player's view rotation
+            //Convert movement input into a world-space direction based on the player's view rotation
             Vector3 movement = new Vector3(m_movementInput.x, 0, m_movementInput.y);
             movement = Quaternion.AngleAxis(m_view.rotation.eulerAngles.y, Vector3.up) * movement;
 
-            // Initialize acceleration vector for movement calculations
+            //Initialize acceleration vector for movement calculations
             Vector3 acceleration = Vector3.zero;
             acceleration.x = movement.x * m_acceleration;
             acceleration.z = movement.z * m_acceleration;
 
-            //// Reduce acceleration while in the air for smoother movement control
+            //Reduce acceleration while in the air for smoother movement control
             if (!m_onGround) acceleration *= 0.4f;
 
-            // Extract horizontal velocity (ignoring vertical movement)
+            //Extract horizontal velocity (ignoring vertical movement)
             Vector3 vectorXZ = new Vector3(m_velocity.x, 0, m_velocity.z);
 
-            // Apply acceleration to velocity while limiting max speed
+            //Apply acceleration to velocity while limiting max speed
             vectorXZ += acceleration * Time.deltaTime;
             vectorXZ = Vector3.ClampMagnitude(vectorXZ, (m_isSprinting) ? m_sprintSpeed : m_baseSpeed);
 
-            // Assign updated velocity values
+            //Assign updated velocity values
             m_velocity.x = vectorXZ.x;
             m_velocity.z = vectorXZ.z;
 
 
-            // Apply drag to slow the player down when there is no input or when airborne
+            //Apply drag to slow the player down when there is no input or when airborne
             if (movement.sqrMagnitude <= 0 || !m_onGround)
             {
                 float drag = (m_onGround) ? 10 : 4;
@@ -181,17 +184,17 @@ namespace GameBase
                 m_velocity.z = Mathf.MoveTowards(m_velocity.z, 0, drag * Time.deltaTime);
             }
 
-            // Smoothly rotate the player towards the movement direction
+            //Smoothly rotate the player towards the movement direction
             if (movement.sqrMagnitude > 0)
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * m_turnRate);
             }
 
-            // Apply gravity
+            //Apply gravity
             m_velocity.y += m_gravity * Time.deltaTime;
 
             //Apply Movment
-            controller.Move(m_velocity * Time.deltaTime);
+            m_controller.Move(m_velocity * Time.deltaTime);
         }
 
 
@@ -206,103 +209,48 @@ namespace GameBase
             m_movementInput = ctx.ReadValue<Vector2>();
         }
 
-
+        /// <summary>
+        /// Causes player to jump and (if allowed) double jump
+        /// </summary>
+        /// <param name="ctx">>The CallbackContext from the InputAction (this is handled by the engine)</param>
         private void OnJump(InputAction.CallbackContext ctx)
         {
             //Only jumps if the character is already on the ground or if double jump is enabled and player is within the correct timeframe
             if (ctx.phase == InputActionPhase.Performed && m_onGround) 
             {
+                //Add jump velocity to player to be applied as movement in next update
                 m_velocity.y = Mathf.Sqrt(-2 * m_gravity * m_jumpHeight);
                 //Set up variables to track double jump if applicable
-                if(m_enableDoubleJump)
-                {
-                    m_hasJumped = true;
+                if(m_enableDoubleJump)                                      ////////////// These may want to be moved out of the if statement in case 
+                {                                                           //////They can be used elsewhere (ie calculating fall damage)
+                    m_hasJumped = true;                                     //////If move, remember to add && m_enableDoubleJump to the else if conditions
                     m_timeSinceLastJump = 0;
                 }
             } else if (m_hasJumped && (m_timeSinceLastJump <= m_doubleJumpTimer))
             {
+                //Add jump velocity to player to be applied as movement in next update
                 m_velocity.y = Mathf.Sqrt(-2 * m_gravity * m_jumpHeight);
                 m_hasJumped = false;    //to prevent infinite double jumping
             }
         }
 
-
-        private void OnSprintStart(InputAction.CallbackContext ctx)
+        /// <summary>
+        /// Toggles player sprinting
+        /// </summary>
+        /// <param name="ctx">>The CallbackContext from the InputAction (this is handled by the engine)</param>
+        private void OnSprint(InputAction.CallbackContext ctx)
         {
             m_isSprinting = true;
         }
 
-        private void OnSprintEnd(InputAction.CallbackContext ctx)
-        {
-            m_isSprinting = false;
-        }
-
+        /// <summary>
+        /// Performs player attack action
+        /// </summary>
+        /// <param name="ctx">>The CallbackContext from the InputAction (this is handled by the engine)</param>
+        /// <exception cref="NotImplementedException">Class has not been implemented yet and should not yet be used</exception>
         private void OnAttack(InputAction.CallbackContext ctx)
         {
-            Debug.Log("Attack");
+            throw new NotImplementedException("Player Attack logic is not yet defined");
         }
     }
 }
-
-
-
-
-
-
-
-
-
-//////Player State
-//
-//
-//
-//
-//////Player movement
-/////
-//// Reset vertical velocity when grounded to prevent accumulating downward force
-//if (m_onGround && m_velocity.y < 0)
-//{
-//    m_velocity.y = -1; // Small downward force to keep player grounded
-//                       //animator.SetBool("OnGround", onGround);
-//}
-//
-////Camera Dependent
-////// Convert movement input into a world-space direction based on the player's view rotation
-//Vector3 movement = new Vector3(m_movementInput.x, 0, m_movementInput.y);
-////movement = Quaternion.AngleAxis(view.rotation.eulerAngles.y, Vector3.up) * movement;
-//
-//// Initialize acceleration vector for movement calculations
-//Vector3 acceleration = Vector3.zero;
-//acceleration.x = movement.x * m_acceleration;
-//acceleration.z = movement.z * m_acceleration;
-//
-////// Reduce acceleration while in the air for smoother movement control
-////if (!onGround) acceleration *= 0.4f;
-//
-//// Extract horizontal velocity (ignoring vertical movement)
-//Vector3 vectorXZ = new Vector3(m_velocity.x, 0, m_velocity.z);
-//
-//// Apply acceleration to velocity while limiting max speed
-//vectorXZ += acceleration * Time.deltaTime;
-//vectorXZ = Vector3.ClampMagnitude(vectorXZ, (m_isSprinting) ? m_sprintSpeed : m_baseSpeed);
-//
-//// Assign updated velocity values
-//m_velocity.x = vectorXZ.x;
-//m_velocity.z = vectorXZ.z;
-//
-//// Apply drag to slow the player down when there is no input or when airborne
-//if (movement.sqrMagnitude <= 0 || !onGround)
-//{
-//    float drag = (onGround) ? 10 : 4;
-//    velocity.x = Mathf.MoveTowards(velocity.x, 0, drag * Time.deltaTime);
-//    velocity.z = Mathf.MoveTowards(velocity.z, 0, drag * Time.deltaTime);
-//}
-//
-//// Smoothly rotate the player towards the movement direction
-//if (movement.sqrMagnitude > 0)
-//{
-//    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), Time.deltaTime * Data.turnRate);
-//}
-//
-//// Apply gravity
-//velocity.y += Data.gravity * Time.deltaTime;

@@ -12,88 +12,43 @@ namespace GameBase{
         private int counter = 0;    //Test Code (will be removed later)
 
         //Hidden Components
-        PlayerController m_playerController;  //player controller component
-        Rigidbody m_rigidbody; //rigidbody component (if applicable)
+        PlayerController m_playerController;    //player controller component
+        Rigidbody m_rigidbody;                  //rigidbody component
 
         //Player Info
         [Header("Player Information")]
         [SerializeField] private string m_id;   //player unique ID
-        //[Tooltip("If Use Physics is true and no rigidbody component is present on the player, a rigidbody will be generated with the values " +
-        //    "outlined in the physics section of this script. It is advised to use this generated rigidbody.")]
-        //[SerializeField] private bool m_usePhysics; //whether or not the player uses the unity physics engine (i.e. gravity, collisions, etc.)
 
 
-
-        //Components
-        //[Header("Player Components")]
-        //[Tooltip("The CharacterController component responsible for player movement")]
-        //[SerializeField] PlayerController m_playerController;
-        //[Tooltip("This field is optional. Enter a Rigidbody component if player uses physics and you do not want the +" +
-        //    "player's assigned default values to be used.")]
-        //[SerializeField] Rigidbody m_rigidbody;
-
-
-
-        ////physics settings
-        //[Header("Default Player Physics Settings")]
-        //[SerializeField] float phy_mass = 1;
-        //[SerializeField] bool phy_useGravity = true;
-
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        /// <summary>
+        /// Creates important references and sets important data that must be set at awake time
+        /// </summary>
+        void Awake()
         {
             ////sets up important components
-
-            ////Player Controller
-            //Creates reference to player controller and passes reference to self to controller
+            //Creates important references
             m_playerController = GetComponent<PlayerController>();
-            m_playerController.setPlayerReference(this);
-
-            ////Rigidbody
-            //Creates reference to the Rigidbody component, and ensures Rigidbody is set to Kinematic
             m_rigidbody = GetComponent<Rigidbody>();
-            m_rigidbody.isKinematic = true;
+
+            //Sets important values in references
+            m_rigidbody.isKinematic = true; //Rigidbody must be kinematic for character movement to function
         }
 
         // Update is called once per frame
+        //Currently contains only tester and temporary code
         void Update()
         {
-            //All of the contents of this function (as of right now) are intended for testing purposes only and will later be removed/changed
-            //if (Input.GetKeyDown(KeyCode.W))
-            //{
-            //    this.GetComponent<Transform>().position += new Vector3(0, 0, 1);
-            //}
-
-//            //if (Input.GetKeyDown(KeyCode.S))
-            //{
-            //    this.GetComponent<Transform>().position += new Vector3(0, 0, -1);
-            //}
-
-//            //if (Input.GetKeyDown(KeyCode.A))
-            //{
-            //    this.GetComponent<Transform>().position += new Vector3(-1, 0, 0);
-            //}
-
-//            //if (Input.GetKeyDown(KeyCode.D))
-            //{
-            //    this.GetComponent<Transform>().position += new Vector3(1, 0, 0);
-            //}
-
+            //increments counter for Save System testing
             if(Input.GetKeyDown(KeyCode.Q))
             {
                 counter++;
                 Debug.Log("Count = " + counter);
             }
 
+            //Temporary code to reset save file
             if(Input.GetKeyDown(KeyCode.R))
             {
                 DataPersistenceManager.Instance.ResetOnNextSaveLoad();
-            }
-            
-            if(Input.GetKeyDown(KeyCode.Escape))
-            {
-                Application.Quit();
             }
         }
 
@@ -129,28 +84,4 @@ namespace GameBase{
             }
         }
     }
-
 }
-
-
-
-//Creates rigid body component if the player uses physics and does not already have one
-//Also destroys rigid body component if the player does not use physics and has one (to prevent conflicts)
-//If the player uses physics and a Rigidbody is already present, assigns RigidBody to m_rigidBody
-//if (m_usePhysics && this.GetComponent<Rigidbody>() == null)
-//{
-//    m_rigidbody = this.gameObject.AddComponent<Rigidbody>();
-//
-//    m_rigidbody.mass = phy_mass;
-//    m_rigidbody.useGravity = phy_useGravity;
-//    m_rigidbody.constraints = RigidbodyConstraints.FreezeRotationX;
-//    m_rigidbody.constraints = RigidbodyConstraints.FreezeRotationZ;
-//}
-//else if ((!m_usePhysics) && this.GetComponent<Rigidbody>() != null)
-//{
-//    Destroy(this.GetComponent<Rigidbody>());
-//}
-//else if (m_usePhysics && this.GetComponent<Rigidbody>() != null)
-//{
-//    m_rigidbody = this.GetComponent<Rigidbody>();
-//}

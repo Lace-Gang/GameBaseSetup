@@ -19,7 +19,6 @@ namespace GameBase
         {
             deathcount = 25;
             playerPosition = new Vector3(1, 20, 1);
-            //playerPosition = Vector3.one;
         }
     }
 }

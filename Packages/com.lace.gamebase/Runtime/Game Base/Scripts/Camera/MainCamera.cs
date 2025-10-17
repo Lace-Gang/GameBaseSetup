@@ -14,16 +14,17 @@ namespace GameBase
     public class MainCamera : MonoBehaviour
     {
         //Hidden Variables
-        private float m_orbitRadius = 5f;
-        private float m_mouseX = 0f;
-        private float m_mouseY = 0f;
-        private float m_yaw = 0f;
-        private float m_pitch = 0f;
+        private float m_orbitRadius = 5f;   //Radius from the camera to the target
+        private float m_mouseX = 0f;        //Mouse X position
+        private float m_mouseY = 0f;        //Mouse Y position
+        private float m_yaw = 0f;           //Tracks accumulative Camera Yaw (Rotation about the Y-axis)
+        private float m_pitch = 0f;         //Tracks accumulative Camera Pitch (Rotaion about the X-axis)
 
         //Exposed Variables
         [Header("Universal Camera Settings")]
         [Tooltip("The transform of the object you want the camera to target")]
         [SerializeField] private Transform m_target;
+        [Tooltip("Which camera is being used")]
         [SerializeField] private CameraType m_cameraType = CameraType.FIRSTPERSON;
         [Tooltip("How sensitive the camera is to mouse inputs")]
         [SerializeField] private float m_mouseSensitivity = 2f;
@@ -44,100 +45,78 @@ namespace GameBase
 
 
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        /// <summary>
+        /// Sets up critical starting information
+        /// </summary>
         void Start()
         {
-            //probably eventually move these two to the game instance or manager or something
+            ////////probably eventually move these two to the game instance or manager or something
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
 
+            //Set up innitial yaw and pitch trackers
             m_yaw = transform.eulerAngles.y;
             m_pitch = transform.eulerAngles.x;
         }
 
-        // Update is called once per frame
+        /// <summary>
+        /// Updates camera facing and position
+        /// </summary>
         void Update()
         {
-            //Camera behaves differently depending on which type it is
+            //convert mouse axis to rotation
+            m_mouseX = Input.GetAxis("Mouse X") * m_mouseSensitivity;
+            m_mouseY = Input.GetAxis("Mouse Y") * m_mouseSensitivity;
+
+            //track pitch and yaw accumulation
+            m_yaw += m_mouseX;
+            m_pitch -= m_mouseY;
+
+            //Clamp pitch to be within specified constraints
+            m_pitch = Mathf.Clamp(m_pitch, m_minPitch, m_maxPitch);
+
+
+            //Camera behaves differently depending on which type of camera it is
             switch (m_cameraType)
             {
                 case CameraType.FIRSTPERSON:
-                    //convert mouse axis to rotation
-                    m_mouseX = Input.GetAxis("Mouse X") * m_mouseSensitivity;
-                    m_mouseY = Input.GetAxis("Mouse Y") * m_mouseSensitivity;
-
-                    m_yaw += m_mouseX;
-                    m_pitch -= m_mouseY;
-
-                    m_pitch = Mathf.Clamp(m_pitch, m_minPitch, m_maxPitch);
-
+                    //Update camera facing
                     transform.eulerAngles = new Vector3(m_pitch, m_yaw, 0);
 
-                    //Calculate and apply position based on character location
+                    //Calculate and apply position based on target location
                     transform.position = new Vector3(m_target.position.x, m_target.position.y + m_heightOffset, m_target.position.z);
                     break;
+
                 case CameraType.THIRDPERSON:
                     //look at target
                     transform.LookAt(m_target.position);
-                    
-                    //convert mouse axis to rotation
-                    m_mouseX = Input.GetAxis("Mouse X") * m_mouseSensitivity;
-                    m_mouseY = Input.GetAxis("Mouse Y") * m_mouseSensitivity;
 
-                    m_yaw += m_mouseX;
-                    m_pitch -= m_mouseY;
-
-                    m_pitch = Mathf.Clamp(m_pitch, m_minPitch, m_maxPitch);
-
+                    //Update camera facing
                     transform.eulerAngles = new Vector3(m_pitch, m_yaw, 0);         
                 
-                    //calculate and clamp orbital radius and apply it to camera
+                    //calculate and clamp orbital radius 
                     m_orbitRadius -= Input.mouseScrollDelta.y;
                     m_orbitRadius = Mathf.Clamp(m_orbitRadius, m_minTransformDistance, m_maxTransformDistance);
 
-                    //calculate camera position
-                    Vector3 idealPosition = m_target.position - transform.rotation * Vector3.forward * m_orbitRadius;
+                    //calculate and apply camera position
+                    transform.position = m_target.position - transform.rotation * Vector3.forward * m_orbitRadius;
 
-                    //apply camera position
-                    transform.position = idealPosition;
-
-                    //Adjust camera position to prevent other objects from blocking line of sight to target
+                    ////Adjust camera position to prevent other objects from blocking line of sight to target
                     //casts ray from target to camera to check for objects that would block the camera view
                     RaycastHit hit;
                     Vector3 cameraDirection = transform.position - m_target.position; 
+
                     //If an object is in the way, adjusts camera position to keep target in view.
                     if(Physics.Raycast(m_target.position, cameraDirection, out hit))
                     {
-                        //Calculates distance between camera and the object blocking the target from view.
-                        Vector3 adjustedPosition = hit.point - transform.position;
-                        float distance = adjustedPosition.magnitude;
-
                         //Moves camera to nearest point in view of target
                         transform.position = hit.point;
                     }
-
-
                     break;
+
                 default:
                     break;
             }
-
         }
-
-        public CameraType GetCameraType() { return m_cameraType; }
-
     }
 }
-
-
-//switch (m_cameraType)
-//{
-//    case CameraType.FIRSTPERSON:
-//        break;
-//    case CameraType.THIRDPERSONSTATIC:
-//        break;
-//    case CameraType.THIRDPERSONORBITAL:
-//        break;
-//    default:
-//        break;
-//}
