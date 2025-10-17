@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace GameBase
 {
+    //All pre-established camera types
+    //Any new types made by the user should go here.
     public enum CameraType
     {
         FIRSTPERSON,
@@ -15,6 +17,8 @@ namespace GameBase
         private float m_orbitRadius = 5f;
         private float m_mouseX = 0f;
         private float m_mouseY = 0f;
+        private float m_yaw = 0f;
+        private float m_pitch = 0f;
 
         //Exposed Variables
         [Header("Universal Camera Settings")]
@@ -23,20 +27,20 @@ namespace GameBase
         [SerializeField] private CameraType m_cameraType = CameraType.FIRSTPERSON;
         [Tooltip("How sensitive the camera is to mouse inputs")]
         [SerializeField] private float m_mouseSensitivity = 2f;
+        [Tooltip("(In Degrees)")] 
+        [SerializeField] private float m_minPitch = -45f;
+        [Tooltip("(In Degrees)")] 
+        [SerializeField] private float m_maxPitch = 80f;
 
         [Header("First Person Camera Settings")]
         [Tooltip("This property ONLY applies to the First Person Camera Type")]
-        [SerializeField] private float m_heightOffset = 0.25f;
+        [SerializeField] private float m_heightOffset = 0.6f;
 
         [Header("Third Person Camera Settings")]
         [Tooltip("This property ONLY applies to the Third Person Camera Type")]
         [SerializeField] private float m_maxTransformDistance = 10f;
         [Tooltip("This property ONLY applies to the Third Person Camera Type")]
         [SerializeField] private float m_minTransformDistance = 2f;
-        [Tooltip("This property ONLY applies to the Third Person Camera Type")] //take this out unless we figure out how to do the clamp
-        [SerializeField] private float m_minPitch = -45f;
-        [Tooltip("This property ONLY applies to the Third Person Camera Type")] //take this out unless we figure out how to do the clamp
-        [SerializeField] private float m_maxPitch = 80f;
 
 
 
@@ -46,27 +50,31 @@ namespace GameBase
             //probably eventually move these two to the game instance or manager or something
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+
+            m_yaw = transform.eulerAngles.y;
+            m_pitch = transform.eulerAngles.x;
         }
 
         // Update is called once per frame
         void Update()
         {
+            //Camera behaves differently depending on which type it is
             switch (m_cameraType)
             {
                 case CameraType.FIRSTPERSON:
-
-
-
                     //convert mouse axis to rotation
                     m_mouseX = Input.GetAxis("Mouse X") * m_mouseSensitivity;
                     m_mouseY = Input.GetAxis("Mouse Y") * m_mouseSensitivity;
-                    transform.eulerAngles += new Vector3(-m_mouseY, m_mouseX, 0);
+
+                    m_yaw += m_mouseX;
+                    m_pitch -= m_mouseY;
+
+                    m_pitch = Mathf.Clamp(m_pitch, m_minPitch, m_maxPitch);
+
+                    transform.eulerAngles = new Vector3(m_pitch, m_yaw, 0);
 
                     //Calculate and apply position based on character location
                     transform.position = new Vector3(m_target.position.x, m_target.position.y + m_heightOffset, m_target.position.z);
-
-                    //transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
-                    //transform.SetPositionAndRotation(new Vector3(m_target.position.x, m_target.position.y + m_heightOffset, m_target.position.z), m_target.rotation);
                     break;
                 case CameraType.THIRDPERSON:
                     //look at target
@@ -75,19 +83,14 @@ namespace GameBase
                     //convert mouse axis to rotation
                     m_mouseX = Input.GetAxis("Mouse X") * m_mouseSensitivity;
                     m_mouseY = Input.GetAxis("Mouse Y") * m_mouseSensitivity;
-                    transform.eulerAngles += new Vector3(-m_mouseY, m_mouseX, 0);
 
-                    //If camera rotation is too steep or two shallow, adjust it to be within acceptable bounds
-                    //if(transform.rotation.x < m_minPitch || transform.rotation.x > m_maxPitch)
-                    //{
-                    //    Vector3 currentEulerAngle = transform.rotation.eulerAngles;
-                    //    currentEulerAngle.x = Mathf.Clamp(transform.rotation.x, m_minPitch, m_maxPitch);
-                    //    transform.eulerAngles = currentEulerAngle;
-                    //}
+                    m_yaw += m_mouseX;
+                    m_pitch -= m_mouseY;
 
-                    //transform.rotation.y = Mathf.Clamp(m_mouseY, m_minPitch, m_maxPitch);
-                    
-                    
+                    m_pitch = Mathf.Clamp(m_pitch, m_minPitch, m_maxPitch);
+
+                    transform.eulerAngles = new Vector3(m_pitch, m_yaw, 0);         
+                
                     //calculate and clamp orbital radius and apply it to camera
                     m_orbitRadius -= Input.mouseScrollDelta.y;
                     m_orbitRadius = Mathf.Clamp(m_orbitRadius, m_minTransformDistance, m_maxTransformDistance);
