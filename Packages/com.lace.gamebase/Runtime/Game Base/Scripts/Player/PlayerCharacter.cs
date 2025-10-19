@@ -6,6 +6,7 @@ namespace GameBase{
     //Required Components
     [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent (typeof(Animator))]
     public class PlayerCharacter : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
@@ -16,8 +17,21 @@ namespace GameBase{
         Rigidbody m_rigidbody;                  //rigidbody component
 
         //Player Info
-        [Header("Player Information")]
-        [SerializeField] private string m_id;   //player unique ID
+        [Header("General Player Information")]
+        [Tooltip("Unique ID")]
+        [SerializeField] string m_id;   //player unique ID
+
+
+        //[Header("Player Model Info")]
+        //[Tooltip ("Player Character 3D Model")]
+        //[SerializeField] GameObject m_playerModel;
+        //[Tooltip("Adjust if alignment between collision and model right/left is incorrect")]
+        //[SerializeField] float m_modelXAdjustment = 0f; 
+        //[Tooltip("Adjust if alignment between collision and model up/down is incorrect")]
+        //[SerializeField] float m_modelYAdjustment = 0f;
+        //[Tooltip("Adjust if alignment between collision and model front/back is incorrect")]
+        //[SerializeField] float m_modelZAdjustment = 0f;
+
 
 
         /// <summary>
@@ -26,6 +40,13 @@ namespace GameBase{
         void Awake()
         {
             ////sets up important components
+
+            //Player Model
+            //Vector3 modelTransform = new Vector3(transform.position.x + m_modelXAdjustment, transform.position.y + m_modelYAdjustment, transform.position.z + m_modelZAdjustment); //adjusts model position (if necessary)
+            //GameObject m_model = GameObject.Instantiate(m_playerModel, modelTransform, transform.rotation); //creates instance of the model
+            //m_model.transform.SetParent(transform, true); //so that the model follows the player
+            
+
             //Creates important references
             m_playerController = GetComponent<PlayerController>();
             m_rigidbody = GetComponent<Rigidbody>();

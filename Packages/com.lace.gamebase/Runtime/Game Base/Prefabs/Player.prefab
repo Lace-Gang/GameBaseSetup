@@ -49,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3680283226930303522}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -160,6 +160,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_id: 
+  m_playerModel: {fileID: 8297790082439911139, guid: d26ffaca1ed7feb468975021b0138bf9, type: 3}
+  m_modelXAdjustment: 0
+  m_modelYAdjustment: -1
+  m_modelZAdjustment: 0
 --- !u!114 &8381073304848845801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -278,7 +282,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6123420653662888521}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -472,7 +476,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_target: {fileID: 7620438448413333973}
-  m_cameraType: 0
+  m_cameraType: 1
   m_mouseSensitivity: 2
   m_minPitch: -45
   m_maxPitch: 80

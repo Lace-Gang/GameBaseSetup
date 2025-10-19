@@ -15,8 +15,9 @@ namespace GameBase
         ////Hidden Variables
         //Required Components/References
         private PlayerCharacter m_playerCharacter;
-        CharacterController m_controller;
-        private Transform m_view;   //take this out if we don't end up using it
+        private CharacterController m_controller;
+        private Animator m_animator;
+        private Transform m_view;
 
         //Required values at start
         private float m_gravity = -9.8f;
@@ -75,6 +76,7 @@ namespace GameBase
             //Find and create references to required components
             m_playerCharacter = GetComponent<PlayerCharacter>();
             m_controller = GetComponent<CharacterController>();
+            m_animator = GetComponent<Animator>();
             m_view = m_camera.GetComponent<Transform>();
 
             //Bind input actions
@@ -139,6 +141,10 @@ namespace GameBase
             {
                 m_timeSinceLastJump += Time.deltaTime;
             }
+
+            //Update Animator
+            //(m_controller.velocity.z > m_controller.velocity.x)? m_animator.SetFloat("Speed", m_controller.velocity.z) : m_animator.SetFloat("Speed", m_controller.velocity.x);
+            m_animator.SetFloat("Speed", (MathF.Abs(m_controller.velocity.z) > MathF.Abs(m_controller.velocity.x)) ? MathF.Abs(m_controller.velocity.z) : MathF.Abs(m_controller.velocity.x));
         }
 
         /// <summary>
@@ -240,7 +246,7 @@ namespace GameBase
         /// <param name="ctx">>The CallbackContext from the InputAction (this is handled by the engine)</param>
         private void OnSprint(InputAction.CallbackContext ctx)
         {
-            m_isSprinting = true;
+            m_isSprinting = !m_isSprinting;
         }
 
         /// <summary>
