@@ -111,6 +111,10 @@ namespace GameBase
                     {
                         //Moves camera to nearest point in view of target
                         transform.position = hit.point;
+                        //camera.transform.Translate(ray.direction * zoomDistance, Space.World);
+                        //transform.Translate(cameraDirection * -0.01f);
+                        transform.Translate(hit.normal * 0.15f);
+                        
                     }
                     break;
 
