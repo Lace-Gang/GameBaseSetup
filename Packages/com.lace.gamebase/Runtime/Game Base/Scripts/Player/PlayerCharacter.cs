@@ -7,7 +7,8 @@ namespace GameBase{
     [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent (typeof(Animator))]
-    public class PlayerCharacter : MonoBehaviour, IDataPersistence
+    [RequireComponent (typeof(PlayerHealth))]
+    public class PlayerCharacter : MonoBehaviour, IDataPersistence, IDamagableInterface
     {
         //Hidden Variables
         private int counter = 0;    //Test Code (will be removed later)
@@ -15,11 +16,15 @@ namespace GameBase{
         //Hidden Components
         PlayerController m_playerController;    //player controller component
         Rigidbody m_rigidbody;                  //rigidbody component
+        PlayerHealth m_playerHealth;                  //health component
 
         //Player Info
         [Header("General Player Information")]
         [Tooltip("Unique ID")]
         [SerializeField] string m_id;   //player unique ID
+
+        
+
 
 
         //[Header("Player Model Info")]
@@ -50,6 +55,7 @@ namespace GameBase{
             //Creates important references
             m_playerController = GetComponent<PlayerController>();
             m_rigidbody = GetComponent<Rigidbody>();
+            m_playerHealth = GetComponent<PlayerHealth>();
 
             //Sets important values in references
             m_rigidbody.isKinematic = true; //Rigidbody must be kinematic for character movement to function
@@ -103,6 +109,41 @@ namespace GameBase{
                 this.counter = data.deathcount; //Tester line
                 GetComponent<Transform>().position = data.playerPosition;
             }
+        }
+
+
+
+
+        public void TakeDamage(float damage, GameObject owner)
+        {
+            //Debug.Log("Player Health: " + m_playerHealth.GetHealth());
+            Debug.Log("Damage Dealt: " + damage);
+            if(m_playerHealth.AddToHealth(-damage))
+            {
+                OnDeath();
+            } else
+            {
+                m_playerController.OnTakeHit();
+            }
+            Debug.Log("Player New Health: " + m_playerHealth.GetHealth());
+
+            //throw new System.NotImplementedException();
+
+        }
+
+        public void HealDamage(float amount)
+        {
+            m_playerHealth.AddToHealth(amount);
+
+            Debug.Log("Player New Health: " + m_playerHealth.GetHealth());
+            //throw new System.NotImplementedException();
+        }
+
+        public void OnDeath()
+        {
+            m_playerController.OnDeath();
+
+            //throw new System.NotImplementedException();
         }
     }
 }

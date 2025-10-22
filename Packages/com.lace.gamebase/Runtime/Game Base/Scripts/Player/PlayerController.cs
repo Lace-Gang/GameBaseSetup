@@ -10,7 +10,7 @@ namespace GameBase
 {
 
     [RequireComponent(typeof(CharacterController))] //A CharacterController is required
-    [RequireComponent(typeof(PlayerCharacter))] //A CharacterController is required
+    [RequireComponent(typeof(PlayerCharacter))]
     public class PlayerController : MonoBehaviour
     {
         ////Hidden Variables
@@ -27,6 +27,7 @@ namespace GameBase
         private bool m_isSprinting = false;
         private bool m_onGround = true;
         private bool m_hasJumped = false;
+        private bool m_isDead = false;
 
         //Calculated at runtime
         private float m_timeSinceLastJump = 0f;
@@ -69,6 +70,16 @@ namespace GameBase
         [SerializeField] InputAction sprintAction;
         [Tooltip("Adjusted max player movement speed used when sprinting")]
         [SerializeField] float m_sprintSpeed = 6f;
+
+        [Header("Fall Damage")]
+        [SerializeField] bool m_fallDamageEnabled = false;
+        [Tooltip("Base damage taken if above fall damage velocity threshold")]
+        [SerializeField] float m_baseFallDamage;
+        [Tooltip("Please input a positive float")]
+        [SerializeField] float m_minFallVelocity;
+        [Tooltip("Scale base fall damage by velocity on ipmact")]
+        [SerializeField] bool m_scaleFallDamage;
+        [SerializeField] float m_fallDamageScaler;
 
 
         /// <summary>
@@ -125,6 +136,24 @@ namespace GameBase
         void Update()
         {
             ////Player States
+            //Check for and apply fall damage
+            if(m_fallDamageEnabled && !m_onGround && m_controller.isGrounded)
+            {
+                //Debug.Log(m_controller.velocity.y);
+                if(m_controller.velocity.y < - m_minFallVelocity)
+                {
+                    if(!m_scaleFallDamage) m_playerCharacter.TakeDamage(m_baseFallDamage, GetComponent<GameObject>());
+                    else
+                    {
+                        float fallDamage = m_baseFallDamage * m_fallDamageScaler * ( -m_controller.velocity.y - m_minFallVelocity);
+
+                        m_playerCharacter.TakeDamage(fallDamage, GetComponent<GameObject>());
+                    }
+                    
+                }
+
+            }
+
             // Check if the player is grounded
             m_onGround = m_controller.isGrounded;
             m_animator.SetBool("IsGrounded", m_onGround);
@@ -264,6 +293,7 @@ namespace GameBase
         /// <param name="ctx">>The CallbackContext from the InputAction (this is handled by the engine)</param>
         private void OnSprint(InputAction.CallbackContext ctx)
         {
+            //toggle is_sprinting
             m_isSprinting = !m_isSprinting;
         }
 
@@ -274,11 +304,42 @@ namespace GameBase
         /// <exception cref="NotImplementedException">Class has not been implemented yet and should not yet be used</exception>
         private void OnAttack(InputAction.CallbackContext ctx)
         {
+            //player cannot attack when dead
+            if(m_isDead) return;
+
             throw new NotImplementedException("Player Attack logic is not yet defined");
         }
 
 
 
+
+
+        public void OnTakeHit()
+        {
+            //player cannot be hit when dead
+            if (m_isDead) return;
+            //throw new System.NotImplementedException();
+
+
+            Debug.Log("Hit Taken!");
+        }
+
+        public void OnDeath()
+        {
+            //player cannot die if already dead
+            if (m_isDead) return;
+
+            Debug.Log("Player is dead!");
+
+            m_isDead = true;
+            OnDisable();    //prevent player movement input
+            m_movementInput = Vector2.zero;
+
+            m_animator.SetTrigger("Die");
+            m_animator.SetBool("IsDead", true);
+
+            //throw new System.NotImplementedException();
+        }
 
 
 
