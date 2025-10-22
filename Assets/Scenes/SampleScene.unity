@@ -851,6 +851,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Y Bot
       objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 24b5f7ea8da5a3047bd44786cdcf8ff6, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 42b231761f4561241a250924c879b2b6, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -987,6 +991,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8045910202753976236, guid: 078785446fa9a5445b4424219df11f8b, type: 3}
       propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8381073304848845801, guid: 078785446fa9a5445b4424219df11f8b, type: 3}
+      propertyPath: m_landingDistance
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8446151278902939815, guid: 078785446fa9a5445b4424219df11f8b, type: 3}

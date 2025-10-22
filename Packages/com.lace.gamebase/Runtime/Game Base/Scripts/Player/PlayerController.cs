@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
 
+
 namespace GameBase
 {
 
@@ -59,6 +60,8 @@ namespace GameBase
         [SerializeField] float m_jumpHeight = 2f;
         [Tooltip("The amount of time after an innitial jump in which a double jump may be performed")]
         [SerializeField] float m_doubleJumpTimer = 1f;
+        [Tooltip("Distance above ground (or other surface) to trigger landing animation")]
+        [SerializeField] float m_landingDistance = 1f;
 
         [Header("Sprint Action")]
         [Tooltip("Player Input to start/stop sprinting. " +
@@ -124,11 +127,16 @@ namespace GameBase
             ////Player States
             // Check if the player is grounded
             m_onGround = m_controller.isGrounded;
-            /////////We'll want to move this into the OnLand function later
-            if(m_onGround && m_timeSinceLastJump > 0.1) //the second check here is only necessary because this is being done in the update function
-            {
-                m_hasJumped = false;
-            }
+            m_animator.SetBool("IsGrounded", m_onGround);
+
+            CheckLand();
+
+            ///////////We'll want to move this into the OnLand function later
+            //if(m_hasJumped && m_onGround && m_timeSinceLastJump > 0.1) //the second check here is only necessary because this is being done in the update function
+            //{
+            //    m_hasJumped = false;
+            //    m_animator.SetTrigger("Land");
+            //}
 
 
             ////Player movement
@@ -146,6 +154,8 @@ namespace GameBase
             //(m_controller.velocity.z > m_controller.velocity.x)? m_animator.SetFloat("Speed", m_controller.velocity.z) : m_animator.SetFloat("Speed", m_controller.velocity.x);
             //m_animator.SetFloat("Speed", (MathF.Abs(m_controller.velocity.z) > MathF.Abs(m_controller.velocity.x)) ? MathF.Abs(m_controller.velocity.z) : MathF.Abs(m_controller.velocity.x));
             m_animator.SetFloat("Speed", m_controller.velocity.magnitude);
+            m_animator.SetFloat("HorizontalSpeed", Vector3.Magnitude(new Vector3(m_controller.velocity.x, 0, m_controller.velocity.z)));
+            m_animator.SetFloat("VerticalSpeed", m_controller.velocity.y);
         }
 
         /// <summary>
@@ -227,6 +237,10 @@ namespace GameBase
             {
                 //Add jump velocity to player to be applied as movement in next update
                 m_velocity.y = Mathf.Sqrt(-2 * m_gravity * m_jumpHeight);
+
+                //Tell animator component to jump
+                m_animator.SetTrigger("Jump");
+
                 //Set up variables to track double jump if applicable
                 if(m_enableDoubleJump)                                      ////////////// These may want to be moved out of the if statement in case 
                 {                                                           //////They can be used elsewhere (ie calculating fall damage)
@@ -238,6 +252,9 @@ namespace GameBase
                 //Add jump velocity to player to be applied as movement in next update
                 m_velocity.y = Mathf.Sqrt(-2 * m_gravity * m_jumpHeight);
                 m_hasJumped = false;    //to prevent infinite double jumping
+
+                //Tell animator component to jump
+                m_animator.SetTrigger("Jump");
             }
         }
 
@@ -258,6 +275,33 @@ namespace GameBase
         private void OnAttack(InputAction.CallbackContext ctx)
         {
             throw new NotImplementedException("Player Attack logic is not yet defined");
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// Checks if Character is about to land. If so, executes character landing.
+        /// </summary>
+        private void CheckLand()
+        {
+            //uses raycast to check ground distance
+            RaycastHit hit;
+            if(Physics.Raycast(transform.position, Vector3.down * m_landingDistance, out hit))
+            {
+                Land();
+            }
+        }
+
+        /// <summary>
+        /// Executes character landing
+        /// </summary>
+        private void Land()
+        {
+            m_hasJumped = false;
+            m_animator.SetTrigger("Land"); //notifies animator to trigger landing animation
         }
     }
 }
