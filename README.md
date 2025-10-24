@@ -49,6 +49,11 @@ This is where I will be creating my capstone and running some of my testing for 
 # User Guide
 
 ## Save System
+
+* [Add To Scene](#add-to-scene)
+* [Save Data From Objects](#save-data-from-objects)
+* [File Data Handler](#file-data-handler)
+
 ### Add To Scene
 To set up save system, drag DataPersistenceManager from the Prefabs folder into the scene hierarchy
 
@@ -96,6 +101,12 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 
 
 ## Player Character
+
+* [Set Up](#set-up)
+* [Player Controller](#player-controller)
+* [Player Health](#player-health)
+* [Player Avatar And Animations](#player-avatar-and-animations)
+
 ### Set Up
 To set up save system, drag the Player from the Prefabs folder into the scene hierarchy
 <br>
@@ -140,9 +151,9 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 <img width="288" height="94" alt="image" src="https://github.com/user-attachments/assets/f4cc78fb-73e6-4473-8acd-e0055d9ab4d2" />
 <br>
 
-### Player Avatar and Animations
+### Player Avatar And Animations
 NOTE: If you intend to use an avatar that is NOT humanoid, you will need to rework the animations
-To Change Player Avatar:
+#### To Change Player Avatar:
 1.) Configure Avatar to be Humanoid in "Rig"
 <br>
 <img width="298" height="198" alt="image" src="https://github.com/user-attachments/assets/1dca4904-9807-44cd-88ab-e7eccd8fd8a7" />
@@ -158,7 +169,9 @@ To Change Player Avatar:
 You MUST set the new avatar in: "Y Bot@Death", "Y Bot@Idle", "Y Bot@JumpForward", "Y Bot@JumpUp", "Y Bot@StandardRun", and "Y Bot@Walking"
 <br>
 
-To Change Existing Player Animation(s) - (to add an animation that there is no default for, follow steps 1 and 2 and then add the new animation wherever necessary)
+#### To Change Existing Player Animation(s)
+(to add an animation that there is no default for, follow steps 1 and 2 and then add the new animation wherever necessary)
+<br>
 1.) In the new animation -> Rig, set "Animation Type" to "Humanoid", "Avatar Definition" to "Copy From Other Avatar", and set the Source to your chosen avatar. If using the default avatar, set to the YBotAvatar
 <br>
 <img width="288" height="199" alt="image" src="https://github.com/user-attachments/assets/df7e6837-b3ec-4ebd-807d-248f2a75a139" />
@@ -183,10 +196,13 @@ To Change Existing Player Animation(s) - (to add an animation that there is no d
 
 
 
-### Main Camera
+## Main Camera
 Features a First Person Camera and Third Person Camera that has a defined target. The Third Person Camera will auto-adjust its distance from the target to keep the target in view if another object would otherwise block it from view.
 
-#### Set Up
+* [Set Up](#set-up)
+* [First Person/Third Person](#first-person-third-person)
+
+### Set Up
 To add a MainCamera to the scene add a player character from the prefab folder (a MainCamera is included in the Player prefab with the PlayerCharacter as the target)
 Camera Settings can be edited on the Main Camera object.
 <br>
@@ -200,7 +216,7 @@ Alternatively, add the MainCamera script to a camera object, and add the Transfo
 <br>
 
 
-#### First Person / Third Person
+### First Person / Third Person
 Change from First Person Camera to Third Person Camera (or from Third Person Camera to First Person Camera) in the Universal Camera Settings section of the script in the editor.
 <br>
 <img width="214" height="22" alt="image" src="https://github.com/user-attachments/assets/c9c00fcb-67e9-411a-aad0-b63b58a925c8" />
@@ -212,9 +228,10 @@ Change from First Person Camera to Third Person Camera (or from Third Person Cam
 
 
 
-### Health and Damage System
+## Health and Damage System
+* [Set Up](#set-up)
 
-#### Set Up
+### Set Up
 To create a source of damage, add a Damage Source script to an object with a collider set to trigger.
 <br>
 <img width="296" height="310" alt="image" src="https://github.com/user-attachments/assets/6b52ef9e-8016-4365-a592-a360040b8a7e" />
