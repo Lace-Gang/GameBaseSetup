@@ -249,4 +249,7 @@ NOTE: There is a Health component as well. This component is optional, but can q
 
 
 
+# Art Credits:
+* Credit to Mixamo for the default player model and default player animations!
+
 
