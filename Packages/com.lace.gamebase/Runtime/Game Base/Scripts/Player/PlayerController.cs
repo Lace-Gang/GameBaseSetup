@@ -169,7 +169,7 @@ namespace GameBase
             //Update Animator
             //(m_controller.velocity.z > m_controller.velocity.x)? m_animator.SetFloat("Speed", m_controller.velocity.z) : m_animator.SetFloat("Speed", m_controller.velocity.x);
             //m_animator.SetFloat("Speed", (MathF.Abs(m_controller.velocity.z) > MathF.Abs(m_controller.velocity.x)) ? MathF.Abs(m_controller.velocity.z) : MathF.Abs(m_controller.velocity.x));
-            m_animator.SetFloat("Speed", m_controller.velocity.magnitude);
+            //m_animator.SetFloat("Speed", m_controller.velocity.magnitude);
             m_animator.SetFloat("HorizontalSpeed", Vector3.Magnitude(new Vector3(m_controller.velocity.x, 0, m_controller.velocity.z)));
             m_animator.SetFloat("VerticalSpeed", m_controller.velocity.y);
         }
