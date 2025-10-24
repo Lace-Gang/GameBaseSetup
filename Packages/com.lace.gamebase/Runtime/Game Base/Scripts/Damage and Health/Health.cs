@@ -5,41 +5,43 @@ namespace GameBase
     public class Health : MonoBehaviour
     {
         //Hidden Variables
-        private float m_health;
+        private float m_health; //current health of the owner
 
         //Editor Variables
-        [SerializeField] private GameObject m_healthOwner;
+        [Tooltip("The object this health belongs to")]
+        [SerializeField] private GameObject m_healthOwner;                       ////////take this out if we never use it
+        [Tooltip("The max health of the owner")]
         [SerializeField] private float m_maxHealth;
+        [Tooltip("Health the owner starts with")]
         [SerializeField] private float m_startingHealth;
 
 
 
+        /// <summary>
+        /// Allows the owner of the health to be set via a script
+        /// </summary>
+        /// <param name="damageOwner">Owner of this health component (ie a player, enemy, or breakable object)</param>
+        public void SetHealthOwner(GameObject damageOwner) { m_healthOwner = damageOwner; }                                 ///////take this out if we never use it
 
-        public void SetHealthOwner(GameObject damageOwner) { m_healthOwner = damageOwner; }
 
 
-
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        /// <summary>
+        /// Sets current health equal to starting health.
+        /// </summary>
         void Start()
         {
-            
+            OnStart();  //calls function to execute appropriate commands at start
         }
 
-        protected void OnStart()
+        /// <summary>
+        /// Sets current health equal to starting health.
+        /// </summary>
+        protected void OnStart() //setting data here instead of in the normal Start function allows this function to be called by child classes
         {
             //Set current health to starting health
             m_health = m_startingHealth;
-            Debug.Log("Health IS: " + m_health);
+            Debug.Log("Health IS: " + m_health);        //Tester line. Will be removed later
         }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-
-
 
 
         /// <summary>
@@ -63,17 +65,20 @@ namespace GameBase
             return false;
         }
 
+
         /// <summary>
         /// Allows other classes to view current health
         /// </summary>
         /// <returns>Current health</returns>
         public float GetHealth() {  return m_health; }
 
+
         /// <summary>
         /// Allows other classes to view max health
         /// </summary>
         /// <returns>Max health</returns>
         public float GetMaxHealth() { return m_maxHealth; }
+
 
         /// <summary>
         /// Sets a new Max Health, and ensures that current health does not exceed that max

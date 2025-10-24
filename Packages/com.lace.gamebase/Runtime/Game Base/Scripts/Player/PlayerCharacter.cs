@@ -16,7 +16,7 @@ namespace GameBase{
         //Hidden Components
         PlayerController m_playerController;    //player controller component
         Rigidbody m_rigidbody;                  //rigidbody component
-        PlayerHealth m_playerHealth;                  //health component
+        PlayerHealth m_playerHealth;            //health component
 
         //Player Info
         [Header("General Player Information")]
@@ -113,37 +113,46 @@ namespace GameBase{
 
 
 
-
+        /// <summary>
+        /// Takes damage from a damage source and passes it along to the Player Health component to apply damage to the player. If current health 
+        /// is at zero after damage is dealt, executes player "death" state. Otherwise, executes player "hit" state.
+        /// </summary>
+        /// <param name="damage">Amount of damage being taken</param>
+        /// <param name="owner">Owning object of the damage being taken</param>
         public void TakeDamage(float damage, GameObject owner)
         {
-            //Debug.Log("Player Health: " + m_playerHealth.GetHealth());
-            Debug.Log("Damage Dealt: " + damage);
+            Debug.Log("Damage Dealt: " + damage);               /////Test line. To be removed later
+            //Passes damage to health component, and checks if player health above zero
             if(m_playerHealth.AddToHealth(-damage))
             {
+                //If player health equal to zero, executes player death
                 OnDeath();
             } else
             {
+                //If player health greater than zero, executes player hit state
                 m_playerController.OnTakeHit();
             }
-            Debug.Log("Player New Health: " + m_playerHealth.GetHealth());
-
-            //throw new System.NotImplementedException();
-
+            Debug.Log("Player New Health: " + m_playerHealth.GetHealth());              //Test line. To be removed later
         }
 
+        /// <summary>
+        /// Passes healing to the Player Health component to heal the player.
+        /// </summary>
+        /// <param name="amount">Amount of damage to heal</param>
         public void HealDamage(float amount)
         {
+            //Passes healing amount to the health component to apply healing
             m_playerHealth.AddToHealth(amount);
 
-            Debug.Log("Player New Health: " + m_playerHealth.GetHealth());
-            //throw new System.NotImplementedException();
+            Debug.Log("Player New Health: " + m_playerHealth.GetHealth());              //Test line. To be removed later
         }
 
+        /// <summary>
+        /// Executes all functions necessary for the player death event
+        /// </summary>
         public void OnDeath()
         {
-            m_playerController.OnDeath();
-
-            //throw new System.NotImplementedException();
+            m_playerController.OnDeath();   //Tells PlayerController to trigger the player death state
         }
     }
 }

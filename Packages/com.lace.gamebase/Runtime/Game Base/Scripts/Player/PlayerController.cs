@@ -15,27 +15,28 @@ namespace GameBase
     {
         ////Hidden Variables
         //Required Components/References
-        private PlayerCharacter m_playerCharacter;
-        private CharacterController m_controller;
-        private Animator m_animator;
-        private Transform m_view;
+        private PlayerCharacter m_playerCharacter;      //Player character component
+        private CharacterController m_controller;       //Character controller component
+        private Animator m_animator;                    //Player animator component
+        private Transform m_view;                       //Player focused camera transform
 
         //Required values at start
-        private float m_gravity = -9.8f;
+        private float m_gravity = -9.8f;                //Gravity scale
 
         //Player States
-        private bool m_isSprinting = false;
-        private bool m_onGround = true;
-        private bool m_hasJumped = false;
-        private bool m_isDead = false;
+        private bool m_isSprinting = false;             //Is the player currently sprinting
+        private bool m_onGround = true;                 //Is the player currently standing on something, or are they in the air
+        private bool m_hasJumped = false;               //Has the player recently jumped without having hit the ground since
+        private bool m_isDead = false;                  //Is the player dead
 
         //Calculated at runtime
-        private float m_timeSinceLastJump = 0f;
-        Vector2 m_movementInput = Vector2.zero;
-        Vector3 m_velocity = Vector3.zero;
+        private float m_timeSinceLastJump = 0f;         //How long since the last time the player jumped (only updated before player touches the ground
+        Vector2 m_movementInput = Vector2.zero;         //Current movement input vector (which direction is the player supposed to move)
+        Vector3 m_velocity = Vector3.zero;              //Current player velocity
 
 
         ////Exposed Variables
+        [Tooltip("Camera being used to follow the player and provide steering")]
         [SerializeField] MainCamera m_camera;
 
         //InputActions
@@ -79,6 +80,7 @@ namespace GameBase
         [SerializeField] float m_minFallVelocity;
         [Tooltip("Scale base fall damage by velocity on ipmact")]
         [SerializeField] bool m_scaleFallDamage;
+        [Tooltip("Multiplier for scaling fall damage with velocity")]
         [SerializeField] float m_fallDamageScaler;
 
 
@@ -131,34 +133,19 @@ namespace GameBase
         }
 
         /// <summary>
-        /// Updates player states, updates and executes player movement, and updates other frame by frame data such as timers
+        /// Updates player states, updates and executes player movement, and updates other frame by frame data such as timers. Also checks for and applies fall damage.
         /// </summary>
         void Update()
         {
+            EvaluateFallDamage(); //MUST happen before updating m_onGround
+
+
             ////Player States
-            //Check for and apply fall damage
-            if(m_fallDamageEnabled && !m_onGround && m_controller.isGrounded)
-            {
-                //Debug.Log(m_controller.velocity.y);
-                if(m_controller.velocity.y < - m_minFallVelocity)
-                {
-                    if(!m_scaleFallDamage) m_playerCharacter.TakeDamage(m_baseFallDamage, GetComponent<GameObject>());
-                    else
-                    {
-                        float fallDamage = m_baseFallDamage * m_fallDamageScaler * ( -m_controller.velocity.y - m_minFallVelocity);
-
-                        m_playerCharacter.TakeDamage(fallDamage, GetComponent<GameObject>());
-                    }
-                    
-                }
-
-            }
 
             // Check if the player is grounded
             m_onGround = m_controller.isGrounded;
             m_animator.SetBool("IsGrounded", m_onGround);
 
-            CheckLand();
 
             ///////////We'll want to move this into the OnLand function later
             //if(m_hasJumped && m_onGround && m_timeSinceLastJump > 0.1) //the second check here is only necessary because this is being done in the update function
@@ -298,7 +285,7 @@ namespace GameBase
         }
 
         /// <summary>
-        /// Performs player attack action
+        /// Performs player attack action. Not yet implemented.
         /// </summary>
         /// <param name="ctx">>The CallbackContext from the InputAction (this is handled by the engine)</param>
         /// <exception cref="NotImplementedException">Class has not been implemented yet and should not yet be used</exception>
@@ -313,7 +300,9 @@ namespace GameBase
 
 
 
-
+        /// <summary>
+        /// Player hit state. Not yet fully implemented.
+        /// </summary>
         public void OnTakeHit()
         {
             //player cannot be hit when dead
@@ -321,48 +310,71 @@ namespace GameBase
             //throw new System.NotImplementedException();
 
 
-            Debug.Log("Hit Taken!");
+            Debug.Log("Hit Taken!");    //Debug line. To be removed later.
         }
 
+        /// <summary>
+        /// Player death state. Disables input, updates isDead bool, and tells animator to start the death animation
+        /// </summary>
         public void OnDeath()
         {
             //player cannot die if already dead
             if (m_isDead) return;
 
-            Debug.Log("Player is dead!");
+            Debug.Log("Player is dead!");           //Debug line. To be removed later
 
-            m_isDead = true;
-            OnDisable();    //prevent player movement input
-            m_movementInput = Vector2.zero;
+            m_isDead = true;                //Sets isDead bool to true so other functions in the Player Controller are aware
+            OnDisable();                    //Disable player movement input
+            m_movementInput = Vector2.zero; //Sets current player movement input vector to zero
 
-            m_animator.SetTrigger("Die");
-            m_animator.SetBool("IsDead", true);
-
-            //throw new System.NotImplementedException();
+            m_animator.SetTrigger("Die");   //Sets death animation trigger in the animator
         }
 
 
-
         /// <summary>
-        /// Checks if Character is about to land. If so, executes character landing.
+        /// Evaluates conditions for fall damage. If conditions are met, calculates and applies fall damage.
         /// </summary>
-        private void CheckLand()
+        public void EvaluateFallDamage()
         {
-            //uses raycast to check ground distance
-            RaycastHit hit;
-            if(Physics.Raycast(transform.position, Vector3.down * m_landingDistance, out hit))
+            //Check for and apply fall damage
+            if (m_fallDamageEnabled && !m_onGround && m_controller.isGrounded)
             {
-                Land();
+                if (m_controller.velocity.y < -m_minFallVelocity)   //If the player's current y velocity is above the threshold for fall damage (technically if it's bellow the threshold due to y velocity being negative when falling)
+                {
+                    if (!m_scaleFallDamage) m_playerCharacter.TakeDamage(m_baseFallDamage, GetComponent<GameObject>()); //applies base damage if damage should not scale with velocity
+                    else
+                    {
+                        //if damage SHOULD scale with velocity, calculates and applies fall damage
+                        float fallDamage = m_baseFallDamage * m_fallDamageScaler * (-m_controller.velocity.y - m_minFallVelocity);  
+                        m_playerCharacter.TakeDamage(fallDamage, GetComponent<GameObject>());
+                    }
+                }
             }
         }
 
-        /// <summary>
-        /// Executes character landing
-        /// </summary>
-        private void Land()
-        {
-            m_hasJumped = false;
-            m_animator.SetTrigger("Land"); //notifies animator to trigger landing animation
-        }
+
+        //These functions marked for likely removal in comming updates
+
+       ///// <summary>
+       ///// Checks if Character is about to land. If so, executes character landing.
+       ///// </summary>
+       //private void CheckLand()
+       //{
+       //    //uses raycast to check ground distance
+       //    RaycastHit hit;
+       //    if(Physics.Raycast(transform.position, Vector3.down * m_landingDistance, out hit))
+       //    {
+       //        Land();
+       //    }
+       //}
+       //
+       ///// <summary>
+       ///// Executes character landing
+       ///// </summary>
+       //private void Land()
+       //{
+       //    m_hasJumped = false;
+       //    m_animator.SetTrigger("Land"); //notifies animator to trigger landing animation
+       //}
     }
 }
