@@ -2,10 +2,10 @@
 This is where I will be creating my capstone and running some of my testing for it.
 
 ## Contents
-* [Save System] (#save-system)
-* [Player Character] (#player-character)
-* [Main Camera] (#main-camera)
-* [Health and Damage System] (#health-and-damage-system)
+* [Save System](#save-system)
+* [Player Character](#player-character)
+* [Main Camera](#main-camera)
+* [Health and Damage System](#health-and-damage-system)
 
 ## Instilation Instructions
 ### Install From Disk
