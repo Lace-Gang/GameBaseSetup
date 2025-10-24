@@ -22,6 +22,8 @@ namespace GameBase{
         [Header("General Player Information")]
         [Tooltip("Unique ID")]
         [SerializeField] string m_id;   //player unique ID
+        [Tooltip("Whether the player can receive damage through the Game Base damage system")]
+        [SerializeField] bool m_isDamagable = true;
 
         
 
@@ -121,6 +123,8 @@ namespace GameBase{
         /// <param name="owner">Owning object of the damage being taken</param>
         public void TakeDamage(float damage, GameObject owner)
         {
+            if(!m_isDamagable) return; //only execute damage if the player is set to damagable
+
             Debug.Log("Damage Dealt: " + damage);               /////Test line. To be removed later
             //Passes damage to health component, and checks if player health above zero
             if(m_playerHealth.AddToHealth(-damage))
