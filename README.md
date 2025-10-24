@@ -102,12 +102,12 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 
 ## Player Character
 
-* [Set Up](#set-up)
+* [Player Set Up](#player-set-up)
 * [Player Controller](#player-controller)
 * [Player Health](#player-health)
 * [Player Avatar And Animations](#player-avatar-and-animations)
 
-### Set Up
+### Player Set Up
 To set up save system, drag the Player from the Prefabs folder into the scene hierarchy
 <br>
 <img width="308" height="171" alt="image" src="https://github.com/user-attachments/assets/2835c58b-6b44-446d-a4de-a6e5435a001b" />
@@ -199,10 +199,10 @@ You MUST set the new avatar in: "Y Bot@Death", "Y Bot@Idle", "Y Bot@JumpForward"
 ## Main Camera
 Features a First Person Camera and Third Person Camera that has a defined target. The Third Person Camera will auto-adjust its distance from the target to keep the target in view if another object would otherwise block it from view.
 
-* [Set Up](#set-up)
+* [Main Camera Set Up](#main-camera-set-up)
 * [First Person/Third Person](#first-person-third-person)
 
-### Set Up
+### Main Camera Set Up
 To add a MainCamera to the scene add a player character from the prefab folder (a MainCamera is included in the Player prefab with the PlayerCharacter as the target)
 Camera Settings can be edited on the Main Camera object.
 <br>
@@ -229,9 +229,9 @@ Change from First Person Camera to Third Person Camera (or from Third Person Cam
 
 
 ## Health and Damage System
-* [Set Up](#set-up)
+* [Health And Damage System Set Up](#health-and-damage-system-set-up)
 
-### Set Up
+### Health And Damage System Set Up
 To create a source of damage, add a Damage Source script to an object with a collider set to trigger.
 <br>
 <img width="296" height="310" alt="image" src="https://github.com/user-attachments/assets/6b52ef9e-8016-4365-a592-a360040b8a7e" />
