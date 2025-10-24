@@ -200,7 +200,7 @@ You MUST set the new avatar in: "Y Bot@Death", "Y Bot@Idle", "Y Bot@JumpForward"
 Features a First Person Camera and Third Person Camera that has a defined target. The Third Person Camera will auto-adjust its distance from the target to keep the target in view if another object would otherwise block it from view.
 
 * [Main Camera Set Up](#main-camera-set-up)
-* [First Person/Third Person](#first-person-third-person)
+* [First Person Vs Third Person](#first-person-vs-third-person)
 
 ### Main Camera Set Up
 To add a MainCamera to the scene add a player character from the prefab folder (a MainCamera is included in the Player prefab with the PlayerCharacter as the target)
@@ -216,7 +216,7 @@ Alternatively, add the MainCamera script to a camera object, and add the Transfo
 <br>
 
 
-### First Person / Third Person
+### First Person Vs Third Person
 Change from First Person Camera to Third Person Camera (or from Third Person Camera to First Person Camera) in the Universal Camera Settings section of the script in the editor.
 <br>
 <img width="214" height="22" alt="image" src="https://github.com/user-attachments/assets/c9c00fcb-67e9-411a-aad0-b63b58a925c8" />
