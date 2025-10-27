@@ -72,6 +72,7 @@ The Base scene should be added to the project Scene List. Ensure that the box be
 <br>
 <img width="368" height="159" alt="image" src="https://github.com/user-attachments/assets/40f30187-0272-42e7-b55f-2a41e6b7be88" />
 <br>
+4.) Repeat Steps 1, 2, and 3, for the Scenes: "UIDisplayScene"
 
 
 
