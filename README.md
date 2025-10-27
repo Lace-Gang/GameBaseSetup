@@ -2,6 +2,7 @@
 This is where I will be creating my capstone and running some of my testing for it.
 
 ## Contents
+* [Game Manager](#game-manager)
 * [Save System](#save-system)
 * [Player Character](#player-character)
 * [Main Camera](#main-camera)
@@ -47,6 +48,37 @@ This is where I will be creating my capstone and running some of my testing for 
 
 
 # User Guide
+
+
+## Game Manager
+* [Set Up](#game-manager-set-up)
+
+### Game Manager Set Up
+#### Step One: Adding Required Scenes
+In order to use the Game Manager, the "Base" scene should be added
+<br>
+1.) Open the "Base" Scene from Packages -> Game Base -> Runtime -> Game Base -> Scenes
+<br>
+<img width="179" height="227" alt="image" src="https://github.com/user-attachments/assets/594d2919-f5c6-40fa-ae23-c25c16ca3928" />
+<br>
+2.) With the "Base" scene open, go to File -> Build Profiles -> Scene List
+<br>
+<img width="211" height="227" alt="image" src="https://github.com/user-attachments/assets/b8237c91-4502-4286-9f85-0ac7068e8570" />
+<img width="271" height="132" alt="image" src="https://github.com/user-attachments/assets/73659741-29ae-40fe-9f59-253da72cbfda" />
+<br>
+3.) Click "Add Open Scenes"
+<br>
+The Base scene should be added to the project Scene List. Ensure that the box beside the scene is checked.
+<br>
+<img width="368" height="159" alt="image" src="https://github.com/user-attachments/assets/40f30187-0272-42e7-b55f-2a41e6b7be88" />
+<br>
+4.) Repeat Steps 1, 2, and 3, for the Scenes: "UIDisplayScene"
+
+
+
+
+
+
 
 ## Save System
 
@@ -98,6 +130,8 @@ Note: "if(!data.isNewSave)" allows savable data to be adjusted in the editor rat
 
 ### File Data Handler
 Modifications to the Data Serialization/Deserialization and Encryption/Decryption or to the File Read/Write system must be made in the FileDataHandler. It is advised not to do this if you are not familiar JSON
+
+
 
 
 ## Player Character
