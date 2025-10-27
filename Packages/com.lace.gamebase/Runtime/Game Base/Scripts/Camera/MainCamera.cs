@@ -50,10 +50,6 @@ namespace GameBase
         /// </summary>
         void Start()
         {
-            ////////probably eventually move these two to the game instance or manager or something
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-
             //Set up innitial yaw and pitch trackers
             m_yaw = transform.eulerAngles.y;
             m_pitch = transform.eulerAngles.x;

@@ -63,6 +63,15 @@ namespace GameBase{
             m_rigidbody.isKinematic = true; //Rigidbody must be kinematic for character movement to function
         }
 
+
+
+        private void Start()
+        {
+            //Notifies Game Manager of current health state
+            GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
+        }
+
+
         // Update is called once per frame
         //Currently contains only tester and temporary code
         void Update()
@@ -126,8 +135,15 @@ namespace GameBase{
             if(!m_isDamagable) return; //only execute damage if the player is set to damagable
 
             Debug.Log("Damage Dealt: " + damage);               /////Test line. To be removed later
-            //Passes damage to health component, and checks if player health above zero
-            if(m_playerHealth.AddToHealth(-damage))
+            //Passes damage to health component
+            bool isDead = m_playerHealth.AddToHealth(-damage);
+
+            //Notifies Game Manager of health change
+            GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
+
+            //Checks if player health above zero
+            //if (m_playerHealth.AddToHealth(-damage))
+            if (isDead)
             {
                 //If player health equal to zero, executes player death
                 OnDeath();
@@ -148,6 +164,9 @@ namespace GameBase{
             //Passes healing amount to the health component to apply healing
             m_playerHealth.AddToHealth(amount);
 
+            //Notifies Game Manager of health change
+            GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
+
             Debug.Log("Player New Health: " + m_playerHealth.GetHealth());              //Test line. To be removed later
         }
 
@@ -157,6 +176,8 @@ namespace GameBase{
         public void OnDeath()
         {
             m_playerController.OnDeath();   //Tells PlayerController to trigger the player death state
+
+            GameInstance.Instance.OnPLayerDeath();  //Notify Game Instance of Player Death
         }
     }
 }
