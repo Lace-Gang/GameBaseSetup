@@ -62,8 +62,8 @@ namespace GameBase
         [SerializeField] float m_jumpHeight = 2f;
         [Tooltip("The amount of time after an innitial jump in which a double jump may be performed")]
         [SerializeField] float m_doubleJumpTimer = 1f;
-        [Tooltip("Distance above ground (or other surface) to trigger landing animation")]
-        [SerializeField] float m_landingDistance = 1f;
+        //[Tooltip("Distance above ground (or other surface) to trigger landing animation")]
+        //[SerializeField] float m_landingDistance = 1f;
 
         [Header("Sprint Action")]
         [Tooltip("Player Input to start/stop sprinting. " +
@@ -140,10 +140,12 @@ namespace GameBase
             EvaluateFallDamage(); //MUST happen before updating m_onGround
 
 
+
             ////Player States
 
             // Check if the player is grounded
             m_onGround = m_controller.isGrounded;
+            //CheckLand();
             m_animator.SetBool("IsGrounded", m_onGround);
 
 
@@ -231,7 +233,8 @@ namespace GameBase
         }
 
 
-       
+        #region Input Action Functions
+
         /// <summary>
         /// Updates m_movementInput to match player controls
         /// </summary>
@@ -298,6 +301,8 @@ namespace GameBase
         }
 
 
+        #endregion Input Action Functions
+
 
 
         /// <summary>
@@ -355,18 +360,23 @@ namespace GameBase
 
         //These functions marked for likely removal in comming updates
 
-       ///// <summary>
-       ///// Checks if Character is about to land. If so, executes character landing.
-       ///// </summary>
-       //private void CheckLand()
-       //{
-       //    //uses raycast to check ground distance
-       //    RaycastHit hit;
-       //    if(Physics.Raycast(transform.position, Vector3.down * m_landingDistance, out hit))
-       //    {
-       //        Land();
-       //    }
-       //}
+       /// <summary>
+       /// Checks if Character is about to land. If so, executes character landing.
+       /// </summary>
+      //private void CheckLand()
+      //{
+      //     Vector3 rayPosition = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
+      //
+      //    //uses raycast to check ground distance
+      //    RaycastHit hit;
+      //    if(Physics.Raycast(rayPosition, Vector3.down, out hit, m_landingDistance) && hit.collider.gameObject.tag != "Player")
+      //    {
+      //         Debug.DrawRay(rayPosition, Vector3.down * m_landingDistance, color: Color.red);
+      //         Debug.Log(hit.collider.gameObject);
+      //         m_onGround = true;
+      //        //Land();
+      //    }
+      //}
        //
        ///// <summary>
        ///// Executes character landing

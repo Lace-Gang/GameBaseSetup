@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -8,7 +9,7 @@ namespace GameBase
     public class UserInterface : MonoBehaviour
     {
         //Hidden variables
-
+        Coroutine m_fadeCoroutine = null;
 
 
         //Exposed varaibles
@@ -19,6 +20,7 @@ namespace GameBase
         [SerializeField] public GameObject m_loseScreen;
         [SerializeField] public GameObject m_HUD;
         [SerializeField] public GameObject m_pauseScreen;
+        [SerializeField] public GameObject m_fadeScreen;
 
         [Header("Components")]
         [SerializeField] private Slider m_healthBar;
@@ -43,13 +45,7 @@ namespace GameBase
 
 
 
-
-
-
-
-        //// Button Click Functions
-        
-
+        #region Button Clicks
 
         /// <summary>
         /// Closes Application
@@ -66,15 +62,7 @@ namespace GameBase
         /// </summary>
         public void PlayClicked()
         {
-            Debug.Log("Play Game Clicked!");        //Test Line
-
             GameInstance.Instance.m_gameState = GameState.STARTGAME;
-
-
-            //m_titleScreen.SetActive(false);
-
-            //GameInstance.Instance.LoadScene("SampleScene");
-
         }
 
         /// <summary>
@@ -92,11 +80,47 @@ namespace GameBase
         public void MainMenuClicked()
         {
             GameInstance.Instance.m_gameState = GameState.LOADMAINMENU;
+        }
+        #endregion Button Clicks
 
-            Debug.Log("Main Clicked");              //Test Line
+        #region Screen Fade
+        /// <summary>
+        /// Fades screen in
+        /// </summary>
+        /// <returns>Yield return for Coroutine</returns>
+        public IEnumerator FadeIn()
+        {
+            //Get current Fade Screen color
+            Color c = m_fadeScreen.GetComponent<Image>().color;
+
+            //Reduce alpha channel
+            for (float alpha = 1.0f; alpha >= 0; alpha -= 0.01f)
+            {
+                c.a = alpha;
+                m_fadeScreen.GetComponent<Image>().color = c;   //Apply new alpha
+                yield return null;
+            }
         }
 
+        /// <summary>
+        /// Fades screen out
+        /// </summary>
+        /// <returns>Yield return for Coroutine</returns>
+        public IEnumerator FadeOut()
+        {
+            //Get current Fade Screen color
+            Color c = m_fadeScreen.GetComponent<Image>().color;
 
+            //Increase alpha channel
+            for (float alpha = 0; alpha <= 1; alpha += 0.01f)
+            {
+                c.a = alpha;
+                m_fadeScreen.GetComponent<Image>().color = c;   //Apply new alpha
+                yield return null;
+            }
+
+        }
+        #endregion Screen Fade
 
 
 

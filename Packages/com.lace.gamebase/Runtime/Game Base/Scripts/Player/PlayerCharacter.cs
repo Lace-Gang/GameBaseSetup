@@ -177,7 +177,7 @@ namespace GameBase{
         {
             m_playerController.OnDeath();   //Tells PlayerController to trigger the player death state
 
-            GameInstance.Instance.OnPLayerDeath();  //Notify Game Instance of Player Death
+            StartCoroutine(GameInstance.Instance.OnPLayerDeath());  //Notify Game Instance of Player Death
         }
     }
 }

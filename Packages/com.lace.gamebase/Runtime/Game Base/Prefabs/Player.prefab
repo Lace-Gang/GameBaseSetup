@@ -128,7 +128,7 @@ GameObject:
   - component: {fileID: 2478473282708260951}
   m_Layer: 0
   m_Name: PlayerCharacter
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -249,7 +249,7 @@ MonoBehaviour:
   m_enableDoubleJump: 1
   m_jumpHeight: 2
   m_doubleJumpTimer: 1
-  m_landingDistance: 0
+  m_landingDistance: 1
   sprintAction:
     m_Name: Sprint
     m_Type: 0
@@ -449,7 +449,7 @@ GameObject:
   - component: {fileID: 7571950509185984992}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -680,6 +680,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 24b5f7ea8da5a3047bd44786cdcf8ff6, type: 3}
       propertyPath: m_Name
       value: Y Bot
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 24b5f7ea8da5a3047bd44786cdcf8ff6, type: 3}
+      propertyPath: m_TagString
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5866666021909216657, guid: 24b5f7ea8da5a3047bd44786cdcf8ff6, type: 3}
       propertyPath: m_Enabled
