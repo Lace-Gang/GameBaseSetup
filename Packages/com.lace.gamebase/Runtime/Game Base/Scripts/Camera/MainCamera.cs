@@ -60,6 +60,9 @@ namespace GameBase
         /// </summary>
         void Update()
         {
+            //Check for paused game
+            if(GameInstance.Instance.getPaused()) return;
+
             //convert mouse axis to rotation
             m_mouseX = Input.GetAxis("Mouse X") * m_mouseSensitivity;
             m_mouseY = Input.GetAxis("Mouse Y") * m_mouseSensitivity;

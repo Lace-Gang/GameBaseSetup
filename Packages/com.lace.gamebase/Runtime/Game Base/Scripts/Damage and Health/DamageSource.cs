@@ -75,6 +75,9 @@ namespace GameBase
         /// <param name="other">The collider that enters the trigger (handled by game engine)</param>
         private void OnTriggerEnter(Collider other)
         {
+            //Check for paused game
+            if (GameInstance.Instance.getPaused()) return;
+
             //Does nothing if object cannot be damaged by this damage
             if (other.GetComponent<IDamagableInterface>() != null && (other != m_damageOwner || m_canDamageOwner))
             {
@@ -126,6 +129,9 @@ namespace GameBase
         /// <param name="other">The collider that is inside the trigger (handled by game engine)</param>
         private void OnTriggerStay(Collider other)
         {
+            //Check for paused game
+            if (GameInstance.Instance.getPaused()) return;
+
             //Does nothing if object cannot be damaged by this damage
             if (other.GetComponent<IDamagableInterface>() != null && (other != m_damageOwner || m_canDamageOwner))
             {
@@ -160,6 +166,9 @@ namespace GameBase
         /// <param name="other">The collider that exits the trigger (handled by game engine)</param>
         private void OnTriggerExit(Collider other)
         {
+            //Check for paused game
+            if (GameInstance.Instance.getPaused()) return;
+
             //Does nothing if object cannot be damaged by this damage
             if (other.GetComponent<IDamagableInterface>() != null && (other != m_damageOwner || m_canDamageOwner))
             {

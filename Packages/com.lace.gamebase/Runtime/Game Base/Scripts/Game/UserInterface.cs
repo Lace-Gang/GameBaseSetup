@@ -10,6 +10,7 @@ namespace GameBase
     {
         //Hidden variables
         Coroutine m_fadeCoroutine = null;
+        
 
 
         //Exposed varaibles
@@ -68,9 +69,9 @@ namespace GameBase
         /// <summary>
         /// Unpauses game
         /// </summary>
-        public void ContinueClicked()
+        public void UnpauseClicked()
         {
-            Debug.Log("Continue Clicked");          //Test Line
+            GameInstance.Instance.UnpauseGame();
         }
 
 
@@ -123,7 +124,11 @@ namespace GameBase
         #endregion Screen Fade
 
 
-
+        /// <summary>
+        /// Update player health bar
+        /// </summary>
+        /// <param name="currentHealth">Current player character health</param>
+        /// <param name="maxHealth">Player character max health</param>
         public void UpdateHealthBar(float currentHealth, float maxHealth)
         {
             m_healthBar.maxValue = maxHealth;

@@ -22,6 +22,8 @@ namespace GameBase
     public class GameInstance : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
+        private bool m_paused = false;                          //Is the game paused
+        private bool m_playerAlive = true;                          //Is the player alive
         public GameState m_gameState = GameState.LOADTITLE;     // What State is the game in
 
 
@@ -29,11 +31,15 @@ namespace GameBase
         [SerializeField] UserInterface m_userInterface;
         [SerializeField] GameObject m_playerCharacter;
 
+
+        [SerializeField] bool m_gamePauses = true;
         [Tooltip("Time between player death event and transition")]
         [SerializeField] float m_deathTransitionTimer = 4f;
 
 
         public static GameInstance Instance { get; private set; }  //Allows other scripts to get the singleton instance of the GameInstance
+
+        public bool getPaused() {  return m_paused; }
 
 
         /// <summary>
@@ -100,6 +106,24 @@ namespace GameBase
                     break;
 
                 case GameState.PLAYGAME:
+                    if (m_gamePauses && m_playerAlive && Input.GetKeyUp(KeyCode.X))
+                    {
+                        if(Time.timeScale > 0)
+                        {
+                            m_userInterface.m_pauseScreen.SetActive(true);
+                            Time.timeScale = 0;
+
+                            //Unlock Cursor and make cursor visible
+                            Cursor.lockState = CursorLockMode.None;
+                            Cursor.visible = true;
+                        }
+                        //else
+                        //{
+                        //    m_userInterface.m_pauseScreen.SetActive(false);
+                        //    Time.timeScale = 1;
+                        //}
+                    }
+
                     break;
 
                 case GameState.WINGAME:
@@ -176,6 +200,17 @@ namespace GameBase
         #endregion Save and Load Data
 
 
+        public void UnpauseGame()
+        {
+            m_userInterface.m_pauseScreen.SetActive(false);
+            Time.timeScale = 1;
+
+            //Lock Cursor and make cursor invisible
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+
+
 
         /// <summary>
         /// Updates player health in the UI
@@ -194,6 +229,7 @@ namespace GameBase
         /// <returns>Yield return for Coroutine</returns>
         public IEnumerator OnPLayerDeath()
         {
+            m_playerAlive = false;  //Indicate player is no longer alive
             yield return new WaitForSeconds(m_deathTransitionTimer); //Wait so that death animation can finish
             m_gameState = GameState.LOSEGAME;   //transition to lose game state
         }
@@ -295,12 +331,16 @@ namespace GameBase
             //Unloads UIDisplayScene
             UnloadScene("UIDisplayScene");
 
-            //Fade In
-            yield return StartCoroutine (m_userInterface.FadeIn());
-
             //Lock Cursor and make cursor invisible
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            //Fade In
+            yield return StartCoroutine (m_userInterface.FadeIn());
+
+            //Indicate player is alive and unpause game
+            m_playerAlive = true;
+            UnpauseGame();
         }
 
         /// <summary>

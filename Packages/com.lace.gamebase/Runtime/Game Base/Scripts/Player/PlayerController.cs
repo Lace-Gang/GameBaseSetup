@@ -137,6 +137,9 @@ namespace GameBase
         /// </summary>
         void Update()
         {
+            //Check for paused game
+            if (GameInstance.Instance.getPaused()) return;
+
             EvaluateFallDamage(); //MUST happen before updating m_onGround
 
 

@@ -241,7 +241,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_gameState: 0
   m_userInterface: {fileID: 683073450}
-  playerCharacter: {fileID: 7065663312760934044, guid: 078785446fa9a5445b4424219df11f8b, type: 3}
+  m_playerCharacter: {fileID: 0}
+  m_gamePauses: 1
+  m_deathTransitionTimer: 4
 --- !u!1 &31543096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2984,7 +2986,7 @@ MonoBehaviour:
       - m_Target: {fileID: 683073450}
         m_TargetAssemblyTypeName: GameBase.UserInterface, Game Base Runtime Assembly
           Definition
-        m_MethodName: ContinueClicked
+        m_MethodName: UnpauseClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
