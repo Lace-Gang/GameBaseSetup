@@ -142,7 +142,7 @@ Transform:
   m_GameObject: {fileID: 6123420653662888521}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.29, y: 1.09, z: -2.13}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -162,6 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f91e6bbede84b1a4da2fc803b88f125a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_transform: {fileID: 7620438448413333973}
   m_id: 
   m_isDamagable: 1
 --- !u!114 &8381073304848845801
@@ -249,7 +250,6 @@ MonoBehaviour:
   m_enableDoubleJump: 1
   m_jumpHeight: 2
   m_doubleJumpTimer: 1
-  m_landingDistance: 1
   sprintAction:
     m_Name: Sprint
     m_Type: 0

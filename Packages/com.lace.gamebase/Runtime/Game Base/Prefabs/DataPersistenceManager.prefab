@@ -48,4 +48,4 @@ MonoBehaviour:
   m_useEncryption: 1
   m_encryptionCodeWord: defaultCodeWord
   m_loadOnStart: 1
-  m_saveOnQuit: 1
+  m_saveOnQuit: 0

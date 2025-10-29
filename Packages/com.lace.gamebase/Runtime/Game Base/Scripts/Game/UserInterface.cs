@@ -9,7 +9,7 @@ namespace GameBase
     public class UserInterface : MonoBehaviour
     {
         //Hidden variables
-        Coroutine m_fadeCoroutine = null;
+        //Coroutine m_fadeCoroutine = null;
         
 
 
@@ -25,6 +25,8 @@ namespace GameBase
 
         [Header("Components")]
         [SerializeField] private Slider m_healthBar;
+        [Tooltip("Save Game button. Only visible if 'Save From Pause Menu' is set to true in the Game Instance")]
+        [SerializeField] public GameObject m_saveButton;
 
 
         
@@ -81,6 +83,21 @@ namespace GameBase
         public void MainMenuClicked()
         {
             GameInstance.Instance.m_gameState = GameState.LOADMAINMENU;
+        }
+
+
+
+        public void SaveClicked()
+        {
+            DataPersistenceManager.Instance.SaveGame();
+        }
+
+
+
+        public void LoadAndPlayClicked()
+        {
+            GameInstance.Instance.LoadOnPlay();
+            GameInstance.Instance.m_gameState = GameState.STARTGAME;
         }
         #endregion Button Clicks
 

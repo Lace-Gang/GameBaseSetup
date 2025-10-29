@@ -20,6 +20,8 @@ namespace GameBase{
 
         //Player Info
         [Header("General Player Information")]
+        [Tooltip("Transform of the PLAYER CHARACTER object.")]
+        [SerializeField] Transform m_transform;
         [Tooltip("Unique ID")]
         [SerializeField] string m_id;   //player unique ID
         [Tooltip("Whether the player can receive damage through the Game Base damage system")]
@@ -38,6 +40,19 @@ namespace GameBase{
         //[SerializeField] float m_modelYAdjustment = 0f;
         //[Tooltip("Adjust if alignment between collision and model front/back is incorrect")]
         //[SerializeField] float m_modelZAdjustment = 0f;
+
+
+
+
+        public void SetPlayerTransform(Vector3 position, Quaternion rotation)
+        {
+            m_playerController.GetComponent<CharacterController>().enabled = false;
+
+            m_transform.position = position;
+            m_transform.rotation = rotation;
+
+            m_playerController.GetComponent<CharacterController>().enabled = true;
+        }
 
 
 
@@ -61,6 +76,11 @@ namespace GameBase{
 
             //Sets important values in references
             m_rigidbody.isKinematic = true; //Rigidbody must be kinematic for character movement to function
+
+
+
+            //Set HUD values
+            GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());    //Sets health bar
         }
 
 
@@ -69,6 +89,9 @@ namespace GameBase{
         {
             //Notifies Game Manager of current health state
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
+
+            ////Set HUD values
+            //GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());    //Sets health bar
         }
 
 
@@ -101,7 +124,8 @@ namespace GameBase{
         {
             //Updates save file data to match player data
             data.deathcount = this.counter; //Tester line
-            data.playerPosition = GetComponent<Transform>().position;
+            data.playerPosition = m_transform.position;
+            data.playerRotation = m_transform.rotation;
         }
 
 
@@ -118,7 +142,9 @@ namespace GameBase{
             {
                 //Updates player data to match save file data
                 this.counter = data.deathcount; //Tester line
-                GetComponent<Transform>().position = data.playerPosition;
+                //GetComponent<Transform>().position = data.playerPosition;
+                SetPlayerTransform(data.playerPosition, data.playerRotation);
+
             }
         }
 

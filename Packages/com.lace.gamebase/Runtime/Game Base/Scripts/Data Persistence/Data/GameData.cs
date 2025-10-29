@@ -11,5 +11,7 @@ namespace GameBase
         //Save System Test Variables (Will later be removed or replaced)
         public int deathcount;
         public Vector3 playerPosition;
+        public Quaternion playerRotation;
+        public float playerHealth;
     }
 }

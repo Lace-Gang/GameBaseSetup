@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,6 +12,7 @@ namespace GameBase
         LOADMAINMENU,
         MAINMENUSCREEN,
         STARTGAME,
+        LOADSAVE,
         PLAYGAME,
         WINGAME,
         LOSEGAME,
@@ -23,18 +25,39 @@ namespace GameBase
     {
         //Hidden Variables
         private bool m_paused = false;                          //Is the game paused
-        private bool m_playerAlive = true;                          //Is the player alive
-        public GameState m_gameState = GameState.LOADTITLE;     // What State is the game in
+        private bool m_playerAlive = true;                      //Is the player alive
+        private bool m_loadOnPlay = false;
+
+        public GameState m_gameState = GameState.LOADTITLE;     //What State is the game in
+        private GameObject m_playerCharacter;                   //Player Character
 
 
         //Exposed Variables
         [SerializeField] UserInterface m_userInterface;
-        [SerializeField] GameObject m_playerCharacter;
+        [SerializeField] GameObject m_playerPrefab;
 
 
         [SerializeField] bool m_gamePauses = true;
         [Tooltip("Time between player death event and transition")]
         [SerializeField] float m_deathTransitionTimer = 4f;
+        [Tooltip("Is the GameInstance responsible for spawning the player? NOTE: Requires a PlayerSpawnPoint to be present in gameplay related scenes!")]
+        [SerializeField] bool m_spawnPlayer = true;
+
+
+
+        [Header("Save and Load Conditions")]
+        [Tooltip("Displays a 'Save Game' option in the pause menu")]
+        [SerializeField] bool m_saveFromPauseMenu = true;
+        [Tooltip("Displays a 'Load Game' option in the main menu")]
+        [SerializeField] bool m_loadFromMainMenu = true;
+        [Tooltip("Player can save game by hitting a specific key on their keyboard")]
+        [SerializeField] bool m_saveHotKeyEnabled = false;
+        [Tooltip("Which key on the keyboard can be used to save the game")]
+        [SerializeField] KeyCode m_saveHotKey = KeyCode.J;
+        [Tooltip("Player can load game by hitting a specific key on their keyboard")]
+        [SerializeField] bool m_loadHotKeyEnabled = false;
+        [Tooltip("Which key on the keyboard can be used to load the game")]
+        [SerializeField] KeyCode m_loadHotKey = KeyCode.L;
 
 
         public static GameInstance Instance { get; private set; }  //Allows other scripts to get the singleton instance of the GameInstance
@@ -100,17 +123,21 @@ namespace GameBase
                     //load level and UI 
                     StartCoroutine(LoadGame());
 
-                    //transition to "play game" GameState
-                    m_gameState = GameState.PLAYGAME;
+                    
 
                     break;
 
+                case GameState.LOADSAVE:
+                    //LoadSaveTransition Coroutine CANNOT be started in this section of the switch, or else the coroutine will be started too many times!
+                    break;
+
                 case GameState.PLAYGAME:
-                    if (m_gamePauses && m_playerAlive && Input.GetKeyUp(KeyCode.X))
+                    if (m_gamePauses && m_playerAlive && Input.GetKeyDown(KeyCode.X))
                     {
                         if(Time.timeScale > 0)
                         {
                             m_userInterface.m_pauseScreen.SetActive(true);
+                            if(m_saveFromPauseMenu) m_userInterface.m_saveButton.SetActive(true);
                             Time.timeScale = 0;
 
                             //Unlock Cursor and make cursor visible
@@ -122,6 +149,12 @@ namespace GameBase
                         //    m_userInterface.m_pauseScreen.SetActive(false);
                         //    Time.timeScale = 1;
                         //}
+                    }
+                    if(m_loadHotKeyEnabled && Input.GetKeyDown(m_loadHotKey))
+                    {
+                        StartCoroutine(m_userInterface.FadeOut());
+                        m_gameState = GameState.LOADSAVE;
+                        StartCoroutine(LoadSaveTransition());
                     }
 
                     break;
@@ -159,13 +192,14 @@ namespace GameBase
         /// Loads a scene asynchronously
         /// </summary>
         /// <param name="sceneName">The name of the scene being loaded (MUST be the exact name of the scene (case insensitve) or the file path name if two scenes of the same name exist)</param>
-        public void LoadScene(string sceneName)
+        /// <returns>Yield return for Coroutine</returns>
+        private IEnumerator LoadScene(string sceneName)
         {
             //Only loads scene if scene is not already loaded
             if(!SceneManager.GetSceneByName(sceneName).IsValid())
             {
                 //Loads specified scene Async (for better performance) and additive so that the base scene remains present
-                SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+                yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             }
         }
 
@@ -173,13 +207,14 @@ namespace GameBase
         /// Unloads a scene asynchronously
         /// </summary>
         /// <param name="sceneName">The name of the scene being loaded (MUST be the exact name of the scene (case insensitve) or the file path name if two scenes of the same name exist)</param>
-        public void UnloadScene(string sceneName)
+        /// <returns>Yield return for Coroutine</returns>
+        private IEnumerator UnloadScene(string sceneName)
         {
             //Only unloads scene if scene is already loaded
             if (SceneManager.GetSceneByName(sceneName).IsValid())
             {
                 //Unloads specified scene Async (for better performance)
-                SceneManager.UnloadSceneAsync(sceneName);
+                yield return SceneManager.UnloadSceneAsync(sceneName);
             }
         }
         #endregion Load and Unload Scenes
@@ -235,9 +270,14 @@ namespace GameBase
         }
 
 
+        public void LoadOnPlay()
+        {
+            m_loadOnPlay = true;
+        }
 
 
-        #region Scene Loading
+
+        #region State Transitioning
 
         /// <summary>
         /// Transitions to Title Screen
@@ -256,10 +296,10 @@ namespace GameBase
             m_userInterface.m_pauseScreen.SetActive(false);
 
             //loads UIDisplayScene
-            LoadScene("UIDisplayScene");
+            yield return StartCoroutine(LoadScene("UIDisplayScene"));
 
             //unloads game screen
-            UnloadScene("samplescene");
+            StartCoroutine(UnloadScene("samplescene"));
 
             //Fade Screen In
             //m_userInterface.FadeScreen();
@@ -291,10 +331,10 @@ namespace GameBase
             m_userInterface.m_pauseScreen.SetActive(false);
 
             //loads UIDisplayScene
-            LoadScene("UIDisplayScene");
+            yield return StartCoroutine(LoadScene("UIDisplayScene"));
 
             //unloads game screen
-            UnloadScene("samplescene");
+            StartCoroutine(UnloadScene("samplescene"));
 
             //yield return new WaitForSeconds(1);
 
@@ -326,21 +366,90 @@ namespace GameBase
             m_userInterface.m_HUD.SetActive(true);
 
             //Loads Game scene
-            LoadScene("SampleScene");
+            yield return StartCoroutine(LoadScene("SampleScene"));
 
             //Unloads UIDisplayScene
-            UnloadScene("UIDisplayScene");
+            StartCoroutine(UnloadScene("UIDisplayScene"));
+
+
+            //Spawns player character
+            if(m_spawnPlayer)
+            {
+                PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
+                if(spawnPoint != null)
+                {
+                    //if (m_playerCharacter == null)
+                    if (m_playerCharacter != null)
+                    {
+                        GameObject.Destroy(m_playerCharacter);
+                    }
+                        m_playerCharacter = GameObject.Instantiate(m_playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+                        //m_playerCharacter.transform.position = spawnPoint.transform.position;
+                        //m_playerCharacter.transform.rotation = spawnPoint.transform.rotation;
+                        m_playerCharacter.SetActive(true);
+                    //}
+                    //else
+                    //{
+                    //    Debug.Log("Um??????");
+                    //    m_playerCharacter.GetComponent<PlayerCharacter>().SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                    //}
+                } 
+                else
+                {
+                    Debug.LogError("No PlayerSpawnPoint was located in the scene! Player will not be spawned.");
+                }
+            }
+            
+
 
             //Lock Cursor and make cursor invisible
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            //Fade In
-            yield return StartCoroutine (m_userInterface.FadeIn());
+
+            if (m_loadOnPlay)
+            {
+                m_gameState = GameState.LOADSAVE;
+                StartCoroutine(LoadSaveTransition());
+            }
+            else
+            {
+                //transition to "play game" GameState
+                m_gameState = GameState.PLAYGAME;
+
+                //Fade In
+                yield return StartCoroutine (m_userInterface.FadeIn());
+            }
+
 
             //Indicate player is alive and unpause game
             m_playerAlive = true;
             UnpauseGame();
+        }
+
+        private IEnumerator LoadSaveTransition()
+        {
+            //yield return StartCoroutine(m_userInterface.FadeOut());
+            DataPersistenceManager.Instance.LoadGame();
+
+            //Spawns player character
+            if (m_spawnPlayer)
+            {
+                PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
+                if (spawnPoint != null)
+                {
+                    m_playerCharacter.GetComponentInChildren<PlayerCharacter>().SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                    //m_playerCharacter.transform.position = spawnPoint.transform.position;
+                    //m_playerCharacter.transform.rotation = spawnPoint.transform.rotation;
+                }
+                else
+                {
+                    Debug.LogError("No PlayerSpawnPoint was located in the scene when loading! Player will not be moved correctly!");
+                }
+            }
+
+            yield return StartCoroutine(m_userInterface.FadeIn());
+            m_gameState = GameState.PLAYGAME;
         }
 
         /// <summary>
@@ -363,10 +472,10 @@ namespace GameBase
             m_userInterface.m_winScreen.SetActive(true);
 
             //loads UIDisplayScene
-            LoadScene("UIDisplayScene");
+            yield return StartCoroutine(LoadScene("UIDisplayScene"));
 
             //unloads Game screen
-            UnloadScene("samplescene");
+            StartCoroutine(UnloadScene("samplescene"));
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
@@ -396,10 +505,10 @@ namespace GameBase
             m_userInterface.m_loseScreen.SetActive(true);
 
             //loads UIDisplayScene
-            LoadScene("UIDisplayScene");
+            yield return StartCoroutine(LoadScene("UIDisplayScene"));
 
             //unloads Game screen
-            UnloadScene("samplescene");
+            StartCoroutine(UnloadScene("samplescene"));
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
@@ -409,7 +518,7 @@ namespace GameBase
             yield return StartCoroutine(m_userInterface.FadeIn());
         }
 
-        #endregion Scene Loading
+        #endregion State Transitioning
 
 
     }

@@ -12,20 +12,16 @@ namespace GameBase
 
 
 
-
+        /// <summary>
+        /// Gets player component and sets current health equal to starting health.
+        /// </summary>    
         private void Awake()
         {
             m_playerCharacter = GetComponent<PlayerCharacter>();
+            OnAwake(); //calls parent function to execute appropriate commands at awake
+
         }
 
-
-        /// <summary>
-        /// Sets current health equal to starting health.
-        /// </summary>       
-        void Start()
-        {
-            OnStart(); //calls parent function to execute appropriate commands at start
-        }
 
 
         /// <summary>
@@ -34,9 +30,8 @@ namespace GameBase
         /// <param name="data">Game Data object to load data from</param>
         public void LoadData(GameData data)
         {
-            //throw new System.NotImplementedException();
-
-            //TO DO: Load data if data is supposed to be saved and loaded
+            m_health = data.playerHealth;
+            Debug.Log("Loaded health is " +  m_health);
         }
 
 
@@ -46,9 +41,8 @@ namespace GameBase
         /// <param name="data">Reference to Game Data object to save data to</param>
         public void SaveData(ref GameData data)
         {
-            //throw new System.NotImplementedException();
-
-            //TO DO: Save data if data is supposed to be saved and loaded
+            data.playerHealth = m_health;
+            Debug.Log("Saved health is " + m_health);
         }
 
     }

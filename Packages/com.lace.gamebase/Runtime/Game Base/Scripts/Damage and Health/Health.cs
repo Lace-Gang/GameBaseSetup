@@ -5,7 +5,7 @@ namespace GameBase
     public class Health : MonoBehaviour
     {
         //Hidden Variables
-        private float m_health; //current health of the owner
+        protected float m_health; //current health of the owner
 
         //Editor Variables
         [Tooltip("The object this health belongs to")]
@@ -28,15 +28,15 @@ namespace GameBase
         /// <summary>
         /// Sets current health equal to starting health.
         /// </summary>
-        void Start()
+        void Awake()
         {
-            OnStart();  //calls function to execute appropriate commands at start
+            OnAwake();  //calls function to execute appropriate commands at awake
         }
 
         /// <summary>
         /// Sets current health equal to starting health.
         /// </summary>
-        protected void OnStart() //setting data here instead of in the normal Start function allows this function to be called by child classes
+        protected void OnAwake() //setting data here instead of in the normal Start function allows this function to be called by child classes
         {
             //Set current health to starting health
             m_health = m_startingHealth;

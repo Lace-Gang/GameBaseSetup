@@ -17,11 +17,11 @@ namespace GameBase
         [Tooltip("NOTE: Not all available save and load conditions can be found here! Only those activated by the DataPersistenceManager!\n" +
             "AT MINIMUM one save condition AND one load condition must be enabled in order for the Save System to work, but those save " +
             "and load conditions DO NOT have to be among the options listed on this component!")]
-        [SerializeField] private bool m_loadOnStart;    //indicates whether saved data should be loaded when the game starts
+        [SerializeField] private bool m_loadOnStart = true;    //indicates whether saved data should be loaded when the game starts
         [Tooltip("NOTE: Not all available save and load conditions can be found here! Only those activated by the DataPersistenceManager!\n" +
             "AT MINIMUM one save condition AND one load condition must be enabled in order for the Save System to work, but those save " +
             "and load conditions DO NOT have to be among the options listed on this component!")]
-        [SerializeField] private bool m_saveOnQuit;     //indicates whether data should be saved when the game quits
+        [SerializeField] private bool m_saveOnQuit = false;     //indicates whether data should be saved when the game quits
 
         private GameData m_gameData;                                //stores all persistent (save) data
         private List<IDataPersistence> m_dataPersistenceObjects;    //all objects with data to save/load
@@ -96,8 +96,12 @@ namespace GameBase
         /// </summary>
         public void SaveGame()
         {
+            Debug.Log("Saving Data");
+
+            m_dataPersistenceObjects = FindAllDataPersistenceObjects();
+
             //Pass the data to other scripts so they can update it
-            foreach(IDataPersistence dataPersistenceObj in m_dataPersistenceObjects)
+            foreach (IDataPersistence dataPersistenceObj in m_dataPersistenceObjects)
             {
                 dataPersistenceObj.SaveData(ref m_gameData);
             }
@@ -116,7 +120,8 @@ namespace GameBase
         /// </summary>
         public void LoadGame()
         {
-
+            Debug.Log("Loading Data");
+            m_dataPersistenceObjects = FindAllDataPersistenceObjects();
 
             //Load any saved data from a file using the data handler
             m_gameData = m_dataHandler.Load();
@@ -131,6 +136,7 @@ namespace GameBase
             //Push the loaded data to all other scripts that need it
             foreach(IDataPersistence dataPersistenceObj in this.m_dataPersistenceObjects)
             {
+                Debug.Log("Loading " +  dataPersistenceObj);
                 dataPersistenceObj.LoadData(m_gameData);
             }
         }
