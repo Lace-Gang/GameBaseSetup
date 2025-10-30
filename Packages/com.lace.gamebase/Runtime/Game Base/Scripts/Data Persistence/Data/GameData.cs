@@ -13,5 +13,6 @@ namespace GameBase
         public Vector3 playerPosition;
         public Quaternion playerRotation;
         public float playerHealth;
+        public int playerLives;
     }
 }

@@ -2,16 +2,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 //using UnityEngine.UIElements;
 
 namespace GameBase
 {
     public class UserInterface : MonoBehaviour
     {
-        //Hidden variables
-        //Coroutine m_fadeCoroutine = null;
-        
-
 
         //Exposed varaibles
         [Header("Screens")]
@@ -25,11 +22,15 @@ namespace GameBase
 
         [Header("Components")]
         [SerializeField] private Slider m_healthBar;
+        [SerializeField] private TextMeshProUGUI m_playerLivesText;
         [Tooltip("Save Game button. Only visible if 'Save From Pause Menu' is set to true in the Game Instance")]
         [SerializeField] public GameObject m_saveButton;
+        [Tooltip("Load Game button. Only visible if 'Load From Main Menu' is set to true in the Game Instance")]
+        [SerializeField] public GameObject m_loadButton;
 
 
-        
+
+
 
 
 
@@ -63,10 +64,12 @@ namespace GameBase
         /// <summary>
         /// Loads game level and begins game
         /// </summary>
-        public void PlayClicked()
+        public void NewGameClicked()
         {
+            GameInstance.Instance.SetLoadOnPlay(false);
             GameInstance.Instance.m_gameState = GameState.STARTGAME;
         }
+
 
         /// <summary>
         /// Unpauses game
@@ -96,9 +99,22 @@ namespace GameBase
 
         public void LoadAndPlayClicked()
         {
-            GameInstance.Instance.LoadOnPlay();
+            GameInstance.Instance.SetLoadOnPlay(true);
             GameInstance.Instance.m_gameState = GameState.STARTGAME;
         }
+
+
+        public void RetryClicked()
+        {
+            GameInstance.Instance.RestartFromScreen();
+        }
+
+        public void RestartClicked()
+        {
+            GameInstance.Instance.RestartFromGame();
+        }
+
+
         #endregion Button Clicks
 
         #region Screen Fade
@@ -150,6 +166,12 @@ namespace GameBase
         {
             m_healthBar.maxValue = maxHealth;
             m_healthBar.value = currentHealth;
+        }
+
+
+        public void UpdatePlayerLives(int lives)
+        {
+            m_playerLivesText.text = "Lives: " + lives;
         }
     }
 }

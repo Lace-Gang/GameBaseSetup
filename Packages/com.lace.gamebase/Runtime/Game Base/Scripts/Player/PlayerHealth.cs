@@ -22,6 +22,11 @@ namespace GameBase
 
         }
 
+        public void SetHealth(float health)
+        {
+            m_health = health;
+        }
+
 
 
         /// <summary>

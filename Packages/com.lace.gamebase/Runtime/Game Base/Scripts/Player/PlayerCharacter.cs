@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem; //allows for checking user inputs
 
 namespace GameBase{
-
     //Required Components
     [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(Rigidbody))]
@@ -10,8 +9,14 @@ namespace GameBase{
     [RequireComponent (typeof(PlayerHealth))]
     public class PlayerCharacter : MonoBehaviour, IDataPersistence, IDamagableInterface
     {
+        //Hidden Values
+        private bool m_alive = true;                                    //Is the player alive
+        private float m_invincibleTime = 0f;                            //How long the player will be invincible for (player is invincible as long as timer is greater than 0)
+        RespawnHealth m_respawnHealthType = RespawnHealth.FULLHEALTH;   //What is health set to on respawn (Defaults to full health)
+
         //Hidden Variables
         private int counter = 0;    //Test Code (will be removed later)
+        private int m_lives;        //Number of lives player currently has
 
         //Hidden Components
         PlayerController m_playerController;    //player controller component
@@ -26,8 +31,10 @@ namespace GameBase{
         [SerializeField] string m_id;   //player unique ID
         [Tooltip("Whether the player can receive damage through the Game Base damage system")]
         [SerializeField] bool m_isDamagable = true;
+        [Tooltip("Number of lives player starts with")]
+        [SerializeField] int m_baseLives = 1;
 
-        
+
 
 
 
@@ -44,6 +51,29 @@ namespace GameBase{
 
 
 
+        #region Getters and Setters
+
+        public int GetLives()
+        {
+            return m_lives;
+        }
+
+        public void SetRespawnHealthType(RespawnHealth healthType)
+        {
+            m_respawnHealthType = healthType;
+        }
+
+        /// <summary>
+        /// Adds or reduces current number of player lives.
+        /// </summary>
+        /// <param name="lives"> Number of lives to add or reduce. Positive to add, negative to reduce.</param>
+        public void AddOrReduceLives(int lives)
+        {
+            m_lives += lives;
+            GameInstance.Instance.UpdatePlayerLives(m_lives);
+        }
+
+
         public void SetPlayerTransform(Vector3 position, Quaternion rotation)
         {
             m_playerController.GetComponent<CharacterController>().enabled = false;
@@ -53,6 +83,8 @@ namespace GameBase{
 
             m_playerController.GetComponent<CharacterController>().enabled = true;
         }
+
+        #endregion Getters and Setters
 
 
 
@@ -77,10 +109,14 @@ namespace GameBase{
             //Sets important values in references
             m_rigidbody.isKinematic = true; //Rigidbody must be kinematic for character movement to function
 
+            //Set Other Values
+            m_lives = m_baseLives;
 
 
             //Set HUD values
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());    //Sets health bar
+            GameInstance.Instance.UpdatePlayerLives(m_lives);       //Sets player lives
+
         }
 
 
@@ -111,6 +147,13 @@ namespace GameBase{
             {
                 DataPersistenceManager.Instance.ResetOnNextSaveLoad();
             }
+
+            ////Updates timers and time based values
+            //Invincibility
+            if(m_invincibleTime > 0)
+            {
+                m_invincibleTime -= Time.deltaTime;
+            }
         }
 
 
@@ -126,6 +169,7 @@ namespace GameBase{
             data.deathcount = this.counter; //Tester line
             data.playerPosition = m_transform.position;
             data.playerRotation = m_transform.rotation;
+            data.playerLives = m_lives;
         }
 
 
@@ -142,9 +186,12 @@ namespace GameBase{
             {
                 //Updates player data to match save file data
                 this.counter = data.deathcount; //Tester line
-                //GetComponent<Transform>().position = data.playerPosition;
                 SetPlayerTransform(data.playerPosition, data.playerRotation);
+                m_lives = data.playerLives;
 
+
+                //Upate HUD to match new values
+                GameInstance.Instance.UpdatePlayerLives(m_lives);   //player lives
             }
         }
 
@@ -158,7 +205,7 @@ namespace GameBase{
         /// <param name="owner">Owning object of the damage being taken</param>
         public void TakeDamage(float damage, GameObject owner)
         {
-            if(!m_isDamagable) return; //only execute damage if the player is set to damagable
+            if(!m_isDamagable || !m_alive || m_invincibleTime > 0) return; //only execute damage if the player is set to damagable
 
             Debug.Log("Damage Dealt: " + damage);               /////Test line. To be removed later
             //Passes damage to health component
@@ -201,9 +248,38 @@ namespace GameBase{
         /// </summary>
         public void OnDeath()
         {
+            m_alive = false;
             m_playerController.OnDeath();   //Tells PlayerController to trigger the player death state
 
             StartCoroutine(GameInstance.Instance.OnPLayerDeath());  //Notify Game Instance of Player Death
+        }
+        /// <summary>
+        ///Executes all functions necessary from the player end for the player respawn event 
+        /// </summary>
+        public void OnRespawn(float invinsibilityTime)
+        {
+            m_invincibleTime = invinsibilityTime;
+
+            m_playerController.OnRespawn();
+
+            switch (m_respawnHealthType)
+            {
+                case RespawnHealth.FULLHEALTH:
+                    m_playerHealth.SetHealth(m_playerHealth.GetMaxHealth());
+                    break;
+
+                case RespawnHealth.HALFHEALTH:
+                    m_playerHealth.SetHealth(m_playerHealth.GetMaxHealth() / 2);
+                    break;
+
+                default:
+                    break;
+            }
+
+
+            GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
+
+            m_alive = true;
         }
     }
 }

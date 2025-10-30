@@ -329,13 +329,23 @@ namespace GameBase
             //player cannot die if already dead
             if (m_isDead) return;
 
-            Debug.Log("Player is dead!");           //Debug line. To be removed later
-
             m_isDead = true;                //Sets isDead bool to true so other functions in the Player Controller are aware
             OnDisable();                    //Disable player movement input
             m_movementInput = Vector2.zero; //Sets current player movement input vector to zero
 
             m_animator.SetTrigger("Die");   //Sets death animation trigger in the animator
+        }
+
+        /// <summary>
+        /// Player respawn state. Reenables movement, updates isDead bool, and tells animator to leave death animation
+        /// </summary>
+        public void OnRespawn()
+        {
+            m_isDead = false;   //Sets isDead bool to false so other functions may resume as normal
+            OnEnable();         //Reenables player movement input
+
+            m_animator.SetTrigger("Jump");  //Tell animator component to jump (looks like player is getting up, and helps animator leave the "die" state)
+
         }
 
 

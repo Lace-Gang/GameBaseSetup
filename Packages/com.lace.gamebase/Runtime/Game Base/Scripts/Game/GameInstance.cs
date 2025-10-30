@@ -20,6 +20,26 @@ namespace GameBase
         LOSESCREEN
     }
 
+    public enum RespawnType
+    {
+        RESPAWNINPLACE,                 //respawns player in place, and enables invincibility frames for a short time
+        LOADLASTSAVE,                   //reloads save file, and respawns player in the process
+        RESPAWNATSAVELOCATION,          //respawns player at location of last loaded save without reloading game or save
+        RESPAWNATSTATICLOCATION
+    }
+
+    public enum RespawnHealth
+    {
+        FULLHEALTH,
+        HALFHEALTH
+    }
+
+    public enum RestartMode
+    {
+        RESTARTFROMLASTSAVE,
+        RESTARTATBEGINNING
+    }
+
 
     public class GameInstance : MonoBehaviour, IDataPersistence
     {
@@ -27,21 +47,36 @@ namespace GameBase
         private bool m_paused = false;                          //Is the game paused
         private bool m_playerAlive = true;                      //Is the player alive
         private bool m_loadOnPlay = false;
+        private bool m_restartingGame = false;
 
         public GameState m_gameState = GameState.LOADTITLE;     //What State is the game in
         private GameObject m_playerCharacter;                   //Player Character
+        private PlayerCharacter m_playerScript;                 //Player Script
 
 
         //Exposed Variables
         [SerializeField] UserInterface m_userInterface;
         [SerializeField] GameObject m_playerPrefab;
 
+        [Tooltip("After loosing the game, where does the player restart from")]
+        [SerializeField] RestartMode m_restartMode = RestartMode.RESTARTATBEGINNING;
+
 
         [SerializeField] bool m_gamePauses = true;
+
+        [Header("General Player Info")]
         [Tooltip("Time between player death event and transition")]
         [SerializeField] float m_deathTransitionTimer = 4f;
         [Tooltip("Is the GameInstance responsible for spawning the player? NOTE: Requires a PlayerSpawnPoint to be present in gameplay related scenes!")]
         [SerializeField] bool m_spawnPlayer = true;
+
+        [Header ("Player Respawn")]
+        [Tooltip("How should the player respawn")]
+        [SerializeField] RespawnType m_respawnType = RespawnType.RESPAWNINPLACE;
+        [Tooltip("What should player health be at respawn")]
+        [SerializeField] RespawnHealth m_respawnHealthType = RespawnHealth.FULLHEALTH;
+        [Tooltip("Time (in seconds) after the player respawns when they cannot be hurt")]
+        [SerializeField] float m_respawnInvincibilityTimer = 2f;
 
 
 
@@ -150,12 +185,21 @@ namespace GameBase
                         //    Time.timeScale = 1;
                         //}
                     }
+
+                    //load game if load hot key is enabled and pressed
                     if(m_loadHotKeyEnabled && Input.GetKeyDown(m_loadHotKey))
                     {
                         StartCoroutine(m_userInterface.FadeOut());
                         m_gameState = GameState.LOADSAVE;
                         StartCoroutine(LoadSaveTransition());
                     }
+
+                    //save game if save hot key is enabled and pressed
+                    if(m_saveHotKeyEnabled && Input.GetKeyDown(m_saveHotKey))
+                    {
+                        DataPersistenceManager.Instance.SaveGame();
+                    }
+
 
                     break;
 
@@ -185,6 +229,7 @@ namespace GameBase
                     break;
             }
         }
+
 
         #region Load and Unload Scenes
 
@@ -246,6 +291,7 @@ namespace GameBase
         }
 
 
+        #region UI Updates
 
         /// <summary>
         /// Updates player health in the UI
@@ -257,6 +303,25 @@ namespace GameBase
             m_userInterface.UpdateHealthBar(currentHealth, maxHealth);
         }
 
+        /// <summary>
+        /// Updates player lives in the UI
+        /// </summary>
+        /// <param name="lives">Current number of player lives</param>
+        public void UpdatePlayerLives(int lives)
+        {
+            m_userInterface.UpdatePlayerLives(lives);
+        }
+
+        #endregion UI Updates
+
+
+
+        public void SetLoadOnPlay(bool loadSaveFile)
+        {
+            m_loadOnPlay = (loadSaveFile) ? true : false;
+        }
+
+
 
         /// <summary>
         /// Transitions to next stage of game (afer player death)
@@ -266,13 +331,110 @@ namespace GameBase
         {
             m_playerAlive = false;  //Indicate player is no longer alive
             yield return new WaitForSeconds(m_deathTransitionTimer); //Wait so that death animation can finish
-            m_gameState = GameState.LOSEGAME;   //transition to lose game state
+
+            //Account for player lives
+
+            if(m_playerScript.GetLives() > 1)
+            {
+                //Respawns player
+                StartCoroutine(OnPlayerRespawn());
+            }
+            else
+            {
+                m_gameState = GameState.LOSEGAME;   //transition to lose game state
+            }
+        }
+
+        public IEnumerator OnPlayerRespawn()
+        {
+            switch (m_respawnType)
+            {
+                case RespawnType.RESPAWNINPLACE:
+                    m_playerScript.OnRespawn(m_respawnInvincibilityTimer);
+                    m_playerAlive = true;
+                    break;
+
+                case RespawnType.LOADLASTSAVE:
+                    yield return StartCoroutine(m_userInterface.FadeOut());
+                    StartCoroutine(LoadSaveTransition());
+                    m_gameState = GameState.LOADSAVE;
+                    m_playerScript.OnRespawn(m_respawnInvincibilityTimer);
+                    break;
+
+                case RespawnType.RESPAWNATSAVELOCATION:
+                    //Respawns player character at location of last loaded save
+
+                    PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
+                    if (spawnPoint != null)
+                    {
+                        m_playerScript.SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                        m_playerScript.OnRespawn(m_respawnInvincibilityTimer);
+                        m_playerAlive = true;
+                    }
+                    else
+                    {
+                        Debug.LogError("No PlayerSpawnPoint was located in the scene when respawning! Player cannot respawn!");
+                    }
+
+                    break;
+
+                case RespawnType.RESPAWNATSTATICLOCATION:
+                    //Respawns player at static location
+                    bool spawnPointFound = false;
+                    StaticSpawnPoint[] spawns = FindObjectsByType<StaticSpawnPoint>(FindObjectsSortMode.None);
+
+                    foreach (StaticSpawnPoint spawn in spawns)
+                    {
+                        if (spawn.spawnTag == "Player")
+                        {
+                            spawnPointFound = true;
+                            m_playerScript.SetPlayerTransform(spawn.transform.position, spawn.transform.rotation);
+                            m_playerScript.OnRespawn(m_respawnInvincibilityTimer);
+                            m_playerAlive = true;
+
+                            break;
+                        }
+                    }
+
+                    //Notify user if static spawn point configued for player has not been found
+                    if (!spawnPointFound) Debug.LogError("No StaticSpawnPoint was located in the scene with tag 'Player'! Player cannot respawn!");
+
+                    break;
+
+                default:
+                    break;
+            }
+
+            m_playerScript.AddOrReduceLives(-1);    //Reduce player lives by one
+
         }
 
 
-        public void LoadOnPlay()
+
+        public void RestartFromScreen()
         {
-            m_loadOnPlay = true;
+            switch (m_restartMode)
+            {
+                case RestartMode.RESTARTFROMLASTSAVE:
+                    m_loadOnPlay = true;
+                    m_gameState = GameState.STARTGAME;
+                    break;
+
+                case RestartMode.RESTARTATBEGINNING:
+                    m_loadOnPlay = false;
+                    m_gameState = GameState.STARTGAME;
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        public void RestartFromGame()
+        {
+            m_restartingGame = true;
+            m_loadOnPlay = false;
+            m_gameState = GameState.STARTGAME;
         }
 
 
@@ -323,6 +485,11 @@ namespace GameBase
             //turn on main menu screen
             m_userInterface.m_mainMenuScreen.SetActive(true);
 
+            if(m_loadFromMainMenu)
+            {
+                m_userInterface.m_loadButton.SetActive(true);
+            }
+
             //turn off other UI screens and HUD
             m_userInterface.m_titleScreen.SetActive(false);
             m_userInterface.m_HUD.SetActive(false);
@@ -365,6 +532,13 @@ namespace GameBase
             //Turns on HUD
             m_userInterface.m_HUD.SetActive(true);
 
+            //Restarts Game if applicable
+            if(m_restartingGame)
+            {
+                yield return StartCoroutine(UnloadScene("SampleScene"));
+                m_restartingGame = false;
+            }
+
             //Loads Game scene
             yield return StartCoroutine(LoadScene("SampleScene"));
 
@@ -382,17 +556,12 @@ namespace GameBase
                     if (m_playerCharacter != null)
                     {
                         GameObject.Destroy(m_playerCharacter);
+                        m_playerScript = null;
                     }
-                        m_playerCharacter = GameObject.Instantiate(m_playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
-                        //m_playerCharacter.transform.position = spawnPoint.transform.position;
-                        //m_playerCharacter.transform.rotation = spawnPoint.transform.rotation;
-                        m_playerCharacter.SetActive(true);
-                    //}
-                    //else
-                    //{
-                    //    Debug.Log("Um??????");
-                    //    m_playerCharacter.GetComponent<PlayerCharacter>().SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
-                    //}
+                    m_playerCharacter = GameObject.Instantiate(m_playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+                    m_playerScript = m_playerCharacter.GetComponentInChildren<PlayerCharacter>();
+                    m_playerScript.SetRespawnHealthType(m_respawnHealthType);
+                    m_playerCharacter.SetActive(true);
                 } 
                 else
                 {
@@ -438,9 +607,8 @@ namespace GameBase
                 PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
                 if (spawnPoint != null)
                 {
-                    m_playerCharacter.GetComponentInChildren<PlayerCharacter>().SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
-                    //m_playerCharacter.transform.position = spawnPoint.transform.position;
-                    //m_playerCharacter.transform.rotation = spawnPoint.transform.rotation;
+                    //m_playerCharacter.GetComponentInChildren<PlayerCharacter>().SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                    m_playerScript.SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
                 }
                 else
                 {
@@ -449,6 +617,8 @@ namespace GameBase
             }
 
             yield return StartCoroutine(m_userInterface.FadeIn());
+
+            m_playerAlive = true;
             m_gameState = GameState.PLAYGAME;
         }
 
