@@ -109,11 +109,11 @@ namespace GameBase
                     if(Physics.Raycast(m_target.position, cameraDirection, out hit))
                     {
                         //Moves camera to nearest point in view of target
-                        transform.position = hit.point;
-                        //camera.transform.Translate(ray.direction * zoomDistance, Space.World);
-                        //transform.Translate(cameraDirection * -0.01f);
+                        float distance = Mathf.Min(hit.distance, m_orbitRadius);
+                        transform.position = m_target.position - (transform.rotation * Vector3.forward * distance);
+
+                        //Prevent Camera view from clipping through solid objects (prevents players from seeing through those objects)
                         transform.Translate(hit.normal * 0.15f);
-                        
                     }
                     break;
 

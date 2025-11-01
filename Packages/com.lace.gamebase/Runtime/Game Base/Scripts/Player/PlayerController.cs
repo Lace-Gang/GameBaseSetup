@@ -1,5 +1,4 @@
 using UnityEngine;
-//using log4net.Util;
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
@@ -50,7 +49,6 @@ namespace GameBase
         [SerializeField] float m_acceleration = 20.0f;
         [Tooltip ("How quickly the player can turn")]
         [SerializeField] float m_turnRate = 5f;
-        //[SerializeField] float m_pushForce = 1f;                  /////////Either add functionality later or remove
 
         [Header("Jump Action")]
         [Tooltip("Player Input to jump. " +
@@ -62,8 +60,6 @@ namespace GameBase
         [SerializeField] float m_jumpHeight = 2f;
         [Tooltip("The amount of time after an innitial jump in which a double jump may be performed")]
         [SerializeField] float m_doubleJumpTimer = 1f;
-        //[Tooltip("Distance above ground (or other surface) to trigger landing animation")]
-        //[SerializeField] float m_landingDistance = 1f;
 
         [Header("Sprint Action")]
         [Tooltip("Player Input to start/stop sprinting. " +
@@ -83,6 +79,7 @@ namespace GameBase
         [Tooltip("Multiplier for scaling fall damage with velocity")]
         [SerializeField] float m_fallDamageScaler;
 
+        #region Awake, Enable, Disable, Start, Update
 
         /// <summary>
         /// Creates necessary references and binds InputActions to action functions
@@ -126,12 +123,6 @@ namespace GameBase
         }
 
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-            
-        }
-
         /// <summary>
         /// Updates player states, updates and executes player movement, and updates other frame by frame data such as timers. Also checks for and applies fall damage.
         /// </summary>
@@ -172,12 +163,12 @@ namespace GameBase
             }
 
             //Update Animator
-            //(m_controller.velocity.z > m_controller.velocity.x)? m_animator.SetFloat("Speed", m_controller.velocity.z) : m_animator.SetFloat("Speed", m_controller.velocity.x);
-            //m_animator.SetFloat("Speed", (MathF.Abs(m_controller.velocity.z) > MathF.Abs(m_controller.velocity.x)) ? MathF.Abs(m_controller.velocity.z) : MathF.Abs(m_controller.velocity.x));
-            //m_animator.SetFloat("Speed", m_controller.velocity.magnitude);
             m_animator.SetFloat("HorizontalSpeed", Vector3.Magnitude(new Vector3(m_controller.velocity.x, 0, m_controller.velocity.z)));
             m_animator.SetFloat("VerticalSpeed", m_controller.velocity.y);
         }
+
+        #endregion Awake, Enable, Disable, Start, Update
+
 
         /// <summary>
         /// Calculates the movement of the player and updates the player accordingly
@@ -306,7 +297,7 @@ namespace GameBase
 
         #endregion Input Action Functions
 
-
+        #region Player States
 
         /// <summary>
         /// Player hit state. Not yet fully implemented.
@@ -315,10 +306,6 @@ namespace GameBase
         {
             //player cannot be hit when dead
             if (m_isDead) return;
-            //throw new System.NotImplementedException();
-
-
-            Debug.Log("Hit Taken!");    //Debug line. To be removed later.
         }
 
         /// <summary>
@@ -370,34 +357,7 @@ namespace GameBase
             }
         }
 
+        #endregion Player States
 
-        //These functions marked for likely removal in comming updates
-
-       /// <summary>
-       /// Checks if Character is about to land. If so, executes character landing.
-       /// </summary>
-      //private void CheckLand()
-      //{
-      //     Vector3 rayPosition = new Vector3(transform.position.x, transform.position.y - 1, transform.position.z);
-      //
-      //    //uses raycast to check ground distance
-      //    RaycastHit hit;
-      //    if(Physics.Raycast(rayPosition, Vector3.down, out hit, m_landingDistance) && hit.collider.gameObject.tag != "Player")
-      //    {
-      //         Debug.DrawRay(rayPosition, Vector3.down * m_landingDistance, color: Color.red);
-      //         Debug.Log(hit.collider.gameObject);
-      //         m_onGround = true;
-      //        //Land();
-      //    }
-      //}
-       //
-       ///// <summary>
-       ///// Executes character landing
-       ///// </summary>
-       //private void Land()
-       //{
-       //    m_hasJumped = false;
-       //    m_animator.SetTrigger("Land"); //notifies animator to trigger landing animation
-       //}
     }
 }

@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
-//using UnityEngine.UIElements;
 
 namespace GameBase
 {
@@ -25,28 +24,10 @@ namespace GameBase
         [SerializeField] private TextMeshProUGUI m_playerLivesText;
         [Tooltip("Save Game button. Only visible if 'Save From Pause Menu' is set to true in the Game Instance")]
         [SerializeField] public GameObject m_saveButton;
-        [Tooltip("Load Game button. Only visible if 'Load From Main Menu' is set to true in the Game Instance")]
-        [SerializeField] public GameObject m_loadButton;
-
-
-
-
-
-
-
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-
+        [Tooltip("'Load Game Button' object. Only visible if 'Load From Main Menu' is set to true in the Game Instance")]
+        [SerializeField] public GameObject m_loadButtonObject;
+        [Tooltip("'Load Game Button' button. Only enabled if there is a valid save file to load")]
+        [SerializeField] public Button m_loadButton;
 
 
         #region Button Clicks
@@ -62,12 +43,12 @@ namespace GameBase
 
 
         /// <summary>
-        /// Loads game level and begins game
+        /// Loads game level and begins new game
         /// </summary>
         public void NewGameClicked()
         {
-            GameInstance.Instance.SetLoadOnPlay(false);
-            GameInstance.Instance.m_gameState = GameState.STARTGAME;
+            GameInstance.Instance.SetLoadOnPlay(false); //Notifies GameInstance that a New Game should be loaded and not a saved game
+            GameInstance.Instance.m_gameState = GameState.STARTGAME;    //Transitions to "Start Game" game state
         }
 
 
@@ -76,7 +57,7 @@ namespace GameBase
         /// </summary>
         public void UnpauseClicked()
         {
-            GameInstance.Instance.UnpauseGame();
+            GameInstance.Instance.UnpauseGame();    //Tells GameInstance to unpause the game
         }
 
 
@@ -85,33 +66,42 @@ namespace GameBase
         /// </summary>
         public void MainMenuClicked()
         {
-            GameInstance.Instance.m_gameState = GameState.LOADMAINMENU;
+            GameInstance.Instance.m_gameState = GameState.LOADMAINMENU;     //Transition to "Load Main Menu" game state
         }
 
 
-
+        /// <summary>
+        /// Saves Game
+        /// </summary>
         public void SaveClicked()
         {
-            DataPersistenceManager.Instance.SaveGame();
+            DataPersistenceManager.Instance.SaveGame(); //Tells DataPersistenceManager to save the game
         }
 
 
-
+        /// <summary>
+        /// Loads game level, then loads save file, then begins saved game
+        /// </summary>
         public void LoadAndPlayClicked()
         {
-            GameInstance.Instance.SetLoadOnPlay(true);
-            GameInstance.Instance.m_gameState = GameState.STARTGAME;
+            GameInstance.Instance.SetLoadOnPlay(true);      //Tells GameInstance to load the saved game
+            GameInstance.Instance.m_gameState = GameState.STARTGAME;    //Transitions to "Start Game" game state
         }
 
-
+        /// <summary>
+        /// Calls for a game restart from outside of gameplay
+        /// </summary>
         public void RetryClicked()
         {
-            GameInstance.Instance.RestartFromScreen();
+            GameInstance.Instance.RestartFromScreen();  //Tells GameInstance to restart game, and informs GameInstance that this restart is being called from outside of gameplay
         }
 
+        /// <summary>
+        /// Calls for a game restart from within gameplay
+        /// </summary>
         public void RestartClicked()
         {
-            GameInstance.Instance.RestartFromGame();
+            GameInstance.Instance.RestartFromGame();    //Tells GameInstance to restart the game, and informs GameInstance that this restart is being called for from within gameplay
         }
 
 
@@ -156,6 +146,7 @@ namespace GameBase
         }
         #endregion Screen Fade
 
+        #region HUD Updates
 
         /// <summary>
         /// Update player health bar
@@ -164,14 +155,20 @@ namespace GameBase
         /// <param name="maxHealth">Player character max health</param>
         public void UpdateHealthBar(float currentHealth, float maxHealth)
         {
-            m_healthBar.maxValue = maxHealth;
-            m_healthBar.value = currentHealth;
+            m_healthBar.maxValue = maxHealth;   //Tells health bar what its max value should be
+            m_healthBar.value = currentHealth;  //Tells health bar what its value should be
         }
 
 
+        /// <summary>
+        /// Updates Player Lives text
+        /// </summary>
+        /// <param name="lives">Current number of player lives</param>
         public void UpdatePlayerLives(int lives)
         {
-            m_playerLivesText.text = "Lives: " + lives;
+            m_playerLivesText.text = "Lives: " + lives; //Updates Player Lives text
         }
+
+        #endregion HUD Updates
     }
 }

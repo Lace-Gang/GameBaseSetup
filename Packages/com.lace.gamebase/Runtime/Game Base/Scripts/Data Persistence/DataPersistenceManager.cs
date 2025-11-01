@@ -7,6 +7,9 @@ namespace GameBase
 {
     public class DataPersistenceManager : MonoBehaviour
     {
+        //Exposed Variables
+
+
         [Header("File Storage Config")]
         [SerializeField] private string m_fileName;                                 //name of the file that persistent (save) data will be stored in
         [SerializeField] private bool m_useEncryption;                              //indicates whether persistent (save) data should be encrypted
@@ -29,6 +32,9 @@ namespace GameBase
         private bool m_reset = false;                               //used to indicate when save file is to be discarded
 
         public static DataPersistenceManager Instance { get; private set; }     //Singleton instance of the DataPersistenceManager
+
+
+        #region Awake, Start, and ApplicationQuit
 
         /// <summary>
         /// Checks that only this instance of the DataPersistenceManager exists at this time and notifies the user if this is not true.
@@ -69,6 +75,9 @@ namespace GameBase
             if (m_saveOnQuit) SaveGame();
         }
 
+        #endregion Awake, Start, and ApplicationQuit
+
+        #region Save File Management
 
         /// <summary>
         /// Tells DataPersistenceManager to discard current save file and load a new game the next time the game loads
@@ -77,8 +86,6 @@ namespace GameBase
         {
             m_reset = true;
         }
-
-
 
         /// <summary>
         /// Creates new instance of GameData to effectively create a new "save file".
@@ -89,6 +96,10 @@ namespace GameBase
             m_gameData = new GameData();
         }
 
+        #endregion Save File Management
+
+
+        #region Save and Load
 
         /// <summary>
         /// Promts all persistent data objects to update the GameData object with the proper information, notifies GameData object that
@@ -96,8 +107,7 @@ namespace GameBase
         /// </summary>
         public void SaveGame()
         {
-            Debug.Log("Saving Data");
-
+            //Searched for all objects that need to be saved (both objects and scenes present may have changed since the last save or load)
             m_dataPersistenceObjects = FindAllDataPersistenceObjects();
 
             //Pass the data to other scripts so they can update it
@@ -112,6 +122,9 @@ namespace GameBase
 
             //Save that data to a file using the file data handler
             m_dataHandler.Save(m_gameData);
+
+            //Notify GameInstance that there is a valid save file
+            GameInstance.Instance.SetValidSaveFile(true);
         }
 
         /// <summary>
@@ -120,7 +133,7 @@ namespace GameBase
         /// </summary>
         public void LoadGame()
         {
-            Debug.Log("Loading Data");
+            //Searched for all objects that need to be loaded (both objects and scenes present may have changed since the last save or load)
             m_dataPersistenceObjects = FindAllDataPersistenceObjects();
 
             //Load any saved data from a file using the data handler
@@ -140,6 +153,9 @@ namespace GameBase
                 dataPersistenceObj.LoadData(m_gameData);
             }
         }
+
+        #endregion Save and Load
+
 
         /// <summary>
         /// Creates a list of all objects that will be saved through the DataPersistenceManager. Only-

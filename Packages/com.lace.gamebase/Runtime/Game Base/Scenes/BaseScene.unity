@@ -322,18 +322,19 @@ MonoBehaviour:
   m_gameState: 0
   m_userInterface: {fileID: 683073450}
   m_playerPrefab: {fileID: 7065663312760934044, guid: 078785446fa9a5445b4424219df11f8b, type: 3}
+  m_gameSceneName: SampleScene
   m_restartMode: 1
   m_gamePauses: 1
+  m_pauseKey: 120
   m_deathTransitionTimer: 4
-  m_spawnPlayer: 1
-  m_respawnType: 2
-  m_respawnHealthType: 1
+  m_respawnType: 0
+  m_respawnHealthPercentage: 100
   m_respawnInvincibilityTimer: 2
   m_saveFromPauseMenu: 1
   m_loadFromMainMenu: 1
-  m_saveHotKeyEnabled: 1
+  m_saveHotKeyEnabled: 0
   m_saveHotKey: 106
-  m_loadHotKeyEnabled: 1
+  m_loadHotKeyEnabled: 0
   m_loadHotKey: 108
 --- !u!1 &31543096
 GameObject:
@@ -1717,7 +1718,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -160}
+  m_AnchoredPosition: {x: 0, y: -60}
   m_SizeDelta: {x: 500, y: 125}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &496338311
@@ -2511,7 +2512,8 @@ MonoBehaviour:
   m_healthBar: {fileID: 2036979733}
   m_playerLivesText: {fileID: 1379227329}
   m_saveButton: {fileID: 1250067942}
-  m_loadButton: {fileID: 1677966351}
+  m_loadButtonObject: {fileID: 1677966351}
+  m_loadButton: {fileID: 1677966353}
 --- !u!1 &741780209
 GameObject:
   m_ObjectHideFlags: 0
@@ -3648,7 +3650,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -320}
+  m_AnchoredPosition: {x: 0, y: -220}
   m_SizeDelta: {x: 500, y: 125}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &934968429
@@ -6306,7 +6308,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 100}
   m_SizeDelta: {x: 500, y: 125}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1677966353

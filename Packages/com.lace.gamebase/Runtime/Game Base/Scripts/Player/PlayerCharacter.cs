@@ -10,9 +10,9 @@ namespace GameBase{
     public class PlayerCharacter : MonoBehaviour, IDataPersistence, IDamagableInterface
     {
         //Hidden Values
-        private bool m_alive = true;                                    //Is the player alive
-        private float m_invincibleTime = 0f;                            //How long the player will be invincible for (player is invincible as long as timer is greater than 0)
-        RespawnHealth m_respawnHealthType = RespawnHealth.FULLHEALTH;   //What is health set to on respawn (Defaults to full health)
+        private bool m_alive = true;                //Is the player alive
+        private float m_invincibleTime = 0f;        //How long the player will be invincible for (player is invincible as long as timer is greater than 0)
+        float m_respawnHealthPercentage = 100f;     //What percentage of health the player will have after respawning (Defaults to full health)
 
         //Hidden Variables
         private int counter = 0;    //Test Code (will be removed later)
@@ -37,30 +37,25 @@ namespace GameBase{
 
 
 
-
-        //[Header("Player Model Info")]
-        //[Tooltip ("Player Character 3D Model")]
-        //[SerializeField] GameObject m_playerModel;
-        //[Tooltip("Adjust if alignment between collision and model right/left is incorrect")]
-        //[SerializeField] float m_modelXAdjustment = 0f; 
-        //[Tooltip("Adjust if alignment between collision and model up/down is incorrect")]
-        //[SerializeField] float m_modelYAdjustment = 0f;
-        //[Tooltip("Adjust if alignment between collision and model front/back is incorrect")]
-        //[SerializeField] float m_modelZAdjustment = 0f;
-
-
-
-
         #region Getters and Setters
 
+        /// <summary>
+        /// Allows other scripts to know how many lives the player has left
+        /// </summary>
+        /// <returns>Current number of player lives</returns>
         public int GetLives()
         {
             return m_lives;
         }
 
-        public void SetRespawnHealthType(RespawnHealth healthType)
+        /// <summary>
+        /// Sets respawn health percentage
+        /// </summary>
+        /// <param name="healthPercentage">The percentage of health the player will have after a respawn</param>
+        public void SetRespawnHealthType(float healthPercentage)
         {
-            m_respawnHealthType = healthType;
+            //Sets the respawn health percentage 
+            m_respawnHealthPercentage = healthPercentage;
         }
 
         /// <summary>
@@ -69,37 +64,37 @@ namespace GameBase{
         /// <param name="lives"> Number of lives to add or reduce. Positive to add, negative to reduce.</param>
         public void AddOrReduceLives(int lives)
         {
-            m_lives += lives;
-            GameInstance.Instance.UpdatePlayerLives(m_lives);
+            m_lives += lives;   //Add/reduce current number of player lives
+            GameInstance.Instance.UpdatePlayerLives(m_lives);   //Notifies UI/HUD of the change and updates it
         }
 
-
+        /// <summary>
+        /// Dirrectly sets the player position and rotation, essentially allowing the player to "teleport"
+        /// </summary>
+        /// <param name="position">Desired player positioin</param>
+        /// <param name="rotation">Desired player rotation</param>
         public void SetPlayerTransform(Vector3 position, Quaternion rotation)
         {
-            m_playerController.GetComponent<CharacterController>().enabled = false;
+            m_playerController.GetComponent<CharacterController>().enabled = false;     //Disables the Character Controller to allow position and rotation overrides
 
+            //Dirrectly set position and rotation of player
             m_transform.position = position;
             m_transform.rotation = rotation;
 
-            m_playerController.GetComponent<CharacterController>().enabled = true;
+            m_playerController.GetComponent<CharacterController>().enabled = true;      //Reenables the Character Controller once completed
         }
 
         #endregion Getters and Setters
 
 
+        #region Awake, Start, and Update
 
         /// <summary>
         /// Creates important references and sets important data that must be set at awake time
         /// </summary>
         void Awake()
         {
-            ////sets up important components
-
-            //Player Model
-            //Vector3 modelTransform = new Vector3(transform.position.x + m_modelXAdjustment, transform.position.y + m_modelYAdjustment, transform.position.z + m_modelZAdjustment); //adjusts model position (if necessary)
-            //GameObject m_model = GameObject.Instantiate(m_playerModel, modelTransform, transform.rotation); //creates instance of the model
-            //m_model.transform.SetParent(transform, true); //so that the model follows the player
-            
+            ////sets up important components, data, values, etc
 
             //Creates important references
             m_playerController = GetComponent<PlayerController>();
@@ -120,29 +115,29 @@ namespace GameBase{
         }
 
 
-
+        /// <summary>
+        /// Updates important values on Start, such as current health
+        /// </summary>
         private void Start()
         {
             //Notifies Game Manager of current health state
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
-
-            ////Set HUD values
-            //GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());    //Sets health bar
         }
 
 
-        // Update is called once per frame
-        //Currently contains only tester and temporary code
+        /// <summary>
+        ///  Updates timers and other frame by frame checks and data
+        /// </summary>
         void Update()
         {
-            //increments counter for Save System testing
+            //increments counter for Save System testing (will be removed soon)
             if(Input.GetKeyDown(KeyCode.Q))
             {
                 counter++;
                 Debug.Log("Count = " + counter);
             }
 
-            //Temporary code to reset save file
+            //Temporary code to reset save file (will be removed soon)
             if(Input.GetKeyDown(KeyCode.R))
             {
                 DataPersistenceManager.Instance.ResetOnNextSaveLoad();
@@ -156,6 +151,10 @@ namespace GameBase{
             }
         }
 
+        #endregion Awake, Start, and Update
+
+
+        #region Save and Load
 
         /// <summary>
         /// Updates the persistent data values in the GameData (save file) in order to save the Player Character.
@@ -195,7 +194,9 @@ namespace GameBase{
             }
         }
 
+        #endregion Save and Load
 
+        #region Health, Damage, Death, and Respawning
 
         /// <summary>
         /// Takes damage from a damage source and passes it along to the Player Health component to apply damage to the player. If current health 
@@ -205,9 +206,8 @@ namespace GameBase{
         /// <param name="owner">Owning object of the damage being taken</param>
         public void TakeDamage(float damage, GameObject owner)
         {
-            if(!m_isDamagable || !m_alive || m_invincibleTime > 0) return; //only execute damage if the player is set to damagable
+            if(!m_isDamagable || !m_alive || m_invincibleTime > 0) return; //only execute damage if the player is set to damagable, is alive, and is not currently invincible
 
-            Debug.Log("Damage Dealt: " + damage);               /////Test line. To be removed later
             //Passes damage to health component
             bool isDead = m_playerHealth.AddToHealth(-damage);
 
@@ -225,7 +225,6 @@ namespace GameBase{
                 //If player health greater than zero, executes player hit state
                 m_playerController.OnTakeHit();
             }
-            Debug.Log("Player New Health: " + m_playerHealth.GetHealth());              //Test line. To be removed later
         }
 
         /// <summary>
@@ -248,38 +247,33 @@ namespace GameBase{
         /// </summary>
         public void OnDeath()
         {
-            m_alive = false;
+            m_alive = false;    //Sets that player is not alive
             m_playerController.OnDeath();   //Tells PlayerController to trigger the player death state
 
             StartCoroutine(GameInstance.Instance.OnPLayerDeath());  //Notify Game Instance of Player Death
         }
+
         /// <summary>
         ///Executes all functions necessary from the player end for the player respawn event 
         /// </summary>
         public void OnRespawn(float invinsibilityTime)
         {
+            //Sets player invincibility timer
             m_invincibleTime = invinsibilityTime;
 
+            //Notifies Player Controller of the respawn
             m_playerController.OnRespawn();
 
-            switch (m_respawnHealthType)
-            {
-                case RespawnHealth.FULLHEALTH:
-                    m_playerHealth.SetHealth(m_playerHealth.GetMaxHealth());
-                    break;
+            //Sets respawn health
+            m_playerHealth.SetHealth((m_respawnHealthPercentage / m_playerHealth.GetMaxHealth()) * 100);
 
-                case RespawnHealth.HALFHEALTH:
-                    m_playerHealth.SetHealth(m_playerHealth.GetMaxHealth() / 2);
-                    break;
-
-                default:
-                    break;
-            }
-
-
+            //Updates Health in the UI
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
 
+            //Sets that the player is alive
             m_alive = true;
         }
+
+        #endregion Health, Damage, Death, and Respawning
     }
 }

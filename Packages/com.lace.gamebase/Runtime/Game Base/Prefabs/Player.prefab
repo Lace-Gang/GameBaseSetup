@@ -165,7 +165,7 @@ MonoBehaviour:
   m_transform: {fileID: 7620438448413333973}
   m_id: 
   m_isDamagable: 1
-  m_baseLives: 1
+  m_baseLives: 2
 --- !u!114 &8381073304848845801
 MonoBehaviour:
   m_ObjectHideFlags: 0

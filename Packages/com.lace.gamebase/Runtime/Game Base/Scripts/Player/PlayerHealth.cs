@@ -22,12 +22,16 @@ namespace GameBase
 
         }
 
+        /// <summary>
+        /// Directly set player health
+        /// </summary>
+        /// <param name="health">Desired player health</param>
         public void SetHealth(float health)
         {
             m_health = health;
         }
 
-
+        #region Save and Load
 
         /// <summary>
         /// Loads Player Health data
@@ -36,7 +40,6 @@ namespace GameBase
         public void LoadData(GameData data)
         {
             m_health = data.playerHealth;
-            Debug.Log("Loaded health is " +  m_health);
         }
 
 
@@ -47,8 +50,8 @@ namespace GameBase
         public void SaveData(ref GameData data)
         {
             data.playerHealth = m_health;
-            Debug.Log("Saved health is " + m_health);
         }
 
+        #endregion Save and Load
     }
 }

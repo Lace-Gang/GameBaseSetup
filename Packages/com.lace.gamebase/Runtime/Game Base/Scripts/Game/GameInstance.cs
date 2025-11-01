@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameBase
 {
+    //Defintes which part of the Game Cycle the game is currently in
     public enum GameState
     {
         LOADTITLE,
@@ -22,22 +23,16 @@ namespace GameBase
 
     public enum RespawnType
     {
-        RESPAWNINPLACE,                 //respawns player in place, and enables invincibility frames for a short time
+        RESPAWNINPLACE,                 //respawns player in place
         LOADLASTSAVE,                   //reloads save file, and respawns player in the process
         RESPAWNATSAVELOCATION,          //respawns player at location of last loaded save without reloading game or save
-        RESPAWNATSTATICLOCATION
-    }
-
-    public enum RespawnHealth
-    {
-        FULLHEALTH,
-        HALFHEALTH
+        RESPAWNATSTATICLOCATION         //respawns at a set location without loading any saved data
     }
 
     public enum RestartMode
     {
-        RESTARTFROMLASTSAVE,
-        RESTARTATBEGINNING
+        RESTARTFROMLASTSAVE,    //after loosing, player will restart at last save point
+        RESTARTFROMBEGINNING      //after loosing, player must restart from the beginning
     }
 
 
@@ -46,35 +41,42 @@ namespace GameBase
         //Hidden Variables
         private bool m_paused = false;                          //Is the game paused
         private bool m_playerAlive = true;                      //Is the player alive
-        private bool m_loadOnPlay = false;
-        private bool m_restartingGame = false;
+        private bool m_validSaveFile = false;
+        private bool m_loadOnPlay = false;                      //Should save file load when game loads
+        private bool m_restartingGame = false;                  //Has player indicated from pause menu to restart since the last update
 
-        public GameState m_gameState = GameState.LOADTITLE;     //What State is the game in
-        private GameObject m_playerCharacter;                   //Player Character
-        private PlayerCharacter m_playerScript;                 //Player Script
+        private GameObject m_playerCharacter;                   //Reference to the Player Character
+        private PlayerCharacter m_playerScript;                 //Reference to the Player Character Script
 
 
         //Exposed Variables
+        [Header("Critical Information and References")]
+        [Tooltip("What Game State the game will be in when the game is first opened")]
+        [SerializeField] public  GameState m_gameState = GameState.LOADTITLE;     //What State is the game in
+        [Tooltip("Reference to the User Interface")]
         [SerializeField] UserInterface m_userInterface;
+        [Tooltip("Reference to the 'Player' prefab")]
         [SerializeField] GameObject m_playerPrefab;
+        [Tooltip("Name of the Scene where the game will execute")]
+        [SerializeField] string m_gameSceneName = "SampleScene";    //Name of the game scene. Used to load game scene
 
+        [Header("Game Flow")]
         [Tooltip("After loosing the game, where does the player restart from")]
-        [SerializeField] RestartMode m_restartMode = RestartMode.RESTARTATBEGINNING;
-
-
+        [SerializeField] RestartMode m_restartMode = RestartMode.RESTARTFROMBEGINNING;
+        [Tooltip("Can the game be paused")]
         [SerializeField] bool m_gamePauses = true;
+        [Tooltip("Which key on the keyboard can be used to open the pause menu")]
+        [SerializeField] KeyCode m_pauseKey = KeyCode.X;
 
         [Header("General Player Info")]
         [Tooltip("Time between player death event and transition")]
         [SerializeField] float m_deathTransitionTimer = 4f;
-        [Tooltip("Is the GameInstance responsible for spawning the player? NOTE: Requires a PlayerSpawnPoint to be present in gameplay related scenes!")]
-        [SerializeField] bool m_spawnPlayer = true;
 
         [Header ("Player Respawn")]
         [Tooltip("How should the player respawn")]
         [SerializeField] RespawnType m_respawnType = RespawnType.RESPAWNINPLACE;
         [Tooltip("What should player health be at respawn")]
-        [SerializeField] RespawnHealth m_respawnHealthType = RespawnHealth.FULLHEALTH;
+        [SerializeField] float m_respawnHealthPercentage = 100;
         [Tooltip("Time (in seconds) after the player respawns when they cannot be hurt")]
         [SerializeField] float m_respawnInvincibilityTimer = 2f;
 
@@ -95,10 +97,33 @@ namespace GameBase
         [SerializeField] KeyCode m_loadHotKey = KeyCode.L;
 
 
+        #region Getters and Setters
+
         public static GameInstance Instance { get; private set; }  //Allows other scripts to get the singleton instance of the GameInstance
 
-        public bool getPaused() {  return m_paused; }
+        public bool getPaused() {  return m_paused; }   //Allows other scripts to know if the game is currently paused
 
+        /// <summary>
+        /// Sets whether the save file should load next time the game loads
+        /// </summary>
+        /// <param name="loadSaveFile">Should save file load next time game loads</param>
+        public void SetLoadOnPlay(bool loadSaveFile)
+        {
+            m_loadOnPlay = (loadSaveFile) ? true : false;
+        }
+
+        /// <summary>
+        /// Set if there is a valid save file (for if/when that changes)
+        /// </summary>
+        /// <param name="validSaveFile"></param>
+        public void SetValidSaveFile(bool validSaveFile)
+        {
+            m_validSaveFile = validSaveFile;
+        }
+
+        #endregion Getters and Setters
+
+        #region Awake and Update
 
         /// <summary>
         /// Checks that only this instance of the GameInstance exists at this time and notifies the user if this is not true.
@@ -115,17 +140,12 @@ namespace GameBase
         }
 
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-            //m_userInterface.m_titleScreen.SetActive(true);
-            //LoadScene("UIDisplayScene");
-            //m_gameState = GameState.TITLESCREEN;
-        }
-
-        // Update is called once per frame
+        /// <summary>
+        /// Executes Game Cycle
+        /// </summary>
         void Update()
         {
+            //Behavior depended on which state the game is currently in
             switch (m_gameState)
             {
                 case GameState.LOADTITLE:
@@ -137,9 +157,10 @@ namespace GameBase
                     break;
 
                 case GameState.TITLESCREEN:
+                    //Transitions to main menu if any key is pressed
                     if(Input.anyKey)
                     {
-                        m_gameState = GameState.LOADMAINMENU;
+                        m_gameState = GameState.LOADMAINMENU;   //transition to "load main menu" state
                     }
                     break;
 
@@ -155,10 +176,8 @@ namespace GameBase
                     break;
 
                 case GameState.STARTGAME:
-                    //load level and UI 
+                    //load level and HUD, spawns player (if applicable), and optionally loads from save file
                     StartCoroutine(LoadGame());
-
-                    
 
                     break;
 
@@ -167,31 +186,18 @@ namespace GameBase
                     break;
 
                 case GameState.PLAYGAME:
-                    if (m_gamePauses && m_playerAlive && Input.GetKeyDown(KeyCode.X))
+                    //Pauses game if game is supposed to pause, and the player character is alive, and the player hits the pause key
+                    if (m_gamePauses && m_playerAlive && Input.GetKeyDown(m_pauseKey))
                     {
-                        if(Time.timeScale > 0)
-                        {
-                            m_userInterface.m_pauseScreen.SetActive(true);
-                            if(m_saveFromPauseMenu) m_userInterface.m_saveButton.SetActive(true);
-                            Time.timeScale = 0;
-
-                            //Unlock Cursor and make cursor visible
-                            Cursor.lockState = CursorLockMode.None;
-                            Cursor.visible = true;
-                        }
-                        //else
-                        //{
-                        //    m_userInterface.m_pauseScreen.SetActive(false);
-                        //    Time.timeScale = 1;
-                        //}
+                        OpenPauseMenu();
                     }
 
-                    //load game if load hot key is enabled and pressed
-                    if(m_loadHotKeyEnabled && Input.GetKeyDown(m_loadHotKey))
+                    //load game if load hot key is enabled and pressed and there is a valid save file to load
+                    if(m_loadHotKeyEnabled && Input.GetKeyDown(m_loadHotKey) && m_validSaveFile)
                     {
-                        StartCoroutine(m_userInterface.FadeOut());
+                        StartCoroutine(m_userInterface.FadeOut());  //fade out screen for more visually smooth transition
                         m_gameState = GameState.LOADSAVE;
-                        StartCoroutine(LoadSaveTransition());
+                        StartCoroutine(LoadSaveTransition());   //Load save file
                     }
 
                     //save game if save hot key is enabled and pressed
@@ -199,7 +205,6 @@ namespace GameBase
                     {
                         DataPersistenceManager.Instance.SaveGame();
                     }
-
 
                     break;
 
@@ -230,6 +235,7 @@ namespace GameBase
             }
         }
 
+        #endregion Awake and Update
 
         #region Load and Unload Scenes
 
@@ -264,12 +270,12 @@ namespace GameBase
         }
         #endregion Load and Unload Scenes
 
-
-
         #region Save and Load Data
 
         public void LoadData(GameData data)
         {
+            m_validSaveFile = !data.isNewSave;
+
             //throw new System.NotImplementedException();
         }
 
@@ -279,17 +285,52 @@ namespace GameBase
         }
         #endregion Save and Load Data
 
+        #region Pause and Unpause
 
+        /// <summary>
+        /// Pauses game and opens pause menu
+        /// </summary>
+        private void OpenPauseMenu()
+        {
+            //Display pause menu
+            m_userInterface.m_pauseScreen.SetActive(true);
+            if (m_saveFromPauseMenu) m_userInterface.m_saveButton.SetActive(true);
+
+            //pause game
+            PauseGame();
+        }
+
+        /// <summary>
+        /// Pauses game but does not open pause menu
+        /// </summary>
+        private void PauseGame()
+        {
+            //Pause Game
+            Time.timeScale = 0;
+
+            //Unlock Cursor and make cursor visible
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        /// <summary>
+        /// Unpauses game and exits pause menu
+        /// </summary>
         public void UnpauseGame()
         {
+            //Exits pause menu
             m_userInterface.m_pauseScreen.SetActive(false);
-            Time.timeScale = 1;
+
+            //Unpause game
+            Time.timeScale = 1;     
 
             //Lock Cursor and make cursor invisible
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
 
+
+        #endregion Pause and Unpause
 
         #region UI Updates
 
@@ -314,14 +355,7 @@ namespace GameBase
 
         #endregion UI Updates
 
-
-
-        public void SetLoadOnPlay(bool loadSaveFile)
-        {
-            m_loadOnPlay = (loadSaveFile) ? true : false;
-        }
-
-
+        #region Player Death, Respawn and Restart
 
         /// <summary>
         /// Transitions to next stage of game (afer player death)
@@ -345,16 +379,23 @@ namespace GameBase
             }
         }
 
+        /// <summary>
+        /// Respawns Player
+        /// </summary>
+        /// <returns>Yield return for coroutine</returns>
         public IEnumerator OnPlayerRespawn()
         {
+            //Behavior dependent on respawn type
             switch (m_respawnType)
             {
                 case RespawnType.RESPAWNINPLACE:
+                    //Respawns player character in the same location as where they died
                     m_playerScript.OnRespawn(m_respawnInvincibilityTimer);
                     m_playerAlive = true;
                     break;
 
                 case RespawnType.LOADLASTSAVE:
+                    //Respawns player by loading the save file. This will, however, still decrease the number of lives the player has.
                     yield return StartCoroutine(m_userInterface.FadeOut());
                     StartCoroutine(LoadSaveTransition());
                     m_gameState = GameState.LOADSAVE;
@@ -362,8 +403,9 @@ namespace GameBase
                     break;
 
                 case RespawnType.RESPAWNATSAVELOCATION:
-                    //Respawns player character at location of last loaded save
+                    //Respawns player character at location of last loaded save, without loading any other data from that save.
 
+                    //Find player spawn point, and relocate player character to that point.
                     PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
                     if (spawnPoint != null)
                     {
@@ -373,20 +415,23 @@ namespace GameBase
                     }
                     else
                     {
+                        //Notify user if there is no player spawn point at which to spawn the player
                         Debug.LogError("No PlayerSpawnPoint was located in the scene when respawning! Player cannot respawn!");
                     }
 
                     break;
 
                 case RespawnType.RESPAWNATSTATICLOCATION:
-                    //Respawns player at static location
+                    //Respawns player at a static location
                     bool spawnPointFound = false;
-                    StaticSpawnPoint[] spawns = FindObjectsByType<StaticSpawnPoint>(FindObjectsSortMode.None);
+                    StaticSpawnPoint[] spawns = FindObjectsByType<StaticSpawnPoint>(FindObjectsSortMode.None); //find all static spawn points in the loaded scene
 
+                    //search for the first static spawn point configured for the player
                     foreach (StaticSpawnPoint spawn in spawns)
                     {
                         if (spawn.spawnTag == "Player")
                         {
+                            //respawn player at that static spawn point
                             spawnPointFound = true;
                             m_playerScript.SetPlayerTransform(spawn.transform.position, spawn.transform.rotation);
                             m_playerScript.OnRespawn(m_respawnInvincibilityTimer);
@@ -405,22 +450,26 @@ namespace GameBase
                     break;
             }
 
-            m_playerScript.AddOrReduceLives(-1);    //Reduce player lives by one
-
+            m_playerScript.AddOrReduceLives(-1);    //Reduce player lives by one (executed here so that the "load last save" respawn type will still evaluate number of lives left correctly
         }
 
 
-
+        /// <summary>
+        /// Restarts game. Intended for use from the LoseScreen of the UI
+        /// </summary>
         public void RestartFromScreen()
         {
+            //Behavior varies depending on Restart Mode
             switch (m_restartMode)
             {
                 case RestartMode.RESTARTFROMLASTSAVE:
+                    //Restarts game from the last save by loading the last save
                     m_loadOnPlay = true;
                     m_gameState = GameState.STARTGAME;
                     break;
 
-                case RestartMode.RESTARTATBEGINNING:
+                case RestartMode.RESTARTFROMBEGINNING:
+                    //Restarts game from the beginning without loading any saved data
                     m_loadOnPlay = false;
                     m_gameState = GameState.STARTGAME;
                     break;
@@ -430,14 +479,20 @@ namespace GameBase
             }
         }
 
+        /// <summary>
+        /// Restarts game. Intended for use from the PauseMenu of the UI
+        /// </summary>
         public void RestartFromGame()
         {
+            //Reloads game scene, and restarts game from the beginning.
+            //Effectively does the same thing as starting a "New Game" from the main menu.
             m_restartingGame = true;
             m_loadOnPlay = false;
             m_gameState = GameState.STARTGAME;
         }
 
 
+        #endregion Player Death, Respawn and Restart
 
         #region State Transitioning
 
@@ -461,7 +516,7 @@ namespace GameBase
             yield return StartCoroutine(LoadScene("UIDisplayScene"));
 
             //unloads game screen
-            StartCoroutine(UnloadScene("samplescene"));
+            StartCoroutine(UnloadScene(m_gameSceneName));
 
             //Fade Screen In
             //m_userInterface.FadeScreen();
@@ -485,9 +540,14 @@ namespace GameBase
             //turn on main menu screen
             m_userInterface.m_mainMenuScreen.SetActive(true);
 
+            //Only displays "Load" button if it is indicated that that button should be present
             if(m_loadFromMainMenu)
             {
-                m_userInterface.m_loadButton.SetActive(true);
+                m_userInterface.m_loadButtonObject.SetActive(true);
+
+                //If there is no valid save to load, makes button non-interactable
+                if (!m_validSaveFile) m_userInterface.m_loadButton.interactable = false;
+                else m_userInterface.m_loadButton.interactable = true;
             }
 
             //turn off other UI screens and HUD
@@ -501,7 +561,7 @@ namespace GameBase
             yield return StartCoroutine(LoadScene("UIDisplayScene"));
 
             //unloads game screen
-            StartCoroutine(UnloadScene("samplescene"));
+            StartCoroutine(UnloadScene(m_gameSceneName));
 
             //yield return new WaitForSeconds(1);
 
@@ -535,38 +595,36 @@ namespace GameBase
             //Restarts Game if applicable
             if(m_restartingGame)
             {
-                yield return StartCoroutine(UnloadScene("SampleScene"));
+                yield return StartCoroutine(UnloadScene(m_gameSceneName));
                 m_restartingGame = false;
             }
 
             //Loads Game scene
-            yield return StartCoroutine(LoadScene("SampleScene"));
+            yield return StartCoroutine(LoadScene(m_gameSceneName));
 
             //Unloads UIDisplayScene
             StartCoroutine(UnloadScene("UIDisplayScene"));
 
 
             //Spawns player character
-            if(m_spawnPlayer)
+            PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
+            if(spawnPoint != null)
             {
-                PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
-                if(spawnPoint != null)
+                //Destroy previous Player if such a Player exists
+                if (m_playerCharacter != null)
                 {
-                    //if (m_playerCharacter == null)
-                    if (m_playerCharacter != null)
-                    {
-                        GameObject.Destroy(m_playerCharacter);
-                        m_playerScript = null;
-                    }
-                    m_playerCharacter = GameObject.Instantiate(m_playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
-                    m_playerScript = m_playerCharacter.GetComponentInChildren<PlayerCharacter>();
-                    m_playerScript.SetRespawnHealthType(m_respawnHealthType);
-                    m_playerCharacter.SetActive(true);
-                } 
-                else
-                {
-                    Debug.LogError("No PlayerSpawnPoint was located in the scene! Player will not be spawned.");
+                    GameObject.Destroy(m_playerCharacter);
+                    m_playerScript = null;
                 }
+                m_playerCharacter = GameObject.Instantiate(m_playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);   //Create player
+                m_playerScript = m_playerCharacter.GetComponentInChildren<PlayerCharacter>();   //Get reference to PlayerCharacter component
+                m_playerScript.SetRespawnHealthType(m_respawnHealthPercentage);   //Set health percentage on respawn
+                m_playerCharacter.SetActive(true);      //Activate Player
+            } 
+            else
+            {
+                //Notify user if there is no spawn point. Without a spawn point, a player cannot be spawned.
+                Debug.LogError("No PlayerSpawnPoint was located in the scene! Player will not be spawned.");
             }
             
 
@@ -575,7 +633,7 @@ namespace GameBase
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-
+            //Load save file if applicable. If not, transition to "Play Game" game state
             if (m_loadOnPlay)
             {
                 m_gameState = GameState.LOADSAVE;
@@ -591,35 +649,41 @@ namespace GameBase
             }
 
 
-            //Indicate player is alive and unpause game
+            //Indicate player is alive and unpause game (in the event the game was paused)
             m_playerAlive = true;
             UnpauseGame();
         }
 
+        /// <summary>
+        /// Transitions from a new game to a game loaded from a save file
+        /// </summary>
+        /// <returns>Yield return for coroutine</returns>
         private IEnumerator LoadSaveTransition()
         {
-            //yield return StartCoroutine(m_userInterface.FadeOut());
-            DataPersistenceManager.Instance.LoadGame();
-
-            //Spawns player character
-            if (m_spawnPlayer)
+            if(m_validSaveFile) //Can't load a save file that doesn't exist
             {
+                //Loads game from Data Manager
+                DataPersistenceManager.Instance.LoadGame();
+
+                //Once game is loaded, moves player to the current transform of the Player Spawn Point
                 PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
                 if (spawnPoint != null)
                 {
-                    //m_playerCharacter.GetComponentInChildren<PlayerCharacter>().SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
                     m_playerScript.SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
                 }
                 else
                 {
+                    //Notifies user if there is no Player Spawn Point in the scene after loading the data
                     Debug.LogError("No PlayerSpawnPoint was located in the scene when loading! Player will not be moved correctly!");
                 }
             }
 
+            //Fade in
             yield return StartCoroutine(m_userInterface.FadeIn());
 
-            m_playerAlive = true;
-            m_gameState = GameState.PLAYGAME;
+           
+            m_playerAlive = true;   //Set player to alive
+            m_gameState = GameState.PLAYGAME;   //Transition to "Play Game" game state
         }
 
         /// <summary>
@@ -645,7 +709,7 @@ namespace GameBase
             yield return StartCoroutine(LoadScene("UIDisplayScene"));
 
             //unloads Game screen
-            StartCoroutine(UnloadScene("samplescene"));
+            StartCoroutine(UnloadScene(m_gameSceneName));
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
@@ -678,7 +742,7 @@ namespace GameBase
             yield return StartCoroutine(LoadScene("UIDisplayScene"));
 
             //unloads Game screen
-            StartCoroutine(UnloadScene("samplescene"));
+            StartCoroutine(UnloadScene(m_gameSceneName));
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
@@ -689,7 +753,5 @@ namespace GameBase
         }
 
         #endregion State Transitioning
-
-
     }
 }
