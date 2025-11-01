@@ -2,7 +2,8 @@
 This is where I will be creating my capstone and running some of my testing for it.
 
 ## Contents
-* [Game Manager](#game-manager)
+* [Important Information](#important-information)
+* [Game Instance](#game-instance)
 * [Save System](#save-system)
 * [Player Character](#player-character)
 * [Main Camera](#main-camera)
@@ -47,13 +48,19 @@ This is where I will be creating my capstone and running some of my testing for 
 [To Be Writen]
 
 
+## Important Information
+1.) The Game must be run from the "Base" Scene to ensure that the Game Instance and User Interface is always present. Alternatively, include a script in any other scenes that 
+loads the "Base Scene" scene additively when the project opens.
+
+
 # User Guide
 
 
-## Game Manager
-* [Set Up](#game-manager-set-up)
+## Game Instance
+* [Set Up](#game-instance-set-up)
+* [Additional Information](#game-instance-additional-information)
 
-### Game Manager Set Up
+### Game Instance Set Up
 #### Step One: Adding Required Scenes
 In order to use the Game Manager, the "Base" scene should be added
 <br>
@@ -72,7 +79,32 @@ The Base scene should be added to the project Scene List. Ensure that the box be
 <br>
 <img width="368" height="159" alt="image" src="https://github.com/user-attachments/assets/40f30187-0272-42e7-b55f-2a41e6b7be88" />
 <br>
-4.) Repeat Steps 1, 2, and 3, for the Scenes: "UIDisplayScene"
+4.) Repeat Steps 1, 2, and 3, for the Scenes: "UIDisplayScene", and for the scene that you intend for the main gameplay to take place in
+
+#### Step Two: Game Manager Configuration
+1.) In the "Base" Scene, click on the Game Instance Object in the Hierarchy
+<br>
+<img width="247" height="121" alt="image" src="https://github.com/user-attachments/assets/a754c0dd-61e4-4977-8617-230d1578689b" />
+<br>
+2.) Go to the "Game Instance" script in the Inspector, and change the "Game Scene Name" to the name of the scene that your game plays from
+<br>
+<img width="361" height="156" alt="image" src="https://github.com/user-attachments/assets/4c0722c2-6737-4ab0-8b21-270df8fe4228" />
+
+### Game Instance Additional Information
+1.) "Game State" referes to the state that the game will start in. It is highly advised to only change this to: "Load Title", "Load Main Menu", or "Start Game"
+<br>
+2.) If the "Respawn Type" is set to "Respawn at Static Location", then there must be a Static Spawn Point present in the main gameplay scene that is configured for the 
+player. Place the "Player Static Spawn Point prefab somewhere in the main gameplay scene. Alternatively, create an object in the scene, add the "Static Spawn Point" script
+onto the object, and set "Player" as the static spawn tag.
+<br>
+<img width="301" height="117" alt="image" src="https://github.com/user-attachments/assets/b5a2801c-bc02-42d4-b24c-4f0cb5fe5ad8" />
+<br>
+<img width="321" height="233" alt="image" src="https://github.com/user-attachments/assets/a3df05c5-d244-4f05-ab9e-5438d7741136" />
+<br>
+<img width="309" height="65" alt="image" src="https://github.com/user-attachments/assets/ac6323b2-1c70-4157-b2b9-39ad7e2a8088" />
+
+
+
 
 
 
@@ -87,17 +119,16 @@ The Base scene should be added to the project Scene List. Ensure that the box be
 * [File Data Handler](#file-data-handler)
 
 ### Add To Scene
-To set up save system, drag DataPersistenceManager from the Prefabs folder into the scene hierarchy
+1.) Do NOT add the Data Persistence Manager to a scene directly. There is already a Data Persistence Manager present in the "Base Scene".
 
+2.) Open the "Base Scene". Ensure that at least one save condition is selected, and at least one load condition is selected on either the "Data Persistence Manager" script located in the Data Persistence Manager (prefab or the object that is a child to the Game Instance object) and/or the "Game Instance" script on the "Game Instance" object.
 <br>
-<img width="274" height="350" alt="image" src="https://github.com/user-attachments/assets/d7678828-4aed-40cd-a895-1c22a49ffb99" />
-<img width="274" height="155" alt="image" src="https://github.com/user-attachments/assets/b128d6bf-b5e4-4f81-9902-5764b21c7873" />
+<img width="623" height="362" alt="image" src="https://github.com/user-attachments/assets/d990d7f1-8715-4449-84b6-88fa7e7865d1" />
 <br>
+There are alternative save and load conditions present in the "Game Instance" script.
+<br>
+<img width="293" height="114" alt="image" src="https://github.com/user-attachments/assets/05946424-7be5-4e83-811f-c203aeedb787" />
 
-Ensure that at least one save condition is selected, and at least one load condition is selected.
-<br>
-<img width="179" height="78" alt="image" src="https://github.com/user-attachments/assets/b523a8e3-d41f-44c1-a13d-ad70fd449cbd" />
-<br>
 
 
 ### Save Data From Objects
@@ -142,15 +173,16 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 * [Player Avatar And Animations](#player-avatar-and-animations)
 
 ### Player Set Up
-To set up save system, drag the Player from the Prefabs folder into the scene hierarchy
+NOTE: Do NOT add a "Player" prefab directly to the scene.
 <br>
-<img width="308" height="171" alt="image" src="https://github.com/user-attachments/assets/2835c58b-6b44-446d-a4de-a6e5435a001b" />
 <br>
+1.) Ensure that a "Player Spawn Point" is present in the main gameplay scene. This is where the player will spawn (if not loading a previous save file). This will also allow the player 
+to spawn in the correct location when loading a previous save file. The "Game Instance" object will be responsible for spawning the Player Character
+<br>
+<img width="347" height="290" alt="image" src="https://github.com/user-attachments/assets/96f7830e-4f48-45f6-ae0c-a1cdfcd8eb1d" />
+<img width="260" height="224" alt="image" src="https://github.com/user-attachments/assets/732997f9-78ca-44bb-bf66-8c0fb37a5c79" />
 
-A player will be spawned in the scene
-<br>
-<img width="381" height="241" alt="image" src="https://github.com/user-attachments/assets/792cae22-0de0-46fc-b78a-c2bb4348328f" />
-<br>
+
 
 
 ### Player Controller
