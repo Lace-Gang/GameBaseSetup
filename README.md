@@ -56,6 +56,7 @@ When setting up GameBase:
 1.) [Set up the Game Instance](#game-instance-set-up) (This is ABSOLUTELY required)
 <br>
 2.) [Set up the Player Character](#player-set-up) (This is REQUIRED)
+<br>
 3.) [Adjust User Interface](#setting-up-the-user-interface) (Advised but not required)
 <br>
 4.) Change Player [Avatar and Animations](#player-avatar-and-animations) (Advised but not required)
@@ -132,6 +133,7 @@ onto the object, and set "Player" as the static spawn tag.
 ### Setting Up The User Interface
 NOTE: Do NOT add a User Interface to any scene directly. There is already a User Interface present in the "Base Scene".
 <br>
+<br>
 1.) For the setup of the User Interface, and for a User Interface that is more personalized to your game,  it is advised to complete the steps found in [Editing User Interface Frontend](#editing-user-interface-frontend)
 
 <br>
@@ -143,11 +145,11 @@ NOTE: Do NOT add a User Interface to any scene directly. There is already a User
 <br>
 2.) In order to view the current appearance of the User Interface:
 <br>
-2a.) Ensure view is in "Game" mode and not in "Scene" mode or any other views (ie the animator)
+  2a.) Ensure view is in "Game" mode and not in "Scene" mode or any other views (ie the animator)
 <br>
 <img width="256" height="100" alt="image" src="https://github.com/user-attachments/assets/0d79cb99-c5aa-4a66-9dc1-e7a5d4a7ed4d" />
 <br>
-2b.) Set the "Test Camera" to active in the Inspector
+  2b.) Set the "Test Camera" to active in the Inspector
 <br>
 <img width="455" height="143" alt="image" src="https://github.com/user-attachments/assets/156d7be6-1a42-4dbc-b119-7bb54f8e018c" />
 <br>
@@ -163,8 +165,8 @@ IMPORTANT: It is highly inadvised to delete the components:
 * "SaveButton" (PauseScreen)
 * "LoadButton" (MainMenu)
 
-  Deleting any of these components will cause Errors across multiple scripts, including the GameInstance script, UserInterface script, and PlayerCharacter script. If you do not need
-  or want these components, it is avised to either set them to inactive in the Inspector, or be prepared to make edits to the GameBase scripts. 
+Deleting any of these components will cause Errors across multiple scripts, including the GameInstance script, UserInterface script, and PlayerCharacter script. If you do not need
+or want these components, it is avised to either set them to inactive in the Inspector, or be prepared to make edits to the GameBase scripts. 
 <br>
 <br>
 5.) When you have finished editing the appearance and arrangement of the User Interface, it is highly advised to set the "Fade Screen" to active, all other screens to inactive, and the "Test Camera" to inactive.
@@ -176,12 +178,14 @@ IMPORTANT: It is highly inadvised to delete the components:
 ### Editing User Interface Backend Or Adding UI Elements
 When editing User Interface backend (including adding new button functionality, or new screens), it is advised to:
 <br>
-1.) Write Button Click event functions into the "UserInterface" script. From there, the User Interface can trigger functionality elsewhere. (this is advised for simplicity, so that 
+  1.) Write Button Click event functions into the "UserInterface" script. From there, the User Interface can trigger functionality elsewhere. (this is advised for simplicity, so that 
 the "User Interface" object can function without requiring attatchments and references to unrelated objects.
 <br>
-2.) When editing values at runtime (ie healthbars, scores, etc), do so with functions written in the User Interface that can be triggered by the GameInstance. (This will allow other scripts to update the UI display as necessary without requiring a reference to anything as the GameInstance can be accessed from anywhere without a reference.)
 <br>
-3.) Set visibility of User Interface elements through the Game Instance. (this is advised because the GameInstance already handles all other UI visibility.)
+  2.) When editing values at runtime (ie healthbars, scores, etc), do so with functions written in the User Interface that can be triggered by the GameInstance. (This will allow other scripts to update the UI display as necessary without requiring a reference to anything as the GameInstance can be accessed from anywhere without a reference.)
+<br>
+<br>
+  3.) Set visibility of User Interface elements through the Game Instance. (this is advised because the GameInstance already handles all other UI visibility.)
 
 <br>
 <br>
