@@ -165,7 +165,7 @@ MonoBehaviour:
   m_transform: {fileID: 7620438448413333973}
   m_id: 
   m_isDamagable: 1
-  m_baseLives: 2
+  m_baseLives: 1
 --- !u!114 &8381073304848845801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,10 +270,10 @@ MonoBehaviour:
     m_Flags: 0
   m_sprintSpeed: 6
   m_fallDamageEnabled: 1
-  m_baseFallDamage: 10
-  m_minFallVelocity: 10
+  m_baseFallDamage: 15
+  m_minFallTime: 1
   m_scaleFallDamage: 1
-  m_fallDamageScaler: 1.05
+  m_fallDamageScaler: 4
 --- !u!114 &5624301553441006517
 MonoBehaviour:
   m_ObjectHideFlags: 0

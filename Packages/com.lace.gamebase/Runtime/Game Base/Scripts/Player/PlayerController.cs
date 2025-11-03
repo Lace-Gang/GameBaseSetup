@@ -30,6 +30,7 @@ namespace GameBase
 
         //Calculated at runtime
         private float m_timeSinceLastJump = 0f;         //How long since the last time the player jumped (only updated before player touches the ground
+        private float m_timeFalling = 0f;               //How long has the player been falling (resets when the player is grounded or when velocity y is greater than zero)
         Vector2 m_movementInput = Vector2.zero;         //Current movement input vector (which direction is the player supposed to move)
         Vector3 m_velocity = Vector3.zero;              //Current player velocity
 
@@ -69,15 +70,16 @@ namespace GameBase
         [SerializeField] float m_sprintSpeed = 6f;
 
         [Header("Fall Damage")]
+        [Tooltip("Does player take fall damage")]
         [SerializeField] bool m_fallDamageEnabled = false;
-        [Tooltip("Base damage taken if above fall damage velocity threshold")]
-        [SerializeField] float m_baseFallDamage;
-        [Tooltip("Please input a positive float")]
-        [SerializeField] float m_minFallVelocity;
-        [Tooltip("Scale base fall damage by velocity on ipmact")]
+        [Tooltip("Base damage taken if above fall damage min fall time threshold")]
+        [SerializeField] float m_baseFallDamage = 15;
+        [Tooltip("How long does player have to be falling before they take fall damage")]
+        [SerializeField] float m_minFallTime = 1;
+        [Tooltip("Scale base fall damage by time falling on ipmact")]
         [SerializeField] bool m_scaleFallDamage;
-        [Tooltip("Multiplier for scaling fall damage with velocity")]
-        [SerializeField] float m_fallDamageScaler;
+        [Tooltip("Multiplier for scaling fall damage with time")]
+        [SerializeField] float m_fallDamageScaler = 4;
 
         #region Awake, Enable, Disable, Start, Update
 
@@ -162,6 +164,12 @@ namespace GameBase
                 m_timeSinceLastJump += Time.deltaTime;
             }
 
+            //Timer for falling
+            if(!m_onGround && m_controller.velocity.y < 0)
+            {
+                m_timeFalling += Time.deltaTime;
+            }
+
             //Update Animator
             m_animator.SetFloat("HorizontalSpeed", Vector3.Magnitude(new Vector3(m_controller.velocity.x, 0, m_controller.velocity.z)));
             m_animator.SetFloat("VerticalSpeed", m_controller.velocity.y);
@@ -169,6 +177,7 @@ namespace GameBase
 
         #endregion Awake, Enable, Disable, Start, Update
 
+        #region Evaluation and Execution
 
         /// <summary>
         /// Calculates the movement of the player and updates the player accordingly
@@ -226,6 +235,39 @@ namespace GameBase
             m_controller.Move(m_velocity * Time.deltaTime);
         }
 
+
+        /// <summary>
+        /// Evaluates conditions for fall damage. If conditions are met, calculates and applies fall damage.
+        /// </summary>
+        public void EvaluateFallDamage()
+        {
+            ////Check for and apply fall damage
+            
+            //Only evaluate if the player has landed since the last update cycle
+            if (!m_onGround && m_controller.isGrounded)
+            {            
+                //if greater than min fall time and fall damage enabled
+                if (m_fallDamageEnabled && m_timeFalling > m_minFallTime)
+                {            
+                    if (!m_scaleFallDamage) m_playerCharacter.TakeDamage(m_baseFallDamage, GetComponent<GameObject>());  //applies only base damage if damage should NOT scale with time
+                    else
+                    {
+                        //if damage SHOULD scale with time, calculates and applies fall damage
+                        float fallDamage = m_baseFallDamage + ((m_baseFallDamage * m_fallDamageScaler * m_timeFalling) * (m_timeFalling - m_minFallTime));
+                        m_playerCharacter.TakeDamage(fallDamage, GetComponent<GameObject>());
+                    }
+                }
+            
+                //reset timer
+                m_timeFalling = 0;
+            }
+            else if (!m_onGround && m_controller.velocity.y > 0)
+            {
+                m_timeFalling = 0;  //reset timer if y velotcity is greater than 0
+            }
+        }
+
+        #endregion Evaluation and Execution
 
         #region Input Action Functions
 
@@ -333,28 +375,6 @@ namespace GameBase
 
             m_animator.SetTrigger("Jump");  //Tell animator component to jump (looks like player is getting up, and helps animator leave the "die" state)
 
-        }
-
-
-        /// <summary>
-        /// Evaluates conditions for fall damage. If conditions are met, calculates and applies fall damage.
-        /// </summary>
-        public void EvaluateFallDamage()
-        {
-            //Check for and apply fall damage
-            if (m_fallDamageEnabled && !m_onGround && m_controller.isGrounded)
-            {
-                if (m_controller.velocity.y < -m_minFallVelocity)   //If the player's current y velocity is above the threshold for fall damage (technically if it's bellow the threshold due to y velocity being negative when falling)
-                {
-                    if (!m_scaleFallDamage) m_playerCharacter.TakeDamage(m_baseFallDamage, GetComponent<GameObject>()); //applies base damage if damage should not scale with velocity
-                    else
-                    {
-                        //if damage SHOULD scale with velocity, calculates and applies fall damage
-                        float fallDamage = m_baseFallDamage * m_fallDamageScaler * (-m_controller.velocity.y - m_minFallVelocity);  
-                        m_playerCharacter.TakeDamage(fallDamage, GetComponent<GameObject>());
-                    }
-                }
-            }
         }
 
         #endregion Player States

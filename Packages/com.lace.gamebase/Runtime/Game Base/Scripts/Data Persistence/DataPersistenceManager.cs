@@ -149,7 +149,6 @@ namespace GameBase
             //Push the loaded data to all other scripts that need it
             foreach(IDataPersistence dataPersistenceObj in this.m_dataPersistenceObjects)
             {
-                Debug.Log("Loading " +  dataPersistenceObj);
                 dataPersistenceObj.LoadData(m_gameData);
             }
         }

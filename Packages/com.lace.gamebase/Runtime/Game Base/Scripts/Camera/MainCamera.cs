@@ -108,7 +108,7 @@ namespace GameBase
                     //If an object is in the way, adjusts camera position to keep target in view.
                     if(Physics.Raycast(m_target.position, cameraDirection, out hit))
                     {
-                        //Moves camera to nearest point in view of target
+                        //Moves camera to nearest point in view of target within max orbit radius
                         float distance = Mathf.Min(hit.distance, m_orbitRadius);
                         transform.position = m_target.position - (transform.rotation * Vector3.forward * distance);
 

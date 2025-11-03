@@ -40,6 +40,9 @@ namespace GameBase
         public void LoadData(GameData data)
         {
             m_health = data.playerHealth;
+
+            //Notify HUD that player health has changed
+            GameInstance.Instance.UpdatePlayerHealth(m_health, m_maxHealth);
         }
 
 

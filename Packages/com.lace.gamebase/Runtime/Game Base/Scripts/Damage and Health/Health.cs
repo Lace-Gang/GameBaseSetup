@@ -9,11 +9,11 @@ namespace GameBase
 
         //Editor Variables
         [Tooltip("The object this health belongs to")]
-        [SerializeField] private GameObject m_healthOwner;                       ////////take this out if we never use it
+        [SerializeField] protected GameObject m_healthOwner;                       ////////take this out if we never use it
         [Tooltip("The max health of the owner")]
-        [SerializeField] private float m_maxHealth;
+        [SerializeField] protected float m_maxHealth;
         [Tooltip("Health the owner starts with")]
-        [SerializeField] private float m_startingHealth;
+        [SerializeField] protected float m_startingHealth;
 
 
 
@@ -40,7 +40,6 @@ namespace GameBase
         {
             //Set current health to starting health
             m_health = m_startingHealth;
-            Debug.Log("Health IS: " + m_health);        //Tester line. Will be removed later
         }
 
 
@@ -59,12 +58,14 @@ namespace GameBase
             if(m_health <= 0)
             {
                 m_health = 0;   //clamps health to a minimum of zero
-                return true;    //notifies the calling class that health has hit zero
+                return true;    //notifies the calling script that health has hit zero
             }
 
-            return false;
+            return false;   //notifies the calling script that health is above zero
         }
 
+
+        #region Getters and Setters
 
         /// <summary>
         /// Allows other classes to view current health
@@ -91,6 +92,8 @@ namespace GameBase
 
             //clamps current health to stay within max health
             m_health = (m_health <= m_maxHealth) ? m_health : m_maxHealth;
-        } 
+        }
+
+        #endregion Getters and Setters
     }
 }

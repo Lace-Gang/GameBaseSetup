@@ -330,8 +330,8 @@ MonoBehaviour:
   m_respawnType: 0
   m_respawnHealthPercentage: 100
   m_respawnInvincibilityTimer: 2
-  m_saveFromPauseMenu: 1
-  m_loadFromMainMenu: 1
+  m_saveFromPauseMenu: 0
+  m_loadFromMainMenu: 0
   m_saveHotKeyEnabled: 0
   m_saveHotKey: 106
   m_loadHotKeyEnabled: 0
@@ -6895,7 +6895,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1742144908}
   - component: {fileID: 1742144907}
-  - component: {fileID: 1742144906}
   - component: {fileID: 1742144905}
   m_Layer: 0
   m_Name: TestCamera
@@ -6948,14 +6947,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!81 &1742144906
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1742144904}
-  m_Enabled: 0
 --- !u!20 &1742144907
 Camera:
   m_ObjectHideFlags: 0

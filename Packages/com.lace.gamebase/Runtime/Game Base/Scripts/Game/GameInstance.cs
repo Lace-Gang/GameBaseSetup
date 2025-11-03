@@ -189,6 +189,7 @@ namespace GameBase
                     //Pauses game if game is supposed to pause, and the player character is alive, and the player hits the pause key
                     if (m_gamePauses && m_playerAlive && Input.GetKeyDown(m_pauseKey))
                     {
+                        m_userInterface.m_saveButton.SetActive(m_saveFromPauseMenu);    //Only display Save Button if save button is supposed to be visible in the pause menu
                         OpenPauseMenu();
                     }
 
