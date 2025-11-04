@@ -1,41 +1,12 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace GameBase
 {
-    //Defintes which part of the Game Cycle the game is currently in
-    public enum GameState
-    {
-        LOADTITLE,
-        TITLESCREEN,
-        LOADMAINMENU,
-        MAINMENUSCREEN,
-        STARTGAME,
-        LOADSAVE,
-        PLAYGAME,
-        WINGAME,
-        LOSEGAME,
-        WINSCREEN,
-        LOSESCREEN
-    }
-
-    public enum RespawnType
-    {
-        RESPAWNINPLACE,                 //respawns player in place
-        LOADLASTSAVE,                   //reloads save file, and respawns player in the process
-        RESPAWNATSAVELOCATION,          //respawns player at location of last loaded save without reloading game or save
-        RESPAWNATSTATICLOCATION         //respawns at a set location without loading any saved data
-    }
-
-    public enum RestartMode
-    {
-        RESTARTFROMLASTSAVE,    //after loosing, player will restart at last save point
-        RESTARTFROMBEGINNING      //after loosing, player must restart from the beginning
-    }
-
-
     public class GameInstance : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
@@ -48,13 +19,14 @@ namespace GameBase
         private GameObject m_playerCharacter;                   //Reference to the Player Character
         private PlayerCharacter m_playerScript;                 //Reference to the Player Character Script
 
+        private List<IPrompter> m_activePrompters = new List<IPrompter>();
+        private IPrompter m_currentDisplayPrompter;
+
 
         //Exposed Variables
         [Header("Critical Information and References")]
         [Tooltip("What Game State the game will be in when the game is first opened")]
         [SerializeField] public  GameState m_gameState = GameState.LOADTITLE;     //What State is the game in
-        [Tooltip("Reference to the User Interface")]
-        [SerializeField] UserInterface m_userInterface;
         [Tooltip("Reference to the 'Player' prefab")]
         [SerializeField] GameObject m_playerPrefab;
         [Tooltip("Name of the Scene where the game will execute")]
@@ -123,6 +95,8 @@ namespace GameBase
 
         #endregion Getters and Setters
 
+
+
         #region Awake and Update
 
         /// <summary>
@@ -189,14 +163,17 @@ namespace GameBase
                     //Pauses game if game is supposed to pause, and the player character is alive, and the player hits the pause key
                     if (m_gamePauses && m_playerAlive && Input.GetKeyDown(m_pauseKey))
                     {
-                        m_userInterface.m_saveButton.SetActive(m_saveFromPauseMenu);    //Only display Save Button if save button is supposed to be visible in the pause menu
+                        UserInterface.Instance.m_saveButton.SetActive(m_saveFromPauseMenu);    //Only display Save Button if save button is supposed to be visible in the pause menu
                         OpenPauseMenu();
                     }
+
+                    //Update prompt display, evaluate if prompt is being triggered, and execute prompt if so
+                    PromptUpdate();
 
                     //load game if load hot key is enabled and pressed and there is a valid save file to load
                     if(m_loadHotKeyEnabled && Input.GetKeyDown(m_loadHotKey) && m_validSaveFile)
                     {
-                        StartCoroutine(m_userInterface.FadeOut());  //fade out screen for more visually smooth transition
+                        StartCoroutine(UserInterface.Instance.FadeOut());  //fade out screen for more visually smooth transition
                         m_gameState = GameState.LOADSAVE;
                         StartCoroutine(LoadSaveTransition());   //Load save file
                     }
@@ -238,6 +215,8 @@ namespace GameBase
 
         #endregion Awake and Update
 
+
+
         #region Load and Unload Scenes
 
         /// <summary>
@@ -271,6 +250,8 @@ namespace GameBase
         }
         #endregion Load and Unload Scenes
 
+
+
         #region Save and Load Data
 
         public void LoadData(GameData data)
@@ -286,6 +267,8 @@ namespace GameBase
         }
         #endregion Save and Load Data
 
+
+
         #region Pause and Unpause
 
         /// <summary>
@@ -294,8 +277,8 @@ namespace GameBase
         private void OpenPauseMenu()
         {
             //Display pause menu
-            m_userInterface.m_pauseScreen.SetActive(true);
-            if (m_saveFromPauseMenu) m_userInterface.m_saveButton.SetActive(true);
+            UserInterface.Instance.m_pauseScreen.SetActive(true);
+            if (m_saveFromPauseMenu) UserInterface.Instance.m_saveButton.SetActive(true);
 
             //pause game
             PauseGame();
@@ -320,7 +303,7 @@ namespace GameBase
         public void UnpauseGame()
         {
             //Exits pause menu
-            m_userInterface.m_pauseScreen.SetActive(false);
+            UserInterface.Instance.m_pauseScreen.SetActive(false);
 
             //Unpause game
             Time.timeScale = 1;     
@@ -333,6 +316,8 @@ namespace GameBase
 
         #endregion Pause and Unpause
 
+
+
         #region UI Updates
 
         /// <summary>
@@ -342,7 +327,7 @@ namespace GameBase
         /// <param name="maxHealth">Player character max health</param>
         public void UpdatePlayerHealth(float currentHealth, float maxHealth)
         {
-            m_userInterface.UpdateHealthBar(currentHealth, maxHealth);
+            UserInterface.Instance.UpdateHealthBar(currentHealth, maxHealth);
         }
 
         /// <summary>
@@ -351,10 +336,59 @@ namespace GameBase
         /// <param name="lives">Current number of player lives</param>
         public void UpdatePlayerLives(int lives)
         {
-            m_userInterface.UpdatePlayerLives(lives);
+            UserInterface.Instance.UpdatePlayerLives(lives);
         }
 
+
+        /// <summary>
+        /// Adds an prompter to the list of active prompters
+        /// </summary>
+        /// <param name="prompter">Prompter being added</param>
+        public void AddToActivePrompts(IPrompter prompter)
+        {
+            m_activePrompters.Add(prompter);
+        }
+
+        /// <summary>
+        /// Removes a prompter from the list of active prompters
+        /// </summary>
+        /// <param name="prompter">Prompter being removed</param>
+        public void RemoveFromActivePrompts(IPrompter prompter)
+        {
+            m_activePrompters.Remove(prompter);
+        }
+
+
+        /// <summary>
+        /// Displays highest priority prompt to the screen and checks if the prompt has been interacted with
+        /// </summary>
+        private void PromptUpdate()
+        {
+            //Hide the prompt box from the user interface if there are no prompts to display
+            if(m_activePrompters.Count == 0)
+            {
+                UserInterface.Instance.HidePromptBox();
+                return;
+            }
+
+            //find the prompt with the highest priority
+            IPrompter highestPriority = m_activePrompters[0];
+            foreach(IPrompter prompter in m_activePrompters)
+            {
+                if(prompter.GetPromptPriority() > highestPriority.GetPromptPriority()) highestPriority = prompter;
+            }
+
+            //display highest priotiry prompt
+            UserInterface.Instance.DisplayPromptBox(highestPriority.GetPrompt());
+
+            //Check if prompt is being interacted with, and notify prompter if so
+            if(Input.GetKeyDown(highestPriority.GetPromptInteractionKey())) highestPriority.ExecutePrompt();
+        }
+
+
         #endregion UI Updates
+
+
 
         #region Player Death, Respawn and Restart
 
@@ -397,7 +431,7 @@ namespace GameBase
 
                 case RespawnType.LOADLASTSAVE:
                     //Respawns player by loading the save file. This will, however, still decrease the number of lives the player has.
-                    yield return StartCoroutine(m_userInterface.FadeOut());
+                    yield return StartCoroutine(UserInterface.Instance.FadeOut());
                     StartCoroutine(LoadSaveTransition());
                     m_gameState = GameState.LOADSAVE;
                     m_playerScript.OnRespawn(m_respawnInvincibilityTimer);
@@ -495,6 +529,8 @@ namespace GameBase
 
         #endregion Player Death, Respawn and Restart
 
+
+
         #region State Transitioning
 
         /// <summary>
@@ -504,14 +540,14 @@ namespace GameBase
         private IEnumerator LoadTitle()
         {
             //turn on title screen
-            m_userInterface.m_titleScreen.SetActive(true);
+            UserInterface.Instance.m_titleScreen.SetActive(true);
 
             //turn off other UI screens and HUD
-            m_userInterface.m_mainMenuScreen.SetActive(false);
-            m_userInterface.m_HUD.SetActive(false);
-            m_userInterface.m_winScreen.SetActive(false);
-            m_userInterface.m_loseScreen.SetActive(false);
-            m_userInterface.m_pauseScreen.SetActive(false);
+            UserInterface.Instance.m_mainMenuScreen.SetActive(false);
+            UserInterface.Instance.m_HUD.SetActive(false);
+            UserInterface.Instance.m_winScreen.SetActive(false);
+            UserInterface.Instance.m_loseScreen.SetActive(false);
+            UserInterface.Instance.m_pauseScreen.SetActive(false);
 
             //loads UIDisplayScene
             yield return StartCoroutine(LoadScene("UIDisplayScene"));
@@ -521,7 +557,7 @@ namespace GameBase
 
             //Fade Screen In
             //m_userInterface.FadeScreen();
-            yield return StartCoroutine(m_userInterface.FadeIn());
+            yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
@@ -535,28 +571,28 @@ namespace GameBase
         private IEnumerator LoadMainMenu()
         {
             //Fade Screen Out
-            yield return StartCoroutine(m_userInterface.FadeOut());
+            yield return StartCoroutine(UserInterface.Instance.FadeOut());
 
 
             //turn on main menu screen
-            m_userInterface.m_mainMenuScreen.SetActive(true);
+            UserInterface.Instance.m_mainMenuScreen.SetActive(true);
 
             //Only displays "Load" button if it is indicated that that button should be present
             if(m_loadFromMainMenu)
             {
-                m_userInterface.m_loadButtonObject.SetActive(true);
+                UserInterface.Instance.m_loadButtonObject.SetActive(true);
 
                 //If there is no valid save to load, makes button non-interactable
-                if (!m_validSaveFile) m_userInterface.m_loadButton.interactable = false;
-                else m_userInterface.m_loadButton.interactable = true;
+                if (!m_validSaveFile) UserInterface.Instance.m_loadButton.interactable = false;
+                else UserInterface.Instance.m_loadButton.interactable = true;
             }
 
             //turn off other UI screens and HUD
-            m_userInterface.m_titleScreen.SetActive(false);
-            m_userInterface.m_HUD.SetActive(false);
-            m_userInterface.m_winScreen.SetActive(false);
-            m_userInterface.m_loseScreen.SetActive(false);
-            m_userInterface.m_pauseScreen.SetActive(false);
+            UserInterface.Instance.m_titleScreen.SetActive(false);
+            UserInterface.Instance.m_HUD.SetActive(false);
+            UserInterface.Instance.m_winScreen.SetActive(false);
+            UserInterface.Instance.m_loseScreen.SetActive(false);
+            UserInterface.Instance.m_pauseScreen.SetActive(false);
 
             //loads UIDisplayScene
             yield return StartCoroutine(LoadScene("UIDisplayScene"));
@@ -567,7 +603,7 @@ namespace GameBase
             //yield return new WaitForSeconds(1);
 
             //m_userInterface.FadeScreen();
-            yield return StartCoroutine(m_userInterface.FadeIn());
+            yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
@@ -581,17 +617,17 @@ namespace GameBase
         private IEnumerator LoadGame()
         {
             //Fade Out
-            yield return StartCoroutine (m_userInterface.FadeOut());
+            yield return StartCoroutine (UserInterface.Instance.FadeOut());
 
             //turns off User Interface screens
-            m_userInterface.m_titleScreen.SetActive(false);
-            m_userInterface.m_mainMenuScreen.SetActive(false);
-            m_userInterface.m_winScreen.SetActive(false);
-            m_userInterface.m_loseScreen.SetActive(false);
-            m_userInterface.m_pauseScreen.SetActive(false);
+            UserInterface.Instance.m_titleScreen.SetActive(false);
+            UserInterface.Instance.m_mainMenuScreen.SetActive(false);
+            UserInterface.Instance.m_winScreen.SetActive(false);
+            UserInterface.Instance.m_loseScreen.SetActive(false);
+            UserInterface.Instance.m_pauseScreen.SetActive(false);
 
             //Turns on HUD
-            m_userInterface.m_HUD.SetActive(true);
+            UserInterface.Instance.m_HUD.SetActive(true);
 
             //Restarts Game if applicable
             if(m_restartingGame)
@@ -646,7 +682,7 @@ namespace GameBase
                 m_gameState = GameState.PLAYGAME;
 
                 //Fade In
-                yield return StartCoroutine (m_userInterface.FadeIn());
+                yield return StartCoroutine (UserInterface.Instance.FadeIn());
             }
 
 
@@ -680,7 +716,7 @@ namespace GameBase
             }
 
             //Fade in
-            yield return StartCoroutine(m_userInterface.FadeIn());
+            yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
            
             m_playerAlive = true;   //Set player to alive
@@ -694,17 +730,17 @@ namespace GameBase
         private IEnumerator LoadWinScreen()
         {
             //Fade Out
-            yield return StartCoroutine(m_userInterface.FadeOut());
+            yield return StartCoroutine(UserInterface.Instance.FadeOut());
 
             //turns off other UI screens and HUD
-            m_userInterface.m_titleScreen.SetActive(false);
-            m_userInterface.m_mainMenuScreen.SetActive(false);
-            m_userInterface.m_HUD.SetActive(false);
-            m_userInterface.m_loseScreen.SetActive(false);
-            m_userInterface.m_pauseScreen.SetActive(false);
+            UserInterface.Instance.m_titleScreen.SetActive(false);
+            UserInterface.Instance.m_mainMenuScreen.SetActive(false);
+            UserInterface.Instance.m_HUD.SetActive(false);
+            UserInterface.Instance.m_loseScreen.SetActive(false);
+            UserInterface.Instance.m_pauseScreen.SetActive(false);
 
             //Turns on win screen
-            m_userInterface.m_winScreen.SetActive(true);
+            UserInterface.Instance.m_winScreen.SetActive(true);
 
             //loads UIDisplayScene
             yield return StartCoroutine(LoadScene("UIDisplayScene"));
@@ -717,7 +753,7 @@ namespace GameBase
             Cursor.visible = true;
 
             //Fade In
-            yield return StartCoroutine(m_userInterface.FadeIn());
+            yield return StartCoroutine(UserInterface.Instance.FadeIn());
         }
 
         /// <summary>
@@ -727,17 +763,17 @@ namespace GameBase
         private IEnumerator LoadLooseScreen()
         {
             //Fade Out
-            yield return StartCoroutine(m_userInterface.FadeOut());
+            yield return StartCoroutine(UserInterface.Instance.FadeOut());
 
             //turns off other UI screens and HUD
-            m_userInterface.m_titleScreen.SetActive(false);
-            m_userInterface.m_mainMenuScreen.SetActive(false);
-            m_userInterface.m_HUD.SetActive(false);
-            m_userInterface.m_winScreen.SetActive(false);
-            m_userInterface.m_pauseScreen.SetActive(false);
+            UserInterface.Instance.m_titleScreen.SetActive(false);
+            UserInterface.Instance.m_mainMenuScreen.SetActive(false);
+            UserInterface.Instance.m_HUD.SetActive(false);
+            UserInterface.Instance.m_winScreen.SetActive(false);
+            UserInterface.Instance.m_pauseScreen.SetActive(false);
 
             //Turns on win screen
-            m_userInterface.m_loseScreen.SetActive(true);
+            UserInterface.Instance.m_loseScreen.SetActive(true);
 
             //loads UIDisplayScene
             yield return StartCoroutine(LoadScene("UIDisplayScene"));
@@ -750,7 +786,7 @@ namespace GameBase
             Cursor.visible = true;
 
             //Fade In
-            yield return StartCoroutine(m_userInterface.FadeIn());
+            yield return StartCoroutine(UserInterface.Instance.FadeIn());
         }
 
         #endregion State Transitioning

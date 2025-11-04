@@ -3,13 +3,13 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
 namespace GameBase
 {
     public class UserInterface : MonoBehaviour
     {
-
-        //Exposed varaibles
+        //Exposed Varaibles
         [Header("Screens")]
         [SerializeField] public GameObject m_titleScreen;
         [SerializeField] public GameObject m_mainMenuScreen;
@@ -18,16 +18,38 @@ namespace GameBase
         [SerializeField] public GameObject m_HUD;
         [SerializeField] public GameObject m_pauseScreen;
         [SerializeField] public GameObject m_fadeScreen;
+        [SerializeField] private GameObject m_InteractionPromptScreen;
 
-        [Header("Components")]
+        [Header("HUD Components")]
         [SerializeField] private Slider m_healthBar;
         [SerializeField] private TextMeshProUGUI m_playerLivesText;
+        [SerializeField] private TextMeshProUGUI m_InteractionPromptText;
+
+
+        [Header("Other Componenets")]
         [Tooltip("Save Game button. Only visible if 'Save From Pause Menu' is set to true in the Game Instance")]
         [SerializeField] public GameObject m_saveButton;
         [Tooltip("'Load Game Button' object. Only visible if 'Load From Main Menu' is set to true in the Game Instance")]
         [SerializeField] public GameObject m_loadButtonObject;
         [Tooltip("'Load Game Button' button. Only enabled if there is a valid save file to load")]
         [SerializeField] public Button m_loadButton;
+
+
+
+        public static UserInterface Instance { get; private set; }  //Allows other scripts to get the singleton instance of the UserInterface
+
+        /// <summary>
+        /// Ensures that only one Instance of the User Interface exists and notifies User if there is more than one instance
+        /// </summary>
+        private void Awake()
+        {
+            //Sets up the User Interface as a singleton (ensures only one can be present)
+            if (Instance != null)
+            {
+                Debug.LogError("Found more than one User Interface in the scene.");
+            }
+            Instance = this;
+        }
 
 
         #region Button Clicks
@@ -167,6 +189,25 @@ namespace GameBase
         public void UpdatePlayerLives(int lives)
         {
             m_playerLivesText.text = "Lives: " + lives; //Updates Player Lives text
+        }
+
+
+        /// <summary>
+        /// Makes interaction prompt visible and sets text
+        /// </summary>
+        /// <param name="prompt">Prompt to display</param>
+        public void DisplayPromptBox(string prompt)
+        {
+            m_InteractionPromptText.text = prompt;
+            m_InteractionPromptScreen.SetActive(true);
+        }
+
+        /// <summary>
+        /// Hides promp box
+        /// </summary>
+        public void HidePromptBox()
+        {
+            m_InteractionPromptScreen.SetActive(false);
         }
 
         #endregion HUD Updates
