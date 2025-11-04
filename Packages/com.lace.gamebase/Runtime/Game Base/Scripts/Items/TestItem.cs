@@ -12,6 +12,7 @@ namespace GameBase
             if(other.GetComponent<PlayerCharacter>() != null)
             {
                 ParentTriggerEnter();
+                if(m_autoPickup) OnPickedUp();
             }
         }
 
@@ -25,7 +26,7 @@ namespace GameBase
 
         public override void OnPickedUp()
         {
-            ParentOnPickedUp();
+            ItemBaseOnPickedUp();
         }
     }
 }

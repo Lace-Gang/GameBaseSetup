@@ -5,7 +5,7 @@ namespace GameBase
     public abstract class ItemBase : MonoBehaviour
     {
         //Hidden Variables
-        private bool m_isPresent = true;  //Is the object currently present in the world
+        private bool m_presentInScene = true;  //Is the object currently present in the world
 
 
         //Exposed Variables
@@ -15,7 +15,8 @@ namespace GameBase
 
         [Header("Basic Item Information")]
         [SerializeField] string m_name;
-        [SerializeField] bool m_autoPickup = true;
+        [Tooltip("Is item picked up automatically when player enters trigger")]
+        [SerializeField] protected bool m_autoPickup = true;
 
 
 
@@ -26,7 +27,7 @@ namespace GameBase
         {
             if(m_autoPickup)
             {
-                ParentOnPickedUp();
+                ItemBaseOnPickedUp();
             }
         }
 
@@ -45,9 +46,9 @@ namespace GameBase
         /// <summary>
         /// Executes all necessary code for all items for when item is picked up
         /// </summary>
-        protected void ParentOnPickedUp()
+        protected void ItemBaseOnPickedUp()
         {
-            m_isPresent = false;            //item no longer present in the world
+            m_presentInScene = false;            //item no longer present in the world
             m_renderer.enabled = false;     //item no longer visible
             m_collider.enabled = false;     //item no longer collidable
         }

@@ -238,8 +238,6 @@ namespace GameBase{
 
             //Notifies Game Manager of health change
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
-
-            Debug.Log("Player New Health: " + m_playerHealth.GetHealth());              //Test line. To be removed later
         }
 
         /// <summary>

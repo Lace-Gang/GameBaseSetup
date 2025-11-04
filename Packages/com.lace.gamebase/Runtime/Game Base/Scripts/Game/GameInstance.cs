@@ -75,6 +75,8 @@ namespace GameBase
 
         public bool getPaused() {  return m_paused; }   //Allows other scripts to know if the game is currently paused
 
+        public PlayerCharacter GetPlayerScript() { return m_playerScript; }  //Allows other scripts to access the current player character script
+
         /// <summary>
         /// Sets whether the save file should load next time the game loads
         /// </summary>
