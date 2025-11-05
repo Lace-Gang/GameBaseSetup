@@ -10,9 +10,14 @@ namespace GameBase
 
         //Save System Test Variables (Will later be removed or replaced)
         public int deathcount;
+
+        //Player
         public Vector3 playerPosition;
         public Quaternion playerRotation;
         public float playerHealth;
         public int playerLives;
+
+        //Game Instance
+        public float score;
     }
 }

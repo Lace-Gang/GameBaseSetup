@@ -23,6 +23,9 @@ namespace GameBase
         [Header("HUD Components")]
         [SerializeField] private Slider m_healthBar;
         [SerializeField] private TextMeshProUGUI m_playerLivesText;
+        [SerializeField] private TextMeshProUGUI m_HUDScoreText;
+        [SerializeField] private TextMeshProUGUI m_winScreenScoreText;
+        [SerializeField] private TextMeshProUGUI m_looseScreenScoreText;
         [SerializeField] private TextMeshProUGUI m_InteractionPromptText;
 
 
@@ -189,6 +192,17 @@ namespace GameBase
         public void UpdatePlayerLives(int lives)
         {
             m_playerLivesText.text = "Lives: " + lives; //Updates Player Lives text
+        }
+
+        /// <summary>
+        /// Updates score text in HUD and final score text on the win and loose screens
+        /// </summary>
+        /// <param name="score">Current score</param>
+        public void UpdateScore(float score)
+        {
+            m_HUDScoreText.text = "Score: " + score;   //updates score text for HUD
+            m_winScreenScoreText.text = "Final Score: " + score;    //updates score text for win screen
+            m_looseScreenScoreText.text = "Final Score: " + score;    //updates score text for loose screen
         }
 
 

@@ -18,6 +18,7 @@ namespace GameBase
 
         private GameObject m_playerCharacter;                   //Reference to the Player Character
         private PlayerCharacter m_playerScript;                 //Reference to the Player Character Script
+        private float m_score;                                    //Current score
 
         private List<IPrompter> m_activePrompters = new List<IPrompter>();
         private IPrompter m_currentDisplayPrompter;
@@ -94,6 +95,8 @@ namespace GameBase
         {
             m_validSaveFile = validSaveFile;
         }
+
+
 
         #endregion Getters and Setters
 
@@ -256,16 +259,27 @@ namespace GameBase
 
         #region Save and Load Data
 
+        /// <summary>
+        /// Loads data from the save file
+        /// </summary>
+        /// <param name="data">GameData object that the loaded save file information</param>
         public void LoadData(GameData data)
         {
+            //load data
             m_validSaveFile = !data.isNewSave;
+            m_score = data.score;
 
-            //throw new System.NotImplementedException();
+            //update UI
+            UserInterface.Instance.UpdateScore(m_score);
         }
 
+        /// <summary>
+        /// Saves data to the save file
+        /// </summary>
+        /// <param name="data">GameData object that information is being saved to</param>
         public void SaveData(ref GameData data)
         {
-            //throw new System.NotImplementedException();
+            data.score = m_score;
         }
         #endregion Save and Load Data
 
@@ -389,6 +403,26 @@ namespace GameBase
 
 
         #endregion UI Updates
+
+
+        #region Score
+
+
+        /// <summary>
+        /// Changes the score. Positive inputs will add to the score, negative inputs will detract from it.
+        /// </summary>
+        /// <param name="score">How much to add to the score. Negative integers will subtract.</param>
+        public void AddOrRemoveScore(float score)
+        {
+            //Add to or subtract from score and clamp score (score cannot be negative)
+            m_score = (m_score + score > 0)? m_score + score : 0;
+
+
+            //Notify UI of the change
+            UserInterface.Instance.UpdateScore(m_score);
+        }
+
+        #endregion Score
 
 
 
@@ -665,8 +699,10 @@ namespace GameBase
                 //Notify user if there is no spawn point. Without a spawn point, a player cannot be spawned.
                 Debug.LogError("No PlayerSpawnPoint was located in the scene! Player will not be spawned.");
             }
-            
 
+            //Resets Score
+            m_score = 0;
+            UserInterface.Instance.UpdateScore(m_score);
 
             //Lock Cursor and make cursor invisible
             Cursor.lockState = CursorLockMode.Locked;
