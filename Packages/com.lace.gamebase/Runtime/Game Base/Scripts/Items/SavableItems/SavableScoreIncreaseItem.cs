@@ -2,8 +2,9 @@ using UnityEngine;
 
 namespace GameBase
 {
-    public class BasicScoreIncreaseItem : ItemBase
+    public class SavableScoreIncreaseItem : SavableItem
     {
+        //Exposed Variables
         [Header("Score Increase Information")]
         [Tooltip("How much does this increase the player's score")]
         [SerializeField] float m_scoreIncrease;

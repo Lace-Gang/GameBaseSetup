@@ -133,7 +133,7 @@ namespace GameBase
         /// </summary>
         public void LoadGame()
         {
-            //Searched for all objects that need to be loaded (both objects and scenes present may have changed since the last save or load)
+            //Search for all objects that need to be loaded (both objects and scenes present may have changed since the last save or load)
             m_dataPersistenceObjects = FindAllDataPersistenceObjects();
 
             //Load any saved data from a file using the data handler

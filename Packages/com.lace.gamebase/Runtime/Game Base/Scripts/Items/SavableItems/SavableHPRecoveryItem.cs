@@ -2,12 +2,13 @@ using UnityEngine;
 
 namespace GameBase
 {
-    public class BasicHPRecoveryItem : ItemBase
+    public class SavableHPRecoveryItem : SavableItem
     {
         //Exposed Variables
         [Header("HP Recovery Information")]
         [Tooltip("How much will the player be healed by this item")]
         [SerializeField] float m_healAmount;
+
 
         /// <summary>
         /// Uses this item and then hides it and marks it "Inactive in Scene"

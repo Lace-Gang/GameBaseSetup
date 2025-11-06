@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &6629112549512240727
+--- !u!1 &4688537014986810611
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,65 +8,70 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8899086571201800937}
-  - component: {fileID: 7819752362316270838}
-  - component: {fileID: 4564816949570711604}
-  - component: {fileID: 4729325479386894601}
-  - component: {fileID: 2216966462174393660}
+  - component: {fileID: 3742291987320211006}
+  - component: {fileID: 8063617047764447560}
+  - component: {fileID: 2430725847518772408}
+  - component: {fileID: 5567909107801429444}
+  - component: {fileID: 2058096729461963143}
   m_Layer: 0
-  m_Name: BasicHPRecovery
+  m_Name: SavableHealthRecovery
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8899086571201800937
+--- !u!4 &3742291987320211006
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6629112549512240727}
+  m_GameObject: {fileID: 4688537014986810611}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.62, y: 1.844, z: -13.29}
+  m_LocalPosition: {x: 7.79, y: 1.118, z: -11.928375}
   m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7819752362316270838
+--- !u!114 &8063617047764447560
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6629112549512240727}
+  m_GameObject: {fileID: 4688537014986810611}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbb9a0057a9f6184d8f4237f5528801e, type: 3}
+  m_Script: {fileID: 11500000, guid: 26e6d1da1f91a1c45b04fa2a5590288d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_renderer: {fileID: 4729325479386894601}
-  m_collider: {fileID: 2216966462174393660}
+  m_renderer: {fileID: 5567909107801429444}
+  m_collider: {fileID: 2058096729461963143}
   m_name: Recovery Heart
   m_autoPickup: 1
+  m_save: 1
+  m_ID: 0
+  m_saveActiveInScene: 1
+  m_savePosition: 0
+  m_saveRotation: 0
   m_healAmount: 10
---- !u!33 &4564816949570711604
+--- !u!33 &2430725847518772408
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6629112549512240727}
+  m_GameObject: {fileID: 4688537014986810611}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &4729325479386894601
+--- !u!23 &5567909107801429444
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6629112549512240727}
+  m_GameObject: {fileID: 4688537014986810611}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -105,13 +110,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &2216966462174393660
+--- !u!135 &2058096729461963143
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6629112549512240727}
+  m_GameObject: {fileID: 4688537014986810611}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

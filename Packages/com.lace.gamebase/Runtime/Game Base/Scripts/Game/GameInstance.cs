@@ -16,9 +16,11 @@ namespace GameBase
         private bool m_loadOnPlay = false;                      //Should save file load when game loads
         private bool m_restartingGame = false;                  //Has player indicated from pause menu to restart since the last update
 
+        private bool m_saveHasAlreadyLoaded = false;            //Tracks if the save file has been loaded so that it isn't loaded repeatedly
+
         private GameObject m_playerCharacter;                   //Reference to the Player Character
         private PlayerCharacter m_playerScript;                 //Reference to the Player Character Script
-        private float m_score;                                    //Current score
+        private float m_score;                                  //Current score
 
         private List<IPrompter> m_activePrompters = new List<IPrompter>();
         private IPrompter m_currentDisplayPrompter;
@@ -735,10 +737,13 @@ namespace GameBase
         /// <returns>Yield return for coroutine</returns>
         private IEnumerator LoadSaveTransition()
         {
-            if(m_validSaveFile) //Can't load a save file that doesn't exist
+            //Can't load a save file that doesn't exist, and we don't want to load everytime the
+            //coroutine executes. Only the first time after it is started
+            if (m_validSaveFile && !m_saveHasAlreadyLoaded) 
             {
                 //Loads game from Data Manager
                 DataPersistenceManager.Instance.LoadGame();
+
 
                 //Once game is loaded, moves player to the current transform of the Player Spawn Point
                 PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
@@ -751,12 +756,18 @@ namespace GameBase
                     //Notifies user if there is no Player Spawn Point in the scene after loading the data
                     Debug.LogError("No PlayerSpawnPoint was located in the scene when loading! Player will not be moved correctly!");
                 }
+
+                m_saveHasAlreadyLoaded = true;  //prevents this code from executing more than once while the coroutine executes
             }
 
             //Fade in
             yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
            
+            //With the coroutine finished executing, set this back to false so
+            //that the coroutine executes all code the next time it is started
+            m_saveHasAlreadyLoaded = false;   
+            
             m_playerAlive = true;   //Set player to alive
             m_gameState = GameState.PLAYGAME;   //Transition to "Play Game" game state
         }

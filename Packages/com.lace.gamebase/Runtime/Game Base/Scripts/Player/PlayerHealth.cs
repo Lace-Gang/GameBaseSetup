@@ -22,15 +22,6 @@ namespace GameBase
 
         }
 
-        /// <summary>
-        /// Directly set player health
-        /// </summary>
-        /// <param name="health">Desired player health</param>
-        public void SetHealth(float health)
-        {
-            m_health = health;
-        }
-
         #region Save and Load
 
         /// <summary>
@@ -39,7 +30,8 @@ namespace GameBase
         /// <param name="data">Game Data object to load data from</param>
         public void LoadData(GameData data)
         {
-            m_health = data.playerHealth;
+            m_health = data.playerCurrentHealth;
+            m_maxHealth = data.playerMaxHealth;
 
             //Notify HUD that player health has changed
             GameInstance.Instance.UpdatePlayerHealth(m_health, m_maxHealth);
@@ -52,7 +44,8 @@ namespace GameBase
         /// <param name="data">Reference to Game Data object to save data to</param>
         public void SaveData(ref GameData data)
         {
-            data.playerHealth = m_health;
+            data.playerCurrentHealth = m_health;
+            data.playerMaxHealth = m_maxHealth;
         }
 
         #endregion Save and Load

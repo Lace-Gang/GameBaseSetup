@@ -73,6 +73,14 @@ namespace GameBase
         /// <returns>Current health</returns>
         public float GetHealth() {  return m_health; }
 
+        /// <summary>
+        /// Directly set player health
+        /// </summary>
+        /// <param name="health">Desired player health</param>
+        public void SetHealth(float health)
+        {
+            m_health = health;
+        }
 
         /// <summary>
         /// Allows other classes to view max health

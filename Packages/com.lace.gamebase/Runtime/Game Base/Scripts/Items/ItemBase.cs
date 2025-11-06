@@ -6,39 +6,34 @@ namespace GameBase
     public abstract class ItemBase : MonoBehaviour
     {
         //Hidden Variables
-        private bool m_presentInScene = true;  //Is the object currently present in the world
+        protected bool m_activeInScene = true;  //Is the object currently present in the world
 
 
         //Exposed Variables
         [Header("Basic Item Components")]
-        [SerializeField] MeshRenderer m_renderer;
-        [SerializeField] Collider m_collider;
+        [SerializeField] protected MeshRenderer m_renderer;
+        [SerializeField] protected Collider m_collider;
 
         [Header("Basic Item Information")]
-        [SerializeField] string m_name;
+        //Add a tooltip here later!!!!!
+        [SerializeField] protected string m_name;
         [Tooltip("Is item picked up automatically when player enters trigger")]
         [SerializeField] protected bool m_autoPickup = true;
+        
 
-        //[Header("Basic Item Behavior")]
-        //[SerializeField] bool m_rotates = false;
-        //[Tooltip("Rotation speed in degrees per second")]
-        //[SerializeField] float m_rotationSpeed;
+        
 
 
-       //private void Start()
-       //{
-       //   //if(m_rotates)
-       //   //{
-       //   //    StartCoroutine(Rotate());
-       //   //}
-       //}
 
-
+        /// <summary>
+        /// If the object entering this item's trigger is the player, executes the "ItemBaseTriggerEnter" function
+        /// </summary>
+        /// <param name="other">Collider that entered the trigger (handled by game engine)</param>
         private void OnTriggerEnter(Collider other)
         {
             if(other.GetComponent<PlayerCharacter>() != null)
             { 
-                ParentTriggerEnter();
+                ItemBaseTriggerEnter();
             }
         }
 
@@ -48,33 +43,21 @@ namespace GameBase
         /// when the item is "picked up"
         /// </summary>
         /// <returns></returns>
-        protected void ParentTriggerEnter()
+        protected void ItemBaseTriggerEnter()
         {
             if(m_autoPickup)
             {
-                ItemBaseOnPickedUp();   //Parent class "OnPickedUp"
                 OnPickedUp();           //Child class "OnPickedUp"
+                //ItemBaseOnPickedUp();   //Parent class "OnPickedUp"
             }
         }
 
         /// <summary>
-        /// Executes all necessary code for all items for when a player exits the trigger of an item
-        /// </summary>
-        protected void ParentTriggerExit()
-        {
-           //if(!m_autoPickup)
-           //{
-           //    UserInterface.Instance.HidePromptBox();
-           //}
-        }
-
-
-        /// <summary>
-        /// Executes all necessary code for all items for when item is picked up
+        /// Hides item and marks item as "Inactive in Scene"
         /// </summary>
         protected void ItemBaseOnPickedUp()
         {
-            m_presentInScene = false;            //item no longer present in the world
+            m_activeInScene = false;            //item no longer present in the world
             m_renderer.enabled = false;     //item no longer visible
             m_collider.enabled = false;     //item no longer collidable
         }
@@ -86,43 +69,7 @@ namespace GameBase
         public abstract void OnPickedUp();
 
 
-
-        //public IEnumerator Rotate()
-        //{
-        //    while(true)
-        //    {
-        //        Quaternion q = new Quaternion(transform.rotation.x, transform.rotation.y + (m_rotationSpeed * Time.deltaTime), transform.rotation.z, transform.rotation.w);
-        //        transform.rotation = q;
-        //        yield return null;
-        //    }
-        //}
+        public abstract void Use();
     }
 }
-
-
-
-//Which items do we want?
-
-//Inventory & non-inventory
-
-//Non-inventory
-//Health pick up
-//Amo pickup
-//Health Upgrade
-//Score Increase
-
-
-//inventory
-//weapons
-//Tools
-//Inventory-health increase (like a health potion?)
-//
-
-
-
-
-//What about this?
-//each item has an ID
-//Inventory has a dictionary with item ID as the key and the number present in the inventory as the value
-//loading inventory uses that dictionary
 

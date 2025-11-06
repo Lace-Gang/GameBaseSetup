@@ -273,5 +273,22 @@ namespace GameBase{
         }
 
         #endregion Health, Damage, Death, and Respawning
+
+
+        #region Upgrades and Powerups
+
+        public void UpgradeHealth(float upgradeAmount, bool healToFull)
+        {
+            //Adds additional MaxHealth amount to current MaxHealth
+            m_playerHealth.SetMaxHealth(m_playerHealth.GetMaxHealth() +  upgradeAmount);
+
+            //If "Heal To Full" is true, sets current HP to Max HP
+            if(healToFull) m_playerHealth.SetHealth(m_playerHealth.GetMaxHealth());
+        }
+
+
+        #endregion Upgrades and Powerups
+
+
     }
 }
