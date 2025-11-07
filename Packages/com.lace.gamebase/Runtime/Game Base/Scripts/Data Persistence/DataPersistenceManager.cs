@@ -29,9 +29,16 @@ namespace GameBase
         private GameData m_gameData;                                //stores all persistent (save) data
         private List<IDataPersistence> m_dataPersistenceObjects;    //all objects with data to save/load
         private FileDataHandler m_dataHandler;                      //used to read/write files as well as serialize/deserialize and encrypt/decrypt data
-        private bool m_reset = false;                               //used to indicate when save file is to be discarded
 
         public static DataPersistenceManager Instance { get; private set; }     //Singleton instance of the DataPersistenceManager
+
+
+        /// <summary>
+        /// Allows other scripts to see the current game data
+        /// </summary>
+        /// <returns>Current GameData object</returns>
+        public GameData GetData() { return m_gameData; }
+
 
 
         #region Awake, Start, and ApplicationQuit
@@ -79,12 +86,9 @@ namespace GameBase
 
         #region Save File Management
 
-        /// <summary>
-        /// Tells DataPersistenceManager to discard current save file and load a new game the next time the game loads
-        /// </summary>
-        public void ResetOnNextSaveLoad()
+        public void Reset()
         {
-            m_reset = true;
+            m_dataHandler.Save(new GameData());
         }
 
         /// <summary>
@@ -115,10 +119,6 @@ namespace GameBase
             {
                 dataPersistenceObj.SaveData(ref m_gameData);
             }
-
-            //If reset is false, sets isNewSave to false to indicate there is now saved data to load. Otherwise sets isNewSave to-
-            //true to reset the save file and game the next time the game is loaded.
-            m_gameData.isNewSave = m_reset;
 
             //Save that data to a file using the file data handler
             m_dataHandler.Save(m_gameData);

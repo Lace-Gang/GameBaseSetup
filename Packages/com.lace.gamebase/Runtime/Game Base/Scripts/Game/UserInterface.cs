@@ -10,6 +10,7 @@ namespace GameBase
     public class UserInterface : MonoBehaviour
     {
         //Exposed Varaibles
+
         [Header("Screens")]
         [SerializeField] public GameObject m_titleScreen;
         [SerializeField] public GameObject m_mainMenuScreen;
@@ -28,14 +29,18 @@ namespace GameBase
         [SerializeField] private TextMeshProUGUI m_looseScreenScoreText;
         [SerializeField] private TextMeshProUGUI m_InteractionPromptText;
 
-
-        [Header("Other Componenets")]
-        [Tooltip("Save Game button. Only visible if 'Save From Pause Menu' is set to true in the Game Instance")]
-        [SerializeField] public GameObject m_saveButton;
+        [Header("Main Menu Components")]
         [Tooltip("'Load Game Button' object. Only visible if 'Load From Main Menu' is set to true in the Game Instance")]
         [SerializeField] public GameObject m_loadButtonObject;
         [Tooltip("'Load Game Button' button. Only enabled if there is a valid save file to load")]
         [SerializeField] public Button m_loadButton;
+
+
+
+
+        [Header("Other Componenets")]
+        [Tooltip("'Save Game button' Object. Only visible if 'Save From Pause Menu' is set to true in the Game Instance")]
+        [SerializeField] public GameObject m_saveButton;
 
 
 
@@ -128,6 +133,7 @@ namespace GameBase
         {
             GameInstance.Instance.RestartFromGame();    //Tells GameInstance to restart the game, and informs GameInstance that this restart is being called for from within gameplay
         }
+
 
 
         #endregion Button Clicks
@@ -225,5 +231,18 @@ namespace GameBase
         }
 
         #endregion HUD Updates
+
+
+
+
+
+        #region UI Layout Adjustments
+
+
+
+
+        #endregion UI Layout Adjustments
+
+
     }
 }

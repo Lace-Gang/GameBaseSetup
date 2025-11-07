@@ -11,8 +11,15 @@ namespace GameBase
         /// <param name="data">Copy of GameData object</param>
         public void LoadData(GameData data)
         {
-            transform.position = data.playerPosition;
-            transform.rotation = data.playerRotation;
+            if(data.vector3Data.ContainsKey("Player.Position"))
+            {
+                transform.position = data.vector3Data["Player.Position"];
+            }
+
+            if(data.quaternionData.ContainsKey("Player.Rotation"))
+            {
+                transform.rotation = data.quaternionData["Player.Rotation"];
+            }
         }
 
         /// <summary>

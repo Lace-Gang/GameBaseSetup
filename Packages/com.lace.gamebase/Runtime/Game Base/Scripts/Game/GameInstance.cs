@@ -10,6 +10,8 @@ namespace GameBase
     public class GameInstance : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
+        private int m_ID = 0;                                   //GameManager ID - Used for the Save System
+        
         private bool m_paused = false;                          //Is the game paused
         private bool m_playerAlive = true;                      //Is the player alive
         private bool m_validSaveFile = false;
@@ -70,6 +72,10 @@ namespace GameBase
         [SerializeField] bool m_loadHotKeyEnabled = false;
         [Tooltip("Which key on the keyboard can be used to load the game")]
         [SerializeField] KeyCode m_loadHotKey = KeyCode.L;
+
+
+        [Header("Save and Load Information")]
+        [SerializeField] bool m_saveScore = false;
 
 
         #region Getters and Setters
@@ -262,26 +268,63 @@ namespace GameBase
         #region Save and Load Data
 
         /// <summary>
-        /// Loads data from the save file
-        /// </summary>
-        /// <param name="data">GameData object that the loaded save file information</param>
-        public void LoadData(GameData data)
-        {
-            //load data
-            m_validSaveFile = !data.isNewSave;
-            m_score = data.score;
-
-            //update UI
-            UserInterface.Instance.UpdateScore(m_score);
-        }
-
-        /// <summary>
         /// Saves data to the save file
         /// </summary>
         /// <param name="data">GameData object that information is being saved to</param>
         public void SaveData(ref GameData data)
         {
-            data.score = m_score;
+            //Check for key. If key exists, change value to current value, else add key with current value
+            if (data.boolData.ContainsKey("GameInstance.ValidSaveFile"))
+            {
+                data.boolData["GameInstance.ValidSaveFile"] = true;
+            }
+            else
+            {
+                data.boolData.Add("GameInstance.ValidSaveFile", true);
+            }
+
+            //Save score (if indicated to do so)
+            if (m_saveScore)
+            {
+                //Check floatData for key. If key exists, change value to current value, else add key with current value
+                if (data.floatData.ContainsKey(m_ID + ".Score"))
+                {
+                    data.floatData[m_ID + ".Score"] = m_score;
+                }
+                else
+                {
+                    data.floatData.Add(m_ID + ".Score", m_score);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Loads data from the save file
+        /// </summary>
+        /// <param name="data">GameData object that the loaded save file information</param>
+        public void LoadData(GameData data)
+        {
+            //Validate that a save file already exists. If a key exists in the save file, the file has already been saved to. 
+
+            if (data.boolData.ContainsKey("GameInstance.ValidSaveFile"))
+            {
+                //Track that a valid save file is present.
+                m_validSaveFile = data.boolData["GameInstance.ValidSaveFile"];
+
+                //Load score (if applicable)
+                if(m_saveScore)
+                {
+                    //Check if key exists in floatData, if so load score, if not then do nothing
+                    if(data.floatData.ContainsKey(m_ID + ".Score"))
+                    {
+                        m_score = data.floatData[m_ID + ".Score"];
+
+
+                        //update UI
+                        UserInterface.Instance.UpdateScore(m_score);
+                    }
+                }
+            }
         }
         #endregion Save and Load Data
 
@@ -482,6 +525,7 @@ namespace GameBase
                     PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
                     if (spawnPoint != null)
                     {
+                        spawnPoint.LoadData(DataPersistenceManager.Instance.GetData());
                         m_playerScript.SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
                         m_playerScript.OnRespawn(m_respawnInvincibilityTimer);
                         m_playerAlive = true;
@@ -621,9 +665,10 @@ namespace GameBase
                 UserInterface.Instance.m_loadButtonObject.SetActive(true);
 
                 //If there is no valid save to load, makes button non-interactable
-                if (!m_validSaveFile) UserInterface.Instance.m_loadButton.interactable = false;
-                else UserInterface.Instance.m_loadButton.interactable = true;
+                UserInterface.Instance.m_loadButton.interactable = m_validSaveFile;
             }
+
+
 
             //turn off other UI screens and HUD
             UserInterface.Instance.m_titleScreen.SetActive(false);
@@ -745,17 +790,17 @@ namespace GameBase
                 DataPersistenceManager.Instance.LoadGame();
 
 
-                //Once game is loaded, moves player to the current transform of the Player Spawn Point
-                PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
-                if (spawnPoint != null)
-                {
-                    m_playerScript.SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
-                }
-                else
-                {
-                    //Notifies user if there is no Player Spawn Point in the scene after loading the data
-                    Debug.LogError("No PlayerSpawnPoint was located in the scene when loading! Player will not be moved correctly!");
-                }
+                ////Once game is loaded, moves player to the current transform of the Player Spawn Point
+                //PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
+                //if (spawnPoint != null)
+                //{
+                //    m_playerScript.SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                //}
+                //else
+                //{
+                //    //Notifies user if there is no Player Spawn Point in the scene after loading the data
+                //    Debug.LogError("No PlayerSpawnPoint was located in the scene when loading! Player will not be moved correctly!");
+                //}
 
                 m_saveHasAlreadyLoaded = true;  //prevents this code from executing more than once while the coroutine executes
             }

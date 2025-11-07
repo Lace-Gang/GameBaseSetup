@@ -6,7 +6,7 @@ namespace GameBase{
     [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent (typeof(Animator))]
-    [RequireComponent (typeof(PlayerHealth))]
+    [RequireComponent (typeof(Health))]
     public class PlayerCharacter : MonoBehaviour, IDataPersistence, IDamagableInterface
     {
         //Hidden Values
@@ -15,24 +15,32 @@ namespace GameBase{
         float m_respawnHealthPercentage = 100f;     //What percentage of health the player will have after respawning (Defaults to full health)
 
         //Hidden Variables
-        private int counter = 0;    //Test Code (will be removed later)
         private int m_lives;        //Number of lives player currently has
 
         //Hidden Components
         PlayerController m_playerController;    //player controller component
         Rigidbody m_rigidbody;                  //rigidbody component
-        PlayerHealth m_playerHealth;            //health component
+        Health m_playerHealth;                  //health component
 
         //Player Info
         [Header("General Player Information")]
         [Tooltip("Transform of the PLAYER CHARACTER object.")]
         [SerializeField] Transform m_transform;
         [Tooltip("Unique ID")]
-        [SerializeField] string m_id;   //player unique ID
+        [SerializeField] string m_ID;   //player unique ID
         [Tooltip("Whether the player can receive damage through the Game Base damage system")]
         [SerializeField] bool m_isDamagable = true;
         [Tooltip("Number of lives player starts with")]
         [SerializeField] int m_baseLives = 1;
+
+        [Header("Player Save Informition")]
+        [SerializeField] bool m_saves = false;
+        [SerializeField] bool m_savePosition = false;
+        [SerializeField] bool m_saveRotation = false;
+        [SerializeField] bool m_saveLives = false;
+        [SerializeField] bool m_saveCurrentHealth = false;
+        [SerializeField] bool m_saveMaxHealth = false;
+
 
 
 
@@ -99,7 +107,7 @@ namespace GameBase{
             //Creates important references
             m_playerController = GetComponent<PlayerController>();
             m_rigidbody = GetComponent<Rigidbody>();
-            m_playerHealth = GetComponent<PlayerHealth>();
+            m_playerHealth = GetComponent<Health>();
 
             //Sets important values in references
             m_rigidbody.isKinematic = true; //Rigidbody must be kinematic for character movement to function
@@ -130,17 +138,10 @@ namespace GameBase{
         /// </summary>
         void Update()
         {
-            //increments counter for Save System testing (will be removed soon)
-            if(Input.GetKeyDown(KeyCode.Q))
-            {
-                counter++;
-                Debug.Log("Count = " + counter);
-            }
-
             //Temporary code to reset save file (will be removed soon)
             if(Input.GetKeyDown(KeyCode.R))
             {
-                DataPersistenceManager.Instance.ResetOnNextSaveLoad();
+                DataPersistenceManager.Instance.Reset();
             }
 
             ////Updates timers and time based values
@@ -164,11 +165,83 @@ namespace GameBase{
         /// <param name="data">Takes in a reference to the GameData object</param>
         public void SaveData(ref GameData data)
         {
-            //Updates save file data to match player data
-            data.deathcount = this.counter; //Tester line
-            data.playerPosition = m_transform.position;
-            data.playerRotation = m_transform.rotation;
-            data.playerLives = m_lives;
+            if(!m_saves) return;    //only load if indicated to do so
+
+            //Save Position (if indicated to do so)
+            if (m_savePosition)
+            {
+                //Check vector3Data for key. If key exists, change value to current value, else add key with current value
+                if (data.vector3Data.ContainsKey("Player.Position"))
+                //if(data.vector3Data.ContainsKey(m_ID + ".Position"))
+                {
+                    //data.vector3Data[m_ID + ".Position"] = m_transform.position;
+                    data.vector3Data["Player.Position"] = m_transform.position;
+                }
+                else
+                {
+                    //data.vector3Data.Add(m_ID + ".Position", m_transform.position);
+                    data.vector3Data.Add("Player.Position", m_transform.position);
+                }
+            }
+
+            //Save Rotation (if indicated to do so)
+            if (m_saveRotation)
+            {
+                //Check quaterionData for key. If key exists, change value to current value, else add key with current value
+                if (data.quaternionData.ContainsKey("Player.Rotation"))
+                //if(data.quaternionData.ContainsKey(m_ID + ".Rotation"))
+                {
+                    //data.quaternionData[m_ID + ".Rotation"] = m_transform.rotation;
+                    data.quaternionData["Player.Rotation"] = m_transform.rotation;
+                }
+                //else
+                else
+                {
+                    data.quaternionData.Add("Player.Rotation", m_transform.rotation);
+                }
+            }
+
+            //Save Lives (if indicated to do so)
+            if (m_saveLives)
+            {
+                //Check intData for key. If key exists, change value to current value, else add key with current value
+                if (data.intData.ContainsKey("Player.Lives"))
+                {
+                    data.intData["Player.Lives"] = m_lives;
+                }
+                else
+                {
+                    data.intData.Add("Player.Lives", m_lives);
+                }
+            }
+
+            //Save Current Health (if indicated to do so)
+            if (m_saveCurrentHealth)
+            {
+                //Check floatData for key. If key exists, change value to current value, else add key with current value
+                if (data.floatData.ContainsKey("Player.CurrentHealth"))
+                {
+                    data.floatData["Player.CurrentHealth"] = m_playerHealth.GetHealth();
+                }
+                else
+                {
+                    data.floatData.Add("Player.CurrentHealth", m_playerHealth.GetHealth());
+                }
+            }
+
+            //Save Max Health (if indicated to do so)
+            if (m_saveMaxHealth)
+            {
+                //Check floatData for key. If key exists, change value to current value, else add key with current value
+                if (data.floatData.ContainsKey("Player.MaxHealth"))
+                {
+                    data.floatData["Player.MaxHealth"] = m_playerHealth.GetMaxHealth();
+                }
+                else
+                {
+                    data.floatData.Add("Player.MaxHealth", m_playerHealth.GetMaxHealth());
+                }
+            }
         }
 
 
@@ -180,17 +253,63 @@ namespace GameBase{
         /// <param name="data">Takes in the GameData object</param>
         public void LoadData(GameData data)
         {
-            //If data is new (this is a new save) do not load data
-            if(!data.isNewSave)
+            if(!m_saves) return;    //only load if indicated to do so
+
+            Vector3 position = m_transform.position;
+            Quaternion rotation = m_transform.rotation;
+            
+            if(m_savePosition)
             {
-                //Updates player data to match save file data
-                this.counter = data.deathcount; //Tester line
-                SetPlayerTransform(data.playerPosition, data.playerRotation);
-                m_lives = data.playerLives;
+                if(data.vector3Data.ContainsKey(m_ID + ".Position"))
+                {
+                    position = data.vector3Data[m_ID + ".Position"];
+                }
+            }
+            
+            if(m_saveRotation)
+            {
+                if(data.quaternionData.ContainsKey(m_ID + ".Rotation"))
+                {
+                    rotation = data.quaternionData[m_ID + ".Rotation"];
+                }
+            }
+
+            //Load Lives (if indicated to do so)
+            if (m_saveLives)
+            {
+                //Check intData if key exists, if so load Lives, if not then do nothing
+                if (data.intData.ContainsKey("Player.Lives"))
+                {
+                    m_lives = data.intData["Player.Lives"];
+                }
+            }
+
+            //Load Max Lives (if indicated to do so)
+            if (m_saveMaxHealth)
+            {
+                //Check floatData if key exists, if so load Max Health, if not then do nothing
+                if (data.floatData.ContainsKey("Player.MaxHealth"))
+                {
+                    m_playerHealth.SetMaxHealth(data.floatData["Player.MaxHealth"]);
+                }
+            }
+
+            //Load Current Health (if indicated to do so)
+            if (m_saveCurrentHealth)
+            {
+                //Check floatData if key exists, if so load Current Health, if not then do nothing
+                if (data.floatData.ContainsKey("Player.CurrentHealth"))
+                {
+                    m_playerHealth.SetHealth(data.floatData["Player.CurrentHealth"]);
+                }
+            }
 
 
-                //Upate HUD to match new values
-                GameInstance.Instance.UpdatePlayerLives(m_lives);   //player lives
+
+            //Update other necessary things
+            if(m_savePosition || m_saveRotation)
+            {
+                SetPlayerTransform(position, rotation);
             }
         }
 

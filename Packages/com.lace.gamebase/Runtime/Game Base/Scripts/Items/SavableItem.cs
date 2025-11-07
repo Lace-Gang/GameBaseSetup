@@ -39,42 +39,42 @@ namespace GameBase
             //Save "Active in Scene" (if indicated to do so)
             if(m_saveActiveInScene)
             {
-                //Check for key. If key exists, change value to current value, else add key with current value
-                if(data.itemBoolData.ContainsKey(m_ID + ".ActiveInScene"))
+                //Check boolData for key. If key exists, change value to current value, else add key with current value
+                if(data.boolData.ContainsKey(m_ID + ".ActiveInScene"))
                 {
-                    data.itemBoolData[m_ID + ".ActiveInScene"] = m_activeInScene;
+                    data.boolData[m_ID + ".ActiveInScene"] = m_activeInScene;
                 }
                 else
                 {
-                    data.itemBoolData.Add(m_ID + ".ActiveInScene", m_activeInScene);
+                    data.boolData.Add(m_ID + ".ActiveInScene", m_activeInScene);
                 }
             }
 
             //Save position (if indicated to do so)
             if(m_savePosition)
             {
-                //Check for key. If key exists, change value to current value, else add key with current value
-                if(data.itemVector3Data.ContainsKey(m_ID + ".Position"))
+                //Check Vector3Data for key. If key exists, change value to current value, else add key with current value
+                if(data.vector3Data.ContainsKey(m_ID + ".Position"))
                 {
-                    data.itemVector3Data[m_ID + ".Position"] = transform.position;
+                    data.vector3Data[m_ID + ".Position"] = transform.position;
                 }
                 else
                 {
-                    data.itemVector3Data.Add(m_ID + ".Position", transform.position);
+                    data.vector3Data.Add(m_ID + ".Position", transform.position);
                 }
             }
 
             //Save rotation (if indicated to do so)
             if (m_saveRotation)
             {
-                //Check for key. If key exists, change value to current value, else add key with current value
-                if (data.itemQuaternionData.ContainsKey(m_ID + ".Rotation"))
+                //Check quaternionData for key. If key exists, change value to current value, else add key with current value
+                if (data.quaternionData.ContainsKey(m_ID + ".Rotation"))
                 {
-                    data.itemQuaternionData[m_ID + ".Rotation"] = transform.rotation;
+                    data.quaternionData[m_ID + ".Rotation"] = transform.rotation;
                 }
                 else
                 {
-                    data.itemQuaternionData.Add(m_ID + ".Rotation", transform.rotation);
+                    data.quaternionData.Add(m_ID + ".Rotation", transform.rotation);
                 }
             }
         }
@@ -91,10 +91,10 @@ namespace GameBase
             //Load "Active in Scene" (if indicated to do so)
             if(m_saveActiveInScene)
             {
-                //Check if key exists in item bool data dictionary, if so load "Active in Scene", if not then do nothing
-                if(data.itemBoolData.ContainsKey(m_ID + ".ActiveInScene"))
+                //Check boolData if key exists, if so load "Active in Scene", if not then do nothing
+                if(data.boolData.ContainsKey(m_ID + ".ActiveInScene"))
                 {
-                    m_activeInScene = data.itemBoolData[m_ID + ".ActiveInScene"];
+                    m_activeInScene = data.boolData[m_ID + ".ActiveInScene"];
 
                     //Hide this object if not active in scene
                     m_renderer.enabled = m_activeInScene;     //item no longer visible
@@ -114,10 +114,10 @@ namespace GameBase
             //Load position (if indicated to do so)
             if (m_savePosition)
             {
-                //Check if key exists in item Vector3 data dictionary, if so load position, if not then do nothing
-                if (data.itemVector3Data.ContainsKey(m_ID + ".Position"))
+                //Check if key exists in vector3Data, if so load position, if not then do nothing
+                if (data.vector3Data.ContainsKey(m_ID + ".Position"))
                 {
-                    transform.position = data.itemVector3Data[m_ID + ".Position"];
+                    transform.position = data.vector3Data[m_ID + ".Position"];
                 }
             }
 
@@ -125,10 +125,10 @@ namespace GameBase
             //Load rotation (if indicated to do so)
             if (m_saveRotation)
             {
-                //Check if key exists in item Quaternion data dictionary, if so load rotation, if not then do nothing
-                if (data.itemQuaternionData.ContainsKey(m_ID + ".Rotation"))
+                //Check if key exists in item quaternionData, if so load rotation, if not then do nothing
+                if (data.quaternionData.ContainsKey(m_ID + ".Rotation"))
                 {
-                    transform.rotation = data.itemQuaternionData[m_ID + ".Rotation"];
+                    transform.rotation = data.quaternionData[m_ID + ".Rotation"];
                 }
             }
         }
