@@ -6,8 +6,6 @@ namespace GameBase
     [System.Serializable] //Data cannot be serialized to JSON format without this! 
     public class GameData
     {
-        //public bool isNewSave = true;
-
         //Items
         public SerializableDictionary<string, bool> boolData = new SerializableDictionary<string, bool>();
         public SerializableDictionary<string, int> intData = new SerializableDictionary<string, int>();
