@@ -6,10 +6,11 @@ This is where I will be creating my capstone and running some of my testing for 
 * [Important Information](#important-information)
 * [Game Instance](#game-instance)
 * [User Interface](#user-interface)
-* [Save System](#save-system)
 * [Player Character](#player-character)
 * [Main Camera](#main-camera)
 * [Health and Damage System](#health-and-damage-system)
+* [Save System](#save-system)
+* [Items](#items)
 
 ## Installation and Setup Instructions
 * [Install From Disk](#install-from-disk)
@@ -366,30 +367,34 @@ There are alternative save and load conditions present in the "Game Instance" sc
 <br>
 
 ### Save Data From Objects
-In the GameData Script, add a public variable for each peice of data in your game you want to save. It is recommended but not required to remove values from GameData if you
-will not be saving those values (this will save space in the save file).
-Note: if you want any data to be loaded from an unused save file, that will have to be defined here.
+1.) Ensure that there is a SerializableDictionary in the GameData object with the correct value type for the data you are planning to save.
 <br>
-<img width="244" height="185" alt="image" src="https://github.com/user-attachments/assets/0d22bdf9-ebe9-487e-bfeb-909ca59555a7" />
+<img width="575" height="190" alt="image" src="https://github.com/user-attachments/assets/fd7a5abe-7adf-461e-ad9c-1dc81c0920cb" />
 <br>
-
-To save the any data in any class, ensure that the IDataInterface is added to the class.
+2.) To save the data in any class, ensure that the IDataInterface is added to the class.
 <br>
 <img width="404" height="28" alt="image" src="https://github.com/user-attachments/assets/189e12fb-65fa-4216-86c8-3b33b8111fc2" />
 <br>
 
-In the SaveData method (required by IDataInterface), update any values in the GameData object that are associated with this class
+3.) In the SaveData method (required by IDataInterface), check the SerializableDictionary with the correct value type in the GameData object for your desired key for the
+value. If the key already exists, update it's value, otherwise add and new key/value pair with your desired key and value.
 <br>
-<img width="410" height="95" alt="image" src="https://github.com/user-attachments/assets/4ead06a5-6d05-4576-8ec9-21cac77e359f" />
+This is the suggested way to structure this:
+<br>
+<img width="500" height="101" alt="image" src="https://github.com/user-attachments/assets/4a33d002-298e-4566-8bef-c984a14e7539" />
 <br>
 
-In the LoadData method (required by IDataInterface), load any values from the GameData object that are associated with this class
+4.) In the LoadData method (required by IDataInterface), check the SerializableDictionary with the correct value type in the GameData object for the key of the data you want to load.
+If the key exists, load data from the SerializableDictionary using the key.
 <br>
-<img width="392" height="150" alt="image" src="https://github.com/user-attachments/assets/205695e4-b0a9-4356-9abd-7026957722b7" />
+This is the suggested way to structure this:
 <br>
-Note: "if(!data.isNewSave)" allows savable data to be adjusted in the editor rather than the GameData object
+<img width="386" height="56" alt="image" src="https://github.com/user-attachments/assets/fbb061cc-3668-400c-8446-aa5924e09c34" />
 <br>
-<img width="331" height="34" alt="image" src="https://github.com/user-attachments/assets/25f688e0-6ac6-4a06-a11d-7387bd45386e" />
+<br>
+Note: If you plan to have more than one instance of a savable object, it is highly advised to use an ID system, with the ID added into each key when saving and loading, as the examples above show.
+<br>
+<img width="275" height="47" alt="image" src="https://github.com/user-attachments/assets/83e61e6e-3b71-45b2-8d40-deb17c13a806" />
 
 <br>
 
@@ -399,6 +404,38 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 <br>
 <br>
 
+
+## Items
+* [Included Prefabs](#included-item-prefabs)
+* [Create New Item](#creating-a-new-item)
+
+### Inluded Item Prefabs
+* Basic Health Recovery Item
+* Basic Score Increase Item
+* Basic Health Upgrade
+* Savable Health Recovery Item
+* Savable Score Increase Item
+* Savable Health Upgrade
+
+<br>
+  
+### Creating A New Item
+1.) Make your item script a child of one of the item scripts. For items that should be saved and loaded, use the "SavableItem" script. Otherwise, use the "ItemBase" script.
+<br>
+  1a.) Non-Saving:
+  <br>
+  <img width="242" height="35" alt="image" src="https://github.com/user-attachments/assets/9942ab15-3811-4c2b-a1ed-f7cc381d4994" />
+  <br>
+  1b.) Saving:
+  <br>
+  <img width="240" height="24" alt="image" src="https://github.com/user-attachments/assets/b23cda58-30e9-4b78-9331-190c53b7e246" />
+  <br>
+2.) When setting up the new item, ensure that the object has a Collider component, and that the Collider is set to "Trigger
+<br>
+<img width="294" height="99" alt="image" src="https://github.com/user-attachments/assets/2de013bb-d9df-4099-99a8-7310a2250dc6" />
+
+<br>
+<br>
 
 
 # Art Credits:
