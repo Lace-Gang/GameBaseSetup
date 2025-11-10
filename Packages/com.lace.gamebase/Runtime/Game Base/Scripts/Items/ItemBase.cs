@@ -32,7 +32,7 @@ namespace GameBase
         private void OnTriggerEnter(Collider other)
         {
             if(other.GetComponent<PlayerCharacter>() != null)
-            { 
+            {
                 ItemBaseTriggerEnter();
             }
         }
@@ -55,7 +55,7 @@ namespace GameBase
         /// <summary>
         /// Hides item and marks item as "Inactive in Scene"
         /// </summary>
-        protected void ItemBaseOnPickedUp()
+        protected void HideItemInScene()
         {
             m_activeInScene = false;            //item no longer present in the world
             m_renderer.enabled = false;     //item no longer visible

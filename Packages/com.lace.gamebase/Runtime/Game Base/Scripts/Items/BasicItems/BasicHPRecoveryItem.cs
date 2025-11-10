@@ -16,7 +16,7 @@ namespace GameBase
         {
             Use();
 
-            ItemBaseOnPickedUp(); //Base item "On pickup" execution
+            HideItemInScene();   //Hides item in the scene
         }
 
         /// <summary>

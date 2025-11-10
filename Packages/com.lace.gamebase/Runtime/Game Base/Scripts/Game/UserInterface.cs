@@ -46,8 +46,8 @@ namespace GameBase
         //[SerializeField] float m_inventoryBoxWidthRatio = 0.75f;
         //[SerializeField] float m_inventoryBoxHeightRatio = 0.75f;
 
-        [SerializeField] int imageBoxWidth = 100;
-        [SerializeField] int imageBoxHeight = 100;
+        [SerializeField] int m_imageBoxWidth = 100;
+        [SerializeField] int m_imageBoxHeight = 100;
 
         [SerializeField] int m_rows = 4;
         [SerializeField] int m_columns = 5;
@@ -70,15 +70,12 @@ namespace GameBase
         /// </summary>
         private void Awake()
         {
-            //Sets up the User Interface as a singleton (ensures only one can be present)
+            //Notifies user if User Interface Singleton is being used improperly
             if (Instance != null)
             {
                 Debug.LogError("Found more than one User Interface in the scene.");
             }
             Instance = this;
-
-
-            GenerateInventoryBox();
         }
 
 
@@ -109,7 +106,7 @@ namespace GameBase
         /// </summary>
         public void UnpauseClicked()
         {
-            GameInstance.Instance.UnpauseGame();    //Tells GameInstance to unpause the game
+            GameInstance.Instance.TogglePauseMenu();    //Tells pause menu to close (if it is open)
         }
 
 
@@ -263,84 +260,46 @@ namespace GameBase
         /// <summary>
         /// Generates the Inventory Box based on user specifications
         /// </summary>
-        public void GenerateInventoryBox()
+        public List<InventoryItemBox> GenerateInventoryBox()
         {
-            
-            Debug.Log("Generated Inventory Screen");
+            //Creates list to store item box scripts in
+            List<InventoryItemBox> itemBoxes = new List<InventoryItemBox>();
 
             //find the current size of the screen
             float screenWidth = m_inventoryScreenRect.rect.width;
             float screenHeight = m_inventoryScreenRect.rect.height;
 
             //calculate and set size of inventory box
-            //float boxWidth = screenWidth * m_inventoryBoxWidthRatio;
-            float boxWidth = (m_padding * 2) + (m_columns * (imageBoxWidth + m_margin)) - m_margin;
-            //float boxHeight = screenHeight * m_inventoryBoxHeightRatio;
-            //float boxHeight = screenHeight * m_inventoryBoxHeightRatio;
-            float boxHeight = (m_padding * 2) + (m_rows * (imageBoxHeight + m_margin)) - m_margin;
 
+            float boxWidth = (m_padding * 2) + (m_columns * (m_imageBoxWidth + m_margin)) - m_margin;
+            float boxHeight = (m_padding * 2) + (m_rows * (m_imageBoxHeight + m_margin)) - m_margin;
             m_inventoryBoxRect.sizeDelta = new Vector2(boxWidth, boxHeight);
 
 
-            //calculate locations and sizes of item boxes
-            //sizes
-            // newBoxWidth = (screenWidth - 2 padding) / (columns (boxwidth + margin) - 2 margin)
-            // newBoxHeight = (screenHeight - 2 padding) / (rows (boxHeight + margin) - 2 margin)
+            ////calculate locations and sizes of item boxes
 
-
-            //position X
-            //LeftBoxEdge = -1/2 BoxWidth
-            //start at: X = LeftBoxEdge + padding + 1/2boxWidth
-            //next: X = prevX + margin + boxWidth
-
-            //position Y
-            //TopBoxEdge = 1/2 BoxHeight
-            //start at: Y = TopBoxEdge + padding + 1/2boxHeight
-            //next: Y = prevY - margin - boxHeight
-
-
-            //float leftBoxEdge = 1 * boxWidth;
+            //Find our starting points (the left side and top of the inventory box)
             float leftBoxEdge = -0.5f * boxWidth;
-            //float topBoxEdge = 1 * boxHeight;
             float topBoxEdge = 0.5f * boxHeight;
 
-
-
-            //float itemBoxWidth = (screenWidth - (m_padding * 2)) / (m_columns * ()
-
-
-            List<InventoryItemBox> itemBoxes = new List<InventoryItemBox>();
-
-            for(int i=0; i < (m_rows * m_columns); i++)
+            //Calculate box locations
+            for (int i = 1; i <= m_rows; i++)
             {
-                //calculate position x
-                float boxX = ((leftBoxEdge - (0.5f * imageBoxWidth) - m_margin) + m_padding) + ((i % m_columns + 1) * (imageBoxWidth + m_margin));
-                //float boxX = ((0 - (0.5f * imageBoxWidth) - m_margin) + m_padding) + ((i % m_columns) * (imageBoxWidth + m_margin));
+                float boxY = ((topBoxEdge + (0.5f * m_imageBoxHeight) + m_margin) - m_padding) - (i * (m_imageBoxHeight + m_margin));    //calculare position y
             
-                //calculare position y
-                float boxY = ((topBoxEdge + (0.5f * imageBoxHeight) + m_margin) - m_padding) - ((i % m_rows + 1) * (imageBoxHeight + m_margin));
-                //float boxY = ((0 + (0.5f * imageBoxHeight) + m_margin) + m_padding) + ((i % m_rows) * (imageBoxHeight + m_margin));
+                for (int j = 1; j <= m_columns; j++)
+                {
+                    float boxX = ((leftBoxEdge - (0.5f * m_imageBoxWidth) - m_margin) + m_padding) + (j * (m_imageBoxWidth + m_margin));  //calculate position x
             
+                    GameObject box = GameObject.Instantiate(m_inventoryItemBox, m_inventoryBoxRect);    //Create box
+                    InventoryItemBox boxScript = box.GetComponent<InventoryItemBox>();                  //Get reference to that box's script
+                    boxScript.SetRectTransform(boxX, boxY, m_imageBoxWidth, m_imageBoxHeight);          //Set dimensions and location of the item box
             
-                //GameObject box = GameObject.Instantiate(m_inventoryItemBox, m_inventoryBoxRect, m_inventoryBoxRect);
-                GameObject box = GameObject.Instantiate(m_inventoryItemBox, m_inventoryBoxRect);
-                //box.GetComponent<RectTransform>().SetParent(m_inventoryBoxRect, false);
-                InventoryItemBox boxScript = box.GetComponent<InventoryItemBox>();
-            
-            
-                boxScript.SetRectTransform(boxX, boxY, 100, 100);
-                //boxScript.SetRectTransform(boxX + (0.5f * boxWidth), boxY + (0.5f * boxHeight), 100, 100);
+                    itemBoxes.Add(boxScript);   //Adds item box script to list
+                }
             }
 
-            ////m_inventoryItemBox.SetRectTransform(100, 100, 100, 200);
-            //GameObject box1 = GameObject.Instantiate(m_inventoryItemBox, m_inventoryBoxRect);
-            //InventoryItemBox boxScript1 = box1.GetComponent<InventoryItemBox>();
-            //
-            //boxScript1.SetRectTransform(500, 200, 100, 100);
-
-
-
-
+            return itemBoxes;
         }
 
 

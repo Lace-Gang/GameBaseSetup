@@ -20,7 +20,7 @@ namespace GameBase
         {
             Use();  //Uses item
 
-            ItemBaseOnPickedUp();   //Parent "On Picked Up" method
+            HideItemInScene();   //Hides item in the scene
         }
 
         /// <summary>

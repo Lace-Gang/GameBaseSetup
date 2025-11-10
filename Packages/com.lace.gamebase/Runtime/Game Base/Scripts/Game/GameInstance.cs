@@ -13,6 +13,9 @@ namespace GameBase
         private int m_ID = 0;                                   //GameManager ID - Used for the Save System
         
         private bool m_paused = false;                          //Is the game paused
+        private bool m_pauseMenuOpen = false;                   //Is the pause menu open
+        private bool m_usesInventory = false;                   //Is the inventory system being used in this game
+        private bool m_inventoryOpen = false;                   //Is the inventory open
         private bool m_playerAlive = true;                      //Is the player alive
         private bool m_validSaveFile = false;
         private bool m_loadOnPlay = false;                      //Should save file load when game loads
@@ -37,13 +40,16 @@ namespace GameBase
         [Tooltip("Name of the Scene where the game will execute")]
         [SerializeField] string m_gameSceneName = "SampleScene";    //Name of the game scene. Used to load game scene
 
-        [Header("Game Flow")]
+        [Header("Game Settings and Flow")]
         [Tooltip("After loosing the game, where does the player restart from")]
         [SerializeField] RestartMode m_restartMode = RestartMode.RESTARTFROMBEGINNING;
-        [Tooltip("Can the game be paused")]
-        [SerializeField] bool m_gamePauses = true;
+        [Tooltip("Does the game have a pause menu")]
+        [SerializeField] bool m_gameHasPauseMenu = true;
         [Tooltip("Which key on the keyboard can be used to open the pause menu")]
-        [SerializeField] KeyCode m_pauseKey = KeyCode.X;
+        [SerializeField] KeyCode m_pauseMenuToggleKey = KeyCode.X;
+
+        [SerializeField] bool m_inventoryPausesGame = true;
+        [SerializeField] KeyCode m_toggleInventoryKey = KeyCode.B;
 
         [Header("General Player Info")]
         [Tooltip("Time between player death event and transition")]
@@ -110,7 +116,7 @@ namespace GameBase
 
 
 
-        #region Awake and Update
+        #region Awake, Start, and Update
 
         /// <summary>
         /// Checks that only this instance of the GameInstance exists at this time and notifies the user if this is not true.
@@ -118,12 +124,20 @@ namespace GameBase
         /// </summary>
         private void Awake()
         {
-            //Sets up the GameInstance as a singleton
+            //Notifies user if GameInstance Singleton is being used improperly
             if (Instance != null)
             {
                 Debug.LogError("Found more than one Game Instance in the scene.");
             }
             Instance = this;
+        }
+
+        /// <summary>
+        /// Tracks if inventory system is being used
+        /// </summary>
+        private void Start()
+        {
+            m_usesInventory = Inventory.Instance.GetUseInventory(); //Set if Inventory is being used
         }
 
 
@@ -173,11 +187,16 @@ namespace GameBase
                     break;
 
                 case GameState.PLAYGAME:
-                    //Pauses game if game is supposed to pause, and the player character is alive, and the player hits the pause key
-                    if (m_gamePauses && m_playerAlive && Input.GetKeyDown(m_pauseKey))
+                    //Opens or closes pause menu if game is supposed to have a pause menu, the player character is alive, and the player hits the pause key
+                    if (m_gameHasPauseMenu && m_playerAlive && Input.GetKeyDown(m_pauseMenuToggleKey))
                     {
-                        UserInterface.Instance.m_saveButton.SetActive(m_saveFromPauseMenu);    //Only display Save Button if save button is supposed to be visible in the pause menu
-                        OpenPauseMenu();
+                        TogglePauseMenu();
+                    }
+
+                    //Opens or closes inventory if the inventory system is being used, the player character is alive, and the player hits the inventory key
+                    if(m_usesInventory && m_playerAlive && Input.GetKeyDown(m_toggleInventoryKey))
+                    {
+                        ToggleInventory();
                     }
 
                     //Update prompt display, evaluate if prompt is being triggered, and execute prompt if so
@@ -226,7 +245,7 @@ namespace GameBase
             }
         }
 
-        #endregion Awake and Update
+        #endregion Awake, Start, and Update
 
 
 
@@ -330,19 +349,72 @@ namespace GameBase
 
 
 
-        #region Pause and Unpause
+        #region Pause, Unpause and Inventory
 
         /// <summary>
-        /// Pauses game and opens pause menu
+        /// If game is in pause menu, hides menu and unpauses game, else displays menu and pauses game
         /// </summary>
-        private void OpenPauseMenu()
+        public void TogglePauseMenu()
         {
-            //Display pause menu
-            UserInterface.Instance.m_pauseScreen.SetActive(true);
-            if (m_saveFromPauseMenu) UserInterface.Instance.m_saveButton.SetActive(true);
+            if(!m_pauseMenuOpen && !m_inventoryOpen)    //if neither the pause menu nor the inventory are open, opens pause menu
+            {
+                UserInterface.Instance.m_pauseScreen.SetActive(true);   //Display pause menu
+                if (m_saveFromPauseMenu) UserInterface.Instance.m_saveButton.SetActive(true);   //Show save button if applicable
 
-            //pause game
-            PauseGame();
+                PauseGame();    //Pause Game
+
+                m_pauseMenuOpen = true;     //tracks that pause menu is now open
+            }
+            else    //Otherwise, closes pause menu
+            {
+                UserInterface.Instance.m_pauseScreen.SetActive(false);  //Hide pause menu
+
+                UnpauseGame();  //Unpause Game
+
+                m_pauseMenuOpen = false;    //tracks that pause menu is no longer open
+
+            }
+        }
+
+        /// <summary>
+        /// If game is in inventory screen, hides inventory and (optionally) unpauses game, else displays inventory and (optionally) pauses game
+        /// </summary>
+        public void ToggleInventory()
+        {
+            if(!m_inventoryOpen && !m_pauseMenuOpen)    //if neither the inventory nor the pause menu are open, opens inventory
+            {
+                UserInterface.Instance.m_inventoryScreen.SetActive(true);   //Display inventory screen
+
+                if(m_inventoryPausesGame)
+                {
+                    PauseGame();    //Pause game
+                }
+                else
+                {
+                    //Unlock Cursor and make cursor visible
+                    Cursor.lockState = CursorLockMode.None;
+                    Cursor.visible = true;
+                }
+
+                m_inventoryOpen = true;     //tracks that inventory is now open
+            }
+            else    //Otherwise, closes inventory
+            {
+                UserInterface.Instance.m_inventoryScreen.SetActive(false);  //Hide inventory screen
+
+                if (m_inventoryPausesGame)
+                {
+                    UnpauseGame();  //Unpause game
+                }
+                else
+                {
+                    //Lock Cursor and make cursor invisible
+                    Cursor.lockState = CursorLockMode.Locked;
+                    Cursor.visible = false;
+                }
+
+                m_inventoryOpen = false;    //tracks that inventory is no longer open
+            }
         }
 
         /// <summary>
@@ -361,11 +433,8 @@ namespace GameBase
         /// <summary>
         /// Unpauses game and exits pause menu
         /// </summary>
-        public void UnpauseGame()
+        private void UnpauseGame()
         {
-            //Exits pause menu
-            UserInterface.Instance.m_pauseScreen.SetActive(false);
-
             //Unpause game
             Time.timeScale = 1;     
 
@@ -375,7 +444,7 @@ namespace GameBase
         }
 
 
-        #endregion Pause and Unpause
+        #endregion Pause, Unpause and Inventory
 
 
 

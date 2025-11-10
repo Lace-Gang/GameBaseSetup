@@ -2,16 +2,17 @@ using UnityEngine;
 
 namespace GameBase
 {
-    public class TestItem : SavableItem
+    public class TestItem : InventoryItem
     {
 
 
 
 
-        public override void OnPickedUp()
-        {
-            ItemBaseOnPickedUp();
-        }
+        //public override void OnPickedUp()
+        //{
+        //    //ItemBaseOnPickedUp();
+        //    
+        //}
 
         public override void Use()
         {
