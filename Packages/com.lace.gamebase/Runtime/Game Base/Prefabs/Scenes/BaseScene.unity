@@ -841,7 +841,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 555
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -4740,6 +4740,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_useInventory: 1
+  m_equippedItemBox: {fileID: 1548058516}
+  m_sendFirstItemToEquipped: 1
 --- !u!1 &849022269
 GameObject:
   m_ObjectHideFlags: 0
@@ -6801,7 +6803,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Item Name
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9061,7 +9063,7 @@ MonoBehaviour:
   m_nameText: {fileID: 1180440668}
   m_numberText: {fileID: 301769824}
   m_keyIndicatorText: {fileID: 1856218821}
-  m_useKey: 111
+  m_useKey: 101
 --- !u!1 &1573758861
 GameObject:
   m_ObjectHideFlags: 0
@@ -11273,7 +11275,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: E
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

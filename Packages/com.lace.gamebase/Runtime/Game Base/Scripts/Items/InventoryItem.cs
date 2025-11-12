@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace GameBase
 {
-    public class InventoryItem : SavableItem
+    public abstract class InventoryItem : SavableItem
     {
         //Hidden Variables
         protected bool m_inInventory = false;
@@ -80,6 +80,33 @@ namespace GameBase
             }
         }
 
+        /// <summary>
+        /// Checks if two inventory items have all the same inventory related properties
+        /// </summary>
+        /// <param name="a">First inventory item being compaired</param>
+        /// <param name="b">Second inventory item being compaired</param>
+        /// <returns>If they have the same inventory related properties</returns>
+        public static bool operator ==(InventoryItem a, InventoryItem b)
+        {
+            return (a?.GetItemName() == b?.GetItemName() && a?.GetRemovable() == b?.GetRemovable() && a?.GetUseFromInventory() == b?.GetUseFromInventory() && a?.GetStackInstances() == b?.GetStackInstances()
+                && a?.GetEquippable() == b?.GetEquippable() && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse() && a?.GetInventorySprite() == b?.GetInventorySprite());
+        }
+
+        /// <summary>
+        /// Checks if two inventory items do not have all the same inventory related properties
+        /// </summary>
+        /// <param name="a">First inventory item being compaired<</param>
+        /// <param name="b">Second inventory item being compaired</param>
+        /// <returns>If they do not have the same inventory related properties</returns>
+        public static bool operator !=(InventoryItem a, InventoryItem b)
+        {
+            return !(a?.GetItemName() == b?.GetItemName() && a?.GetRemovable() == b?.GetRemovable() && a?.GetUseFromInventory() == b?.GetUseFromInventory() && a?.GetStackInstances() == b?.GetStackInstances()
+                && a?.GetEquippable() == b?.GetEquippable() && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse() && a?.GetInventorySprite() == b?.GetInventorySprite());
+        }
+
+
+
+
 
         /// <summary>
         /// Item attempts to add self to inventory
@@ -90,9 +117,6 @@ namespace GameBase
         }
 
 
-        public override void Use()
-        {
-            throw new System.NotImplementedException();
-        }
+        public abstract override void Use();
     }
 }

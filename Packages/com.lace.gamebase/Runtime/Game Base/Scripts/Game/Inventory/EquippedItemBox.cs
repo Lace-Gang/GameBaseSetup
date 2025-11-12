@@ -43,6 +43,18 @@ namespace GameBase
             if (Input.GetKeyDown(m_useKey) && m_item != null && GameInstance.Instance.getPlayerAlive())
             {
                 m_item.Use();
+
+                if (m_item.GetConsumeAfterUse()) //consumes item (reduces number of item by one) if item is marked to be consumed.
+                {
+                    if (removeInstanceOfItem())    //If all instances of the equipped item were used up, empties and updates equipped item box
+                    {
+                        //empties box and shows that box is empty
+                        EmptyBox();
+
+                        //notifies Inventory that the equipped item box is now empty
+                        Inventory.Instance.OnEquippedItemEmpty();
+                    }
+                }
             }
         }
 
@@ -53,8 +65,44 @@ namespace GameBase
 
 
         #region Getters and Setters
-        public string GetItemName() { return m_itemName; }  //Allows other scripts to get the name of the item(s) being stored in this box
-        public InventoryItem GetItemScript() { return m_item; }   //Allows other scripts to get the script of this item being held in this box
+        public string GetItemName() { return m_itemName; }          //Allows other scripts to get the name of the item(s) being stored in this box
+        public InventoryItem GetItemScript() { return m_item; }     //Allows other scripts to get the script of this item being held in this box
+        public int GetNumberOfItems() { return m_numItems; }        //Allows other scripts to get how many items this box currently contains
+
+
+        public void SetNumberOfItems(int numItems) { m_numItems = numItems; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
+
+
+        /// <summary>
+        /// Removes all item instances from this box, and resets all values in this box
+        /// </summary>
+        public void EmptyBox()
+        {
+            m_item = null;
+            m_itemName = string.Empty;
+            m_numItems = 0;
+            m_itemSprite = null;
+
+            UpdateBox();
+        }
+
+        /// <summary>
+        /// Removes one instance of this item box's item. 
+        /// </summary>
+        /// <returns>If this box is empty</returns>
+        public bool removeInstanceOfItem()
+        {
+            m_numItems--;
+
+            if (m_numItems <= 0)
+            {
+                EmptyBox();
+                return true;
+            }
+
+            UpdateBox();
+            return false;
+        }
 
 
         ///// <summary>
