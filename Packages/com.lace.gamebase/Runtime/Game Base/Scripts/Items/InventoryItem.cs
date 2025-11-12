@@ -13,6 +13,16 @@ namespace GameBase
         [Header("Inventory Item Information")]
         [Tooltip("The image that will be displayed for this item in the inventory screen (and HUD when equipped)")]
         [SerializeField] protected Sprite m_inventorySprite;
+
+        [Tooltip("Can this item be used from the inventory")]
+        [SerializeField] bool m_useFromInventory = false;
+        [Tooltip("Can this item be equipped from inventory")]
+        [SerializeField] bool m_equippable = true;
+        [Tooltip("Can this item be removed from inventory")]
+        [SerializeField] bool m_removable = true;
+        [Tooltip("Can this item be used from the inventory")]
+        [SerializeField] bool m_consumeAfterUse = false;
+
         [Tooltip("Will this item be in inventory upon being spawned")]
         [SerializeField] protected bool m_startInInventory = false;
         //[Tooltip("Can multiple instances of this item exist in the inventory at one time")]
@@ -29,6 +39,10 @@ namespace GameBase
         public string GetItemName() { return m_name; }                  //Allows other scripts to see the name of this item
         //public bool GetAllowMultipleInstances() { return m_allowMultipleInstancesInInventory; }     //Allows other scripts to see if more than one instance can be in the inventory at one time
         public bool GetStackInstances() { return m_stackInstancesInInventory; }                     //Allows other scripts to see if instances of this item should stack in the inventory
+        public bool GetUseFromInventory() { return m_useFromInventory; }                            //Allows other scripts to see if instances of this item can be used from the inventory
+        public bool GetEquippable() { return m_equippable; }                                        //Allows other scripts to see if instances of this item can be equipped
+        public bool GetRemovable() { return m_removable; }                                          //Allows other scripts to see if instances of this item can be removed from the inventory
+        public bool GetConsumeAfterUse() { return m_consumeAfterUse; }                              //Allows other scripts to see if instances of this item is consumed after being used
         
         #endregion Getters and Setters
 
@@ -50,10 +64,19 @@ namespace GameBase
         /// </summary>
         protected void AddToInventory()
         {
-            if(Inventory.Instance.AddItemToInventory(this))
+            if (Inventory.Instance.AddItemToInventory(this))
             {
                 m_inInventory = true;
                 HideItemInScene();
+            }
+            else
+            {
+                //if item is not added succesfully (ie the inventory was full) prompter needs to be reactivated
+                ItemPickupPrompter prompter = GetComponentInChildren<ItemPickupPrompter>();
+                if (prompter != null)
+                {
+                    prompter.SetPromptActive(true);
+                }
             }
         }
 

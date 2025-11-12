@@ -301,6 +301,10 @@ MonoBehaviour:
   m_savePosition: 1
   m_saveRotation: 1
   m_inventorySprite: {fileID: 10901, guid: 0000000000000000f000000000000000, type: 0}
+  m_useFromInventory: 0
+  m_equippable: 1
+  m_removable: 1
+  m_consumeAfterUse: 0
   m_startInInventory: 0
   m_stackInstancesInInventory: 1
 --- !u!4 &147219520
@@ -435,6 +439,10 @@ MonoBehaviour:
   m_savePosition: 0
   m_saveRotation: 0
   m_inventorySprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  m_useFromInventory: 0
+  m_equippable: 1
+  m_removable: 1
+  m_consumeAfterUse: 0
   m_startInInventory: 0
   m_stackInstancesInInventory: 1
 --- !u!4 &178940939
@@ -1320,6 +1328,10 @@ MonoBehaviour:
   m_savePosition: 0
   m_saveRotation: 0
   m_inventorySprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  m_useFromInventory: 0
+  m_equippable: 1
+  m_removable: 1
+  m_consumeAfterUse: 0
   m_startInInventory: 0
   m_stackInstancesInInventory: 1
 --- !u!4 &616463446
@@ -1990,6 +2002,10 @@ MonoBehaviour:
   m_savePosition: 0
   m_saveRotation: 0
   m_inventorySprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  m_useFromInventory: 1
+  m_equippable: 1
+  m_removable: 1
+  m_consumeAfterUse: 0
   m_startInInventory: 0
   m_stackInstancesInInventory: 1
 --- !u!4 &916323589
@@ -2139,6 +2155,10 @@ MonoBehaviour:
   m_savePosition: 0
   m_saveRotation: 1
   m_inventorySprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_useFromInventory: 0
+  m_equippable: 1
+  m_removable: 1
+  m_consumeAfterUse: 0
   m_startInInventory: 0
   m_stackInstancesInInventory: 1
 --- !u!1 &1010360313
@@ -3480,6 +3500,10 @@ MonoBehaviour:
   m_savePosition: 0
   m_saveRotation: 0
   m_inventorySprite: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}
+  m_useFromInventory: 0
+  m_equippable: 1
+  m_removable: 1
+  m_consumeAfterUse: 0
   m_startInInventory: 0
   m_stackInstancesInInventory: 1
 --- !u!4 &2114117973

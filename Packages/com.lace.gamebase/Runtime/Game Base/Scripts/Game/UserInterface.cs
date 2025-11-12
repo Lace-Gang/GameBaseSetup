@@ -20,8 +20,9 @@ namespace GameBase
         [SerializeField] public GameObject m_HUD;
         [SerializeField] public GameObject m_pauseScreen;
         [SerializeField] public GameObject m_inventoryScreen;
+        [SerializeField] public GameObject m_inventoryMenuScreen;
         [SerializeField] public GameObject m_fadeScreen;
-        [SerializeField] private GameObject m_InteractionPromptScreen;
+        [SerializeField] private GameObject m_interactionPromptScreen;
 
         [Header("HUD Components")]
         [SerializeField] private UnityEngine.UI.Slider m_healthBar;
@@ -42,6 +43,9 @@ namespace GameBase
         [SerializeField] RectTransform m_inventoryBoxRect;
         //[SerializeField] InventoryItemBox m_inventoryItemBoxScript;
         [SerializeField] GameObject m_inventoryItemBox;
+        [SerializeField] public UnityEngine.UI.Button m_useButton;
+        [SerializeField] public UnityEngine.UI.Button m_equipButton;
+        [SerializeField] public UnityEngine.UI.Button m_discardButton;
 
         //[SerializeField] float m_inventoryBoxWidthRatio = 0.75f;
         //[SerializeField] float m_inventoryBoxHeightRatio = 0.75f;
@@ -154,6 +158,30 @@ namespace GameBase
         }
 
 
+        /// <summary>
+        /// Tells Inventory to use the selected inventory item
+        /// </summary>
+        public void UseSelectedItemClicked()
+        {
+            Inventory.Instance.UseSelectedItem();
+        }
+
+        /// <summary>
+        /// Tells inventory to equip selected inventory item
+        /// </summary>
+        public void EquipSelectedItem()
+        {
+            Inventory.Instance.EqipSelectedItem();
+        }
+
+        /// <summary>
+        /// Tells inventory to remove selected inventory item from inventory
+        /// </summary>
+        public void RemoveSelectedItem()
+        {
+            Inventory.Instance.RemoveSelectedItem();
+        }
+
 
         #endregion Button Clicks
 
@@ -238,7 +266,7 @@ namespace GameBase
         public void DisplayPromptBox(string prompt)
         {
             m_InteractionPromptText.text = prompt;
-            m_InteractionPromptScreen.SetActive(true);
+            m_interactionPromptScreen.SetActive(true);
         }
 
         /// <summary>
@@ -246,7 +274,7 @@ namespace GameBase
         /// </summary>
         public void HidePromptBox()
         {
-            m_InteractionPromptScreen.SetActive(false);
+            m_interactionPromptScreen.SetActive(false);
         }
 
         #endregion HUD Updates

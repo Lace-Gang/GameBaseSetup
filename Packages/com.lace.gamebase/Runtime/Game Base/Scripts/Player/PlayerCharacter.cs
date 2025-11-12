@@ -145,15 +145,6 @@ namespace GameBase{
             }
 
 
-
-            ////Temporary code to reset save file (will be removed soon)
-            //if (Input.GetKeyDown(KeyCode.B))
-            //{
-            //    UserInterface.Instance.m_inventoryScreen.SetActive(!UserInterface.Instance.m_inventoryScreen.activeInHierarchy);
-            //}
-
-
-
             ////Updates timers and time based values
             //Invincibility
             if (m_invincibleTime > 0)

@@ -23,13 +23,15 @@ namespace GameBase
             m_activePrompt = promptActive;
         }
 
+        
+
         /// <summary>
         /// When player enters prompt trigger, prompt is added to active prompt list
         /// </summary>
         /// <param name="other">Collider that entered this trigger (handled by game engine)</param>
         private void OnTriggerEnter(Collider other)
         {
-            if(m_activePrompt)
+            if (m_activePrompt)
             {
                 if(other.gameObject.GetComponent<PlayerCharacter>() != null)
                 {
@@ -58,10 +60,10 @@ namespace GameBase
         /// </summary>
         public override void ExecutePrompt()
         {
-            m_Item.OnPickedUp();
-
             if (m_removesPromptAfterPickup) RemovePromptFromPromptList();
             if (m_pickupOnlyOnce) m_activePrompt = false;
+
+            m_Item.OnPickedUp();
         }
     }
 }

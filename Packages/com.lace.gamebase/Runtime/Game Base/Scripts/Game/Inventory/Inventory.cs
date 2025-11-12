@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace GameBase
 {
@@ -10,6 +12,10 @@ namespace GameBase
         //Hidden Variables
         int m_inventorySpace = 0;
         int m_itemsInInventory = 0;
+
+        InventoryItem m_selectedItem;
+        InventoryItemBox m_selectedItemBox = null;
+        InventoryItem m_equippedItem;
 
         //Hidden Variable Lists
         private List<InventoryItemBox> m_inventoryItemBoxes = new List<InventoryItemBox>();     //stores item boxes in the inventory
@@ -51,11 +57,6 @@ namespace GameBase
             m_inventorySpace = m_inventoryItemBoxes.Count;
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
 
 
         /// <summary>
@@ -89,6 +90,76 @@ namespace GameBase
 
 
             return itemAdded;
+        }
+
+
+        /// <summary>
+        /// Deselects the current selected item
+        /// </summary>
+        public void DeselectSelectedItem()
+        {
+            if (m_selectedItem != null) { m_selectedItemBox.m_button.interactable = true; } //if there is a selected item, marks item box as selectable again
+
+            //Stops tracking selected item and item box
+            m_selectedItemBox = null;
+            m_selectedItem = null;
+        }
+
+
+
+
+        /// <summary>
+        /// If item box has an item: Shows that item box has been selected, tracks selected item and item box, and shows inventory menu
+        /// </summary>
+        /// <param name="itemBox">Newly selected inventory item box</param>
+        public void SelectItemInInventory(InventoryItemBox itemBox)
+        {
+            if (m_selectedItem != null) { m_selectedItemBox.m_button.interactable = true; } //if there is a selected item, marks item box as selectable again
+
+            if(itemBox.GetItemScript() != null)
+            {
+                //tracks new selected item and item box
+                m_selectedItemBox = itemBox;
+                m_selectedItem = itemBox.GetItemScript();
+
+                m_selectedItemBox.m_button.interactable = false; //marks new selected item box as unselectable
+
+                UserInterface.Instance.m_inventoryMenuScreen.SetActive(true);   //shows inventory menu
+
+                //sets interactability of buttons in accordance with the new selected item
+                UserInterface.Instance.m_useButton.interactable = m_selectedItem.GetUseFromInventory();
+                UserInterface.Instance.m_equipButton.interactable = m_selectedItem.GetEquippable();
+                UserInterface.Instance.m_discardButton.interactable = m_selectedItem.GetRemovable();
+            }
+            else
+            {
+                UserInterface.Instance.m_inventoryMenuScreen.SetActive(false);  //hides inventory menu
+
+                //stops tracking selected item and item box
+                m_selectedItemBox = null;
+                m_selectedItem = null;
+            }
+
+
+        }
+
+
+
+
+        public void UseSelectedItem()
+        {
+            m_selectedItem.Use();
+        }
+
+
+        public void EqipSelectedItem()
+        {
+            Debug.Log("Item Equipped"); //Test line to be removed later
+        }
+
+        public void RemoveSelectedItem()
+        {
+            Debug.Log("Item Removed"); //Test line to be removed later
         }
     }
 }

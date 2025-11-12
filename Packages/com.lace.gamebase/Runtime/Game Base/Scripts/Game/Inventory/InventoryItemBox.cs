@@ -19,6 +19,7 @@ namespace GameBase
         [Header("Important Components")]
         [SerializeField] Image m_image;
         [SerializeField] RectTransform m_rectTransform;
+        [SerializeField] public Button m_button;
         [SerializeField] TextMeshProUGUI m_nameText;
         [SerializeField] TextMeshProUGUI m_numberText;
 
@@ -79,11 +80,13 @@ namespace GameBase
             m_numberText.text = (m_numItems > 1)? m_numItems.ToString() : string.Empty;
         }
 
-        //Test code
-        public void turnOffImage()
-        {
-            m_image.canvasRenderer.SetColor(Color.red);
-        }
 
+        /// <summary>
+        /// Notifies Inventory that this inventory item box has been selected
+        /// </summary>
+        public void OnItemBoxSelected()
+        {
+            Inventory.Instance.SelectItemInInventory(this);
+        }
     }
 }

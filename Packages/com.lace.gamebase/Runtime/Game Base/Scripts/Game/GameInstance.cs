@@ -89,6 +89,7 @@ namespace GameBase
         public static GameInstance Instance { get; private set; }  //Allows other scripts to get the singleton instance of the GameInstance
 
         public bool getPaused() {  return m_paused; }   //Allows other scripts to know if the game is currently paused
+        public bool getPlayerAlive() {  return m_playerAlive; }   //Allows other scripts to know if the player is alive
 
         public PlayerCharacter GetPlayerScript() { return m_playerScript; }  //Allows other scripts to access the current player character script
 
@@ -401,6 +402,9 @@ namespace GameBase
             else    //Otherwise, closes inventory
             {
                 UserInterface.Instance.m_inventoryScreen.SetActive(false);  //Hide inventory screen
+                UserInterface.Instance.m_inventoryMenuScreen.SetActive(false); //Hides inventory menu
+
+                Inventory.Instance.DeselectSelectedItem();      //Deselects selected item in the inventory screen
 
                 if (m_inventoryPausesGame)
                 {
