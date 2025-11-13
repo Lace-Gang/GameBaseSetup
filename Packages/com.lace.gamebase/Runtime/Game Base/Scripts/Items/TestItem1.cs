@@ -2,9 +2,8 @@ using UnityEngine;
 
 namespace GameBase
 {
-    public class TestItem : InventoryItem, IInventoryItem
+    public class TestItem1 : InventoryItem, IInventoryItem
     {
-        //protected override bool m_equippable { get; set; } = true;
 
         //public override void OnPickedUp()
         //{
@@ -17,7 +16,7 @@ namespace GameBase
 
         public override void Use()
         {
-            Debug.Log("Test Item Has Been Used");
+            Debug.Log("Something very helpful!");
         }
     }
 }

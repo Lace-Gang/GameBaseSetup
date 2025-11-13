@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace GameBase
 {
-    public class EquippedItemBox : MonoBehaviour
+    public class EquippedItemBox : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
         private string m_itemName = "";
@@ -154,6 +154,70 @@ namespace GameBase
             m_image.sprite = m_itemSprite;
             m_nameText.text = (m_numItems > 0) ? m_itemName : string.Empty;
             m_numberText.text = (m_numItems > 1) ? m_numItems.ToString() : string.Empty;
+        }
+
+
+
+
+
+
+        public void SaveData(ref GameData data)
+        {
+            if (m_numItems > 0)
+            {
+                //Check stringData for key. If key exists, change value to current value, else add key with current value
+                if (data.stringData.ContainsKey("EquippedItemBox.ItemScript"))
+                {
+                    data.stringData["EquippedItemBox.ItemScript"] = m_item.GetType().Name;
+                }
+                else
+                {
+                    data.stringData.Add("EquippedItemBox.ItemScript", m_item.GetType().Name);
+                }
+
+                //Check intData for key. If key exists, change value to current value, else add key with current value
+                if (data.intData.ContainsKey("EquippedItemBox.NumberOfItems"))
+                {
+                    data.intData["EquippedItemBox.NumberOfItems"] = m_numItems;
+                }
+                else
+                {
+                    data.intData.Add("EquippedItemBox.NumberOfItems", m_numItems);
+                }
+
+                m_item.SaveForInventory(ref data, "EquippedItem");
+            }
+        }
+
+        public void LoadData(GameData data)
+        {
+            //Check if key exists in intData, if so continue loading if not then do nothing
+            if (data.intData.ContainsKey("EquippedItemBox.NumberOfItems"))
+            {
+                m_numItems = data.intData["EquippedItemBox.NumberOfItems"];
+
+                //only continue loading if Equipped item box had any items to load
+                if(m_numItems > 0)
+                {
+                    if (data.stringData.ContainsKey("EquippedItemBox.ItemScript"))
+                    {
+                        string itemName = data.stringData["EquippedItemBox.ItemScript"];
+
+                        InventoryItem itemScript = Inventory.Instance.FindItemByName(itemName);
+
+                        if(itemScript != null)
+                        {
+                            InventoryItem newItem = GameObject.Instantiate(itemScript);
+
+                            newItem.LoadForInventory(data, "EquippedItem");
+
+                            m_numItems--;
+                            AddItem(newItem);
+                            Inventory.Instance.SetEquippedItem(newItem);
+                        }
+                    }
+                }                     
+            }
         }
     }
 }

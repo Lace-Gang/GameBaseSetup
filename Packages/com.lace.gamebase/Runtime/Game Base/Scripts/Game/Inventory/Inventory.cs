@@ -1,3 +1,4 @@
+using NUnit.Framework.Internal;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace GameBase
 {
-    public class Inventory : MonoBehaviour
+    public class Inventory : MonoBehaviour, IDataPersistence
     {
         //private SerializableDictionary<int, int> m_inventory = new SerializableDictionary<int, int>();
 
@@ -25,6 +26,12 @@ namespace GameBase
         [SerializeField] bool m_useInventory = false;
         [SerializeField] EquippedItemBox m_equippedItemBox = null;
 
+        [SerializeField] List<InventoryItem> m_availableInventoryItems = new List<InventoryItem>();
+
+        //[SerializeField] List<Script> m_allScripts = new List<MonoBehaviour>();
+
+
+
         [Tooltip("If equipped item box is empty, next item added to inventory will be automatically equipped")]
         [SerializeField] bool m_sendFirstItemToEquipped = false;
 
@@ -34,6 +41,8 @@ namespace GameBase
         public static Inventory Instance { get; private set; }  //Allows other scripts to get the singleton instance of the Inventory
 
         public bool GetUseInventory() { return m_useInventory; }    //Allows other scripts to see if inventory is being used
+
+        public void SetEquippedItem(InventoryItem i) { m_equippedItem = i; }
 
         /// <summary>
         /// Checks that only this instance of the Inventory exists at this time and notifies the user if this is not true.
@@ -59,6 +68,21 @@ namespace GameBase
 
             //track available inventory space
             m_inventorySpace = m_inventoryItemBoxes.Count;
+        }
+
+
+
+        public InventoryItem FindItemByName(string name)
+        {
+            foreach(InventoryItem itemPrefab in m_availableInventoryItems)
+            {
+                if(itemPrefab.GetComponent<InventoryItem>() != null && itemPrefab.GetComponent<InventoryItem>().GetType().Name == name)
+                { 
+                    return itemPrefab;
+                }
+            }
+
+            return null;
         }
 
 
@@ -255,5 +279,52 @@ namespace GameBase
             m_selectedItem = null;
             m_selectedItemBox = null;
         }
+
+
+        public void SaveData(ref GameData data)
+        {
+            //if(m_equippedItemBox.GetNumberOfItems() > 0)
+            //{
+            //    //Check stringData for key. If key exists, change value to current value, else add key with current value
+            //    if (data.stringData.ContainsKey("EquipedItemBox.ItemScript"))
+            //    {
+            //        data.stringData["EquipedItemBox.ItemScript"] = m_equippedItemBox.GetItemScript().GetType().Name;
+            //    }
+            //    else
+            //    {
+            //        data.stringData.Add("EquipedItemBox.ItemScript", m_equippedItemBox.GetItemScript().GetType().Name);
+            //    }
+            //
+            //    //Check intData for key. If key exists, change value to current value, else add key with current value
+            //    if (data.intData.ContainsKey("EquipedItemBox.NumberOfItems"))
+            //    {
+            //        data.intData["EquipedItemBox.NumberOfItems"] = m_equippedItemBox.GetNumberOfItems();
+            //    }
+            //    else
+            //    {
+            //        data.intData.Add("EquipedItemBox.NumberOfItems", m_equippedItemBox.GetNumberOfItems());
+            //    }
+            //}
+
+
+
+            //throw new System.NotImplementedException();
+        }
+
+        public void LoadData(GameData data)
+        {
+            //TestItem t = new TestItem();
+            //t.SetItemName("Test Item");
+            //t.SetUseFromInventory(false);
+            //t.SetEquippable(true);
+            //t.SetRemovable(true);
+            //t.SetConsumeAfterUse(false);
+            //t.SetStackInstances(true);
+            //
+            //m_equippedItemBox.AddItem(t);
+            //m_equippedItem = t;
+            ////throw new System.NotImplementedException();
+        }
+
     }
 }

@@ -6,9 +6,11 @@ using UnityEngine.UI;
 
 namespace GameBase
 {
-    public class InventoryItemBox : MonoBehaviour
+    public class InventoryItemBox : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
+        private string m_boxID = "ItemBox";
+
         private InventoryItem m_item = null;
         private string m_itemName = "";
         private int m_numItems = 0;
@@ -31,6 +33,7 @@ namespace GameBase
 
 
         public void SetNumberOfItems(int numItems) { m_numItems = numItems; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
+        public void SetBoxID(string boxID) { m_boxID = boxID; }          //Allows other scripts to get how many items this box currently contains
 
         /// <summary>
         /// Sets the position and dimensions of the inventory box
@@ -123,6 +126,72 @@ namespace GameBase
         public void OnItemBoxSelected()
         {
             Inventory.Instance.SelectItemInInventory(this);
+        }
+
+
+        public void SaveData(ref GameData data)
+        {
+            if (m_numItems > 0)
+            {
+                //Check stringData for key. If key exists, change value to current value, else add key with current value
+                if (data.stringData.ContainsKey( m_boxID + ".ItemScript"))
+                {
+                    data.stringData[ m_boxID + ".ItemScript"] = m_item.GetType().Name;
+                }
+                else
+                {
+                    data.stringData.Add( m_boxID + ".ItemScript", m_item.GetType().Name);
+                }
+
+                //Check intData for key. If key exists, change value to current value, else add key with current value
+                if (data.intData.ContainsKey( m_boxID + ".NumberOfItems"))
+                {
+                    data.intData[ m_boxID + ".NumberOfItems"] = m_numItems;
+                }
+                else
+                {
+                    data.intData.Add( m_boxID + ".NumberOfItems", m_numItems);
+                }
+
+                m_item.SaveForInventory(ref data, m_boxID + "Item");
+            }
+        }
+
+        public void LoadData(GameData data)
+        {
+            //Check if key exists in intData, if so continue loading if not then do nothing
+            if (data.intData.ContainsKey( m_boxID + ".NumberOfItems"))
+            {
+                m_numItems = data.intData[ m_boxID + ".NumberOfItems"];
+
+                //only continue loading if Equipped item box had any items to load
+                if (m_numItems > 0)
+                {
+                    if (data.stringData.ContainsKey( m_boxID + ".ItemScript"))
+                    {
+                        string itemName = data.stringData[ m_boxID + ".ItemScript"];
+
+                        InventoryItem itemScript = Inventory.Instance.FindItemByName(itemName);
+
+                        if (itemScript != null)
+                        {
+                            InventoryItem newItem = GameObject.Instantiate(itemScript);
+
+                            newItem.LoadForInventory(data, m_boxID + "Item");
+
+                            m_numItems--;
+                            AddItem(newItem);
+                        }
+
+
+
+                        //newItem.LoadForInventory(data, m_boxID + "Item");
+                        //
+                        //m_numItems--;
+                        //AddItem(newItem);
+                    }
+                }
+            }
         }
     }
 }

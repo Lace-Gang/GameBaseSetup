@@ -163,7 +163,8 @@ namespace GameBase
         /// <returns>A list of all Monobehavior objects with the IDataPersitence Interface</returns>
         private List<IDataPersistence> FindAllDataPersistenceObjects()
         {
-            IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IDataPersistence>();
+            //IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IDataPersistence>();
+            IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).OfType<IDataPersistence>();
             return new List<IDataPersistence>(dataPersistenceObjects);
         }
     }

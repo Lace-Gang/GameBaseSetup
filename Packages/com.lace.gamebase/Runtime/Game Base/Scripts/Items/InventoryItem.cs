@@ -3,25 +3,34 @@ using UnityEngine.UI;
 
 namespace GameBase
 {
-    public abstract class InventoryItem : SavableItem
+    public abstract class InventoryItem : SavableItem, IDataPersistence
     {
+        //
+
         //Hidden Variables
         protected bool m_inInventory = false;
-        protected static int m_numItemInInventory = 0;  //How many instances of this item are in the inventory right now
+        protected bool m_equipped = true;
+        //protected static int m_numItemInInventory = 0;  //How many instances of this item are in the inventory right now
 
         //Exposed Variables
         [Header("Inventory Item Information")]
+        //[Tooltip("The Inventory ID of this item's group. Item ID MUST be the same for all instances of a given item that can stack. All items with the same ID MUST have the same " +
+        //   "inventory related variables/properties, the same name, and excute the same function in the 'Use()' method, or else code will function unexpectedly!")]
+
+
         [Tooltip("The image that will be displayed for this item in the inventory screen (and HUD when equipped)")]
         [SerializeField] protected Sprite m_inventorySprite;
 
         [Tooltip("Can this item be used from the inventory")]
-        [SerializeField] bool m_useFromInventory = false;
+        [SerializeField] protected bool m_useFromInventory = false;
         [Tooltip("Can this item be equipped from inventory")]
-        [SerializeField] bool m_equippable = true;
-        [Tooltip("Can this item be removed from inventory")]
-        [SerializeField] bool m_removable = true;
-        [Tooltip("Can this item be used from the inventory")]
-        [SerializeField] bool m_consumeAfterUse = false;
+        [SerializeField] protected bool m_equippable = true;
+        //protected virtual bool m_equippable { get; set; } = false; // Initial value
+
+        [Tooltip("Can thiprotected s item be removed from inventory")]
+        [SerializeField] protected bool m_removable = true;
+        [Tooltip("Can thiprotected s item be used from the inventory")]
+        [SerializeField] protected bool m_consumeAfterUse = false;
 
         [Tooltip("Will this item be in inventory upon being spawned")]
         [SerializeField] protected bool m_startInInventory = false;
@@ -31,8 +40,8 @@ namespace GameBase
         [SerializeField] protected bool m_stackInstancesInInventory = true;
 
         #region Getters and Setters
-        public static int GetNumberOfThisItemInInventory() { return m_numItemInInventory; }             //Allows other scripts to see how many instances of this item are currently in the inventory
-        public static void SetNumberOfThisItemInInventory(int num) {  m_numItemInInventory = num; }     //Allows other scripts to see how many instances of this item are currently in the inventory
+        //public static int GetNumberOfThisItemInInventory() { return m_numItemInInventory; }             //Allows other scripts to see how many instances of this item are currently in the inventory
+        //public static void SetNumberOfThisItemInInventory(int num) {  m_numItemInInventory = num; }     //Allows other scripts to see how many instances of this item are currently in the inventory
 
         public bool GetInInventory() { return m_inInventory; }          //Allows other scripts to see if this item is in the inventory
         public Sprite GetInventorySprite() { return m_inventorySprite; } //Allows other scripts to get this item's sprite
@@ -43,7 +52,16 @@ namespace GameBase
         public bool GetEquippable() { return m_equippable; }                                        //Allows other scripts to see if instances of this item can be equipped
         public bool GetRemovable() { return m_removable; }                                          //Allows other scripts to see if instances of this item can be removed from the inventory
         public bool GetConsumeAfterUse() { return m_consumeAfterUse; }                              //Allows other scripts to see if instances of this item is consumed after being used
-        
+
+
+
+        public void SetItemName(string s) { m_name = s; }                  //Allows other scripts to see the name of this item
+        public void SetStackInstances(bool b) { m_stackInstancesInInventory = b; }                     //Allows other scripts to see if instances of this item should stack in the inventory
+        public void SetUseFromInventory(bool b) { m_useFromInventory = b; }                            //Allows other scripts to see if instances of this item can be used from the inventory
+        public void SetEquippable(bool b) { m_equippable = b; }                                        //Allows other scripts to see if instances of this item can be equipped
+        public void SetRemovable(bool b) { m_removable = b; }                                          //Allows other scripts to see if instances of this item can be removed from the inventory
+        public void SetConsumeAfterUse(bool b) { m_consumeAfterUse = b; }                              //Allows other scripts to see if instances of this item is consumed after being used
+
         #endregion Getters and Setters
 
         /// <summary>
@@ -80,6 +98,9 @@ namespace GameBase
             }
         }
 
+
+        #region Overloaded Operators
+
         /// <summary>
         /// Checks if two inventory items have all the same inventory related properties
         /// </summary>
@@ -89,7 +110,11 @@ namespace GameBase
         public static bool operator ==(InventoryItem a, InventoryItem b)
         {
             return (a?.GetItemName() == b?.GetItemName() && a?.GetRemovable() == b?.GetRemovable() && a?.GetUseFromInventory() == b?.GetUseFromInventory() && a?.GetStackInstances() == b?.GetStackInstances()
-                && a?.GetEquippable() == b?.GetEquippable() && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse() && a?.GetInventorySprite() == b?.GetInventorySprite());
+                && a?.m_equippable == b?.m_equippable && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse()); // && a?.GetInventorySprite() == b?.GetInventorySprite());
+
+
+            //return (a?.GetItemName() == b?.GetItemName() && a?.GetRemovable() == b?.GetRemovable() && a?.GetUseFromInventory() == b?.GetUseFromInventory() && a?.GetStackInstances() == b?.GetStackInstances()
+            //   && a?.GetEquippable() == b?.GetEquippable() && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse() && a?.GetInventorySprite() == b?.GetInventorySprite());
         }
 
         /// <summary>
@@ -101,11 +126,139 @@ namespace GameBase
         public static bool operator !=(InventoryItem a, InventoryItem b)
         {
             return !(a?.GetItemName() == b?.GetItemName() && a?.GetRemovable() == b?.GetRemovable() && a?.GetUseFromInventory() == b?.GetUseFromInventory() && a?.GetStackInstances() == b?.GetStackInstances()
-                && a?.GetEquippable() == b?.GetEquippable() && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse() && a?.GetInventorySprite() == b?.GetInventorySprite());
+                && a?.m_equippable == b?.m_equippable && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse()); // && a?.GetInventorySprite() == b?.GetInventorySprite());
+
+            //return !(a?.GetItemName() == b?.GetItemName() && a?.GetRemovable() == b?.GetRemovable() && a?.GetUseFromInventory() == b?.GetUseFromInventory() && a?.GetStackInstances() == b?.GetStackInstances()
+            //    && a?.GetEquippable() == b?.GetEquippable() && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse() && a?.GetInventorySprite() == b?.GetInventorySprite());
+        }
+
+        #endregion Overloaded Operators
+
+
+
+       #region Save and Load
+       //public void SaveData(ref GameData data)
+       //{
+       //    base.SaveData(ref data);
+       //
+       //
+       //
+       //}
+       //
+       //public void LoadData(GameData data)
+       //{
+       //    base.LoadData(data);
+       //}
+
+
+
+        public void SaveForInventory(ref GameData data, string boxID)
+        {
+            //Save name
+            if (data.stringData.ContainsKey(boxID +".ItemName"))
+            {
+                data.stringData[boxID + ".ItemName"] = m_name;
+            }
+            else
+            {
+                data.stringData.Add(boxID + ".ItemName", m_name);
+            }
+
+            //Save usable from inventory
+            if (data.boolData.ContainsKey(boxID + ".ItemUsableFromInventory"))
+            {
+                data.boolData[boxID + ".ItemUsableFromInventory"] = m_useFromInventory;
+            }
+            else
+            {
+                data.boolData.Add(boxID + ".ItemUsableFromInventory", m_useFromInventory);
+            }
+
+            //Save equippable
+            if (data.boolData.ContainsKey(boxID + ".ItemEquippable"))
+            {
+                data.boolData[boxID + ".ItemEquippable"] = m_equippable;
+            }
+            else
+            {
+                data.boolData.Add(boxID + ".ItemEquippable", m_equippable);
+            }
+
+            //Save removable
+            if (data.boolData.ContainsKey(boxID + ".ItemRemovable"))
+            {
+                data.boolData[boxID + ".ItemRemovable"] = m_removable;
+            }
+            else
+            {
+                data.boolData.Add(boxID + ".ItemRemovable", m_removable);
+            }
+
+            //Save consume after use
+            if (data.boolData.ContainsKey(boxID + ".ItemConsumeAfterUse"))
+            {
+                data.boolData[boxID + ".ItemConsumeAfterUse"] = m_consumeAfterUse;
+            }
+            else
+            {
+                data.boolData.Add(boxID + ".ItemConsumeAfterUse", m_consumeAfterUse);
+            }
+
+            //Save stack insances
+            if (data.boolData.ContainsKey(boxID + ".ItemStackInstances"))
+            {
+                data.boolData[boxID + ".ItemStackInstances"] = m_stackInstancesInInventory;
+            }
+            else
+            {
+                data.boolData.Add(boxID + ".ItemStackInstances", m_stackInstancesInInventory);
+            }
         }
 
 
+        public void LoadForInventory(GameData data, string boxID)
+        {
+            m_activeInScene = false;
 
+            //Load name
+            if (data.stringData.ContainsKey(boxID + ".ItemName"))
+            {
+                m_name = data.stringData[boxID + ".ItemName"];
+            }
+
+            //Load usable from inventory
+            if (data.boolData.ContainsKey(boxID + ".ItemUsableFromInventory"))
+            {
+                m_useFromInventory = data.boolData[boxID + ".ItemUsableFromInventory"];
+            }
+
+            //Load equippable
+            if (data.boolData.ContainsKey(boxID + ".ItemEquippable"))
+            {
+                m_equippable = data.boolData[boxID + ".ItemEquippable"];
+            }
+
+            //Load removable
+            if (data.boolData.ContainsKey(boxID + ".ItemRemovable"))
+            {
+                m_removable = data.boolData[boxID + ".ItemRemovable"];
+            }
+
+            //Load consume after use
+            if (data.boolData.ContainsKey(boxID + ".ItemConsumeAfterUse"))
+            {
+                m_consumeAfterUse = data.boolData[boxID + ".ItemConsumeAfterUse"];
+            }
+
+            //Load stack instances
+            if (data.boolData.ContainsKey(boxID + ".ItemStackInstances"))
+            {
+                m_stackInstancesInInventory = data.boolData[boxID + ".ItemStackInstances"];
+            }
+        }
+       
+       
+       #endregion Save and Load
 
 
         /// <summary>

@@ -322,6 +322,8 @@ namespace GameBase
                     GameObject box = GameObject.Instantiate(m_inventoryItemBox, m_inventoryBoxRect);    //Create box
                     InventoryItemBox boxScript = box.GetComponent<InventoryItemBox>();                  //Get reference to that box's script
                     boxScript.SetRectTransform(boxX, boxY, m_imageBoxWidth, m_imageBoxHeight);          //Set dimensions and location of the item box
+
+                    boxScript.SetBoxID("ItemBox" + (((i - 1) * m_columns) + j));                        //Give item box a unique ID
             
                     itemBoxes.Add(boxScript);   //Adds item box script to list
                 }
