@@ -4740,12 +4740,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_useInventory: 1
+  m_sendFirstItemToEquipped: 1
   m_equippedItemBox: {fileID: 1548058516}
-  m_availableInventoryItems:
+  m_savableInventoryItems:
   - {fileID: 1767789569894051501, guid: 30827fe55ff33474d84e23298b604d7f, type: 3}
   - {fileID: 5493821054626209116, guid: ab1ca41bafb97ea4d9dcd147cb075955, type: 3}
   - {fileID: 1375783634633655360, guid: 1fef5ecbf04f3f240999e2612b1ab315, type: 3}
-  m_sendFirstItemToEquipped: 1
+  - {fileID: 4537818999554023761, guid: fe59ec6a0000c7b4e93aff99dfdc83aa, type: 3}
 --- !u!1 &849022269
 GameObject:
   m_ObjectHideFlags: 0
@@ -8144,6 +8145,10 @@ PrefabInstance:
     - target: {fileID: 2490660188392127216, guid: 13f840c3d2406f14f84cad0d22e24665, type: 3}
       propertyPath: m_Name
       value: DataPersistenceManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006631884029857793, guid: 13f840c3d2406f14f84cad0d22e24665, type: 3}
+      propertyPath: m_useEncryption
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8522614716558557971, guid: 13f840c3d2406f14f84cad0d22e24665, type: 3}
       propertyPath: m_LocalPosition.x

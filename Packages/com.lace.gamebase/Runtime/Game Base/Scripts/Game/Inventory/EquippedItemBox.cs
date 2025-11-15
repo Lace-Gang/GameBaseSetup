@@ -7,17 +7,19 @@ namespace GameBase
     public class EquippedItemBox : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
-        private string m_itemName = "";
-        private int m_numItems = 0;
-        private InventoryItem m_item = null;
-        private Sprite m_itemSprite;
-        //private List<InventoryItem> m_items = new List<InventoryItem>();    //Stores all scripts of the item stored in this box
-
+        private string m_itemName = "";         //Script of the item currently being stored in this Equipped Item Box
+        private int m_numItems = 0;             //Name of the item currently being stored in this Equipped Item Box
+        private InventoryItem m_item = null;    //Number of items currently being stored in this Equipped Item Box
+        private Sprite m_itemSprite;            //The sprite of the item burrently being stored in this Equipped Item Box
 
         [Header("Important Components")]
+        [Tooltip("Image component to display item sprite")]
         [SerializeField] Image m_image;
+        [Tooltip("Rect transform component of this Equipped Item Box")]
         [SerializeField] RectTransform m_rectTransform;
+        [Tooltip("Text box to display item name")]
         [SerializeField] TextMeshProUGUI m_nameText;
+        [Tooltip("Text box to display number of items")]
         [SerializeField] TextMeshProUGUI m_numberText;
         [Tooltip("Text used to tell user what key to use")]
         [SerializeField] TextMeshProUGUI m_keyIndicatorText;
@@ -29,6 +31,9 @@ namespace GameBase
 
         #region Start and Update
 
+        /// <summary>
+        /// Adjusts the UI to properly indicate which key must be pressed to use the Equipped Item
+        /// </summary>
         private void Start()
         {
             m_keyIndicatorText.text = m_useKey.ToString();
@@ -62,8 +67,6 @@ namespace GameBase
 
 
 
-
-
         #region Getters and Setters
         public string GetItemName() { return m_itemName; }          //Allows other scripts to get the name of the item(s) being stored in this box
         public InventoryItem GetItemScript() { return m_item; }     //Allows other scripts to get the script of this item being held in this box
@@ -71,6 +74,19 @@ namespace GameBase
 
 
         public void SetNumberOfItems(int numItems) { m_numItems = numItems; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
+
+        /// <summary>
+        /// Sets this box's image
+        /// </summary>
+        /// <param name="image">The desired image</param>
+        public void SetImage(Image image)
+        {
+            m_image.sprite = m_itemSprite;
+        }
+        #endregion Getters and Setters
+
+
+        #region Equipped Item Box Functionality
 
 
         /// <summary>
@@ -105,30 +121,6 @@ namespace GameBase
         }
 
 
-        ///// <summary>
-        ///// Sets the position and dimensions of the inventory box
-        ///// </summary>
-        ///// <param name="positionX">Desired X position of this box on the canvas</param>
-        ///// <param name="positionY">Desired Y position of this box on the canvas</param>
-        ///// <param name="width">Desired width of this box</param>
-        ///// <param name="height">Desired height of this box</param>
-        //public void SetRectTransform(float positionX, float positionY, float width, float height)
-        //{
-        //    m_rectTransform.sizeDelta = new Vector2(width, height); //Set dimensions of box
-        //
-        //    m_rectTransform.anchoredPosition = new Vector2(positionX, positionY);   //set location of box
-        //}
-
-        /// <summary>
-        /// Sets this box's image
-        /// </summary>
-        /// <param name="image">The desired image</param>
-        public void SetImage(Image image)
-        {
-            m_image.sprite = m_itemSprite;
-        }
-        #endregion Getters and Setters
-
         /// <summary>
         /// Adds item to this item box
         /// </summary>
@@ -139,9 +131,9 @@ namespace GameBase
             m_itemName = item.GetItemName();
             m_itemSprite = item.GetInventorySprite();
 
-            m_numItems++;
+            m_numItems++;   //increment number of items stored in the box
 
-            UpdateBox();
+            UpdateBox();    //update box to propery display item
         }
 
 
@@ -156,16 +148,31 @@ namespace GameBase
             m_numberText.text = (m_numItems > 1) ? m_numItems.ToString() : string.Empty;
         }
 
+        #endregion Equipped Item Box Functionality
 
 
+        #region Save and Load
 
-
-
+        /// <summary>
+        /// Saves this item, as well as all inventory related data for the item in this equipped item box (if this box currently contains at least one item)
+        /// </summary>
+        /// <param name="data">Reference to the GameData object with the data being saved</param>
         public void SaveData(ref GameData data)
         {
+            //Saves number of items currently stored in this Equipped Item Box
+            if (data.intData.ContainsKey("EquippedItemBox.NumberOfItems"))
+            {
+                data.intData["EquippedItemBox.NumberOfItems"] = m_numItems;
+            }
+            else
+            {
+                data.intData.Add("EquippedItemBox.NumberOfItems", m_numItems);
+            }
+
+
             if (m_numItems > 0)
             {
-                //Check stringData for key. If key exists, change value to current value, else add key with current value
+                //Save name of item's item script (if this Equipped Item Box currently has an item)
                 if (data.stringData.ContainsKey("EquippedItemBox.ItemScript"))
                 {
                     data.stringData["EquippedItemBox.ItemScript"] = m_item.GetType().Name;
@@ -175,20 +182,15 @@ namespace GameBase
                     data.stringData.Add("EquippedItemBox.ItemScript", m_item.GetType().Name);
                 }
 
-                //Check intData for key. If key exists, change value to current value, else add key with current value
-                if (data.intData.ContainsKey("EquippedItemBox.NumberOfItems"))
-                {
-                    data.intData["EquippedItemBox.NumberOfItems"] = m_numItems;
-                }
-                else
-                {
-                    data.intData.Add("EquippedItemBox.NumberOfItems", m_numItems);
-                }
-
+                //Saves the inventory related information for the item in this Equipped Item Box
                 m_item.SaveForInventory(ref data, "EquippedItem");
             }
         }
 
+        /// <summary>
+        /// Loads this equipped item box, and if this box contains an item, creates and loads that item
+        /// </summary>
+        /// <param name="data">GameData object with the data being loaded</param>
         public void LoadData(GameData data)
         {
             //Check if key exists in intData, if so continue loading if not then do nothing
@@ -199,25 +201,48 @@ namespace GameBase
                 //only continue loading if Equipped item box had any items to load
                 if(m_numItems > 0)
                 {
+                    //Loads the name of the specific Inventory Item script for the item that was stored in this box
                     if (data.stringData.ContainsKey("EquippedItemBox.ItemScript"))
                     {
-                        string itemName = data.stringData["EquippedItemBox.ItemScript"];
+                        string scriptName = data.stringData["EquippedItemBox.ItemScript"];
 
-                        InventoryItem itemScript = Inventory.Instance.FindItemByName(itemName);
+                        string itemName = "";
 
+                        if (data.stringData.ContainsKey("EquippedItem.ItemName"))
+                        {
+                            itemName = data.stringData["EquippedItem.ItemName"];
+                        }
+
+                        //Obtains stored item script from the Inventory
+                        InventoryItem itemScript = Inventory.Instance.FindItemByScriptNameAndItemName(scriptName, itemName);
+
+                        //If a script was found, creates a new instance of that item to be stored in this Equipped Item Box
                         if(itemScript != null)
                         {
-                            InventoryItem newItem = GameObject.Instantiate(itemScript);
+                            InventoryItem newItem = GameObject.Instantiate(itemScript); //Creates item
 
-                            newItem.LoadForInventory(data, "EquippedItem");
+                            newItem.LoadForInventory(data, "EquippedItem"); //Loads data into item
 
-                            m_numItems--;
-                            AddItem(newItem);
+                            //Properly adds item to box
+                            m_item = newItem;
+                            m_itemName = newItem.GetItemName();
+                            m_itemSprite = newItem.GetInventorySprite();
+
+                            //Updates Box to properly reflect the current item
+                            UpdateBox();
+
+                            //Notifies Inventory of the new equipped item
                             Inventory.Instance.SetEquippedItem(newItem);
+                        }
+                        else
+                        {
+                            m_numItems = 0; //if no item script was found, then no item can be loaded, and the number of items in this Inventory Item Box must be returned to zero
                         }
                     }
                 }                     
             }
         }
+        #endregion Save and Load
+
     }
 }

@@ -15,7 +15,7 @@ namespace GameBase
         [SerializeField] protected Collider m_collider;
 
         [Header("Basic Item Information")]
-        //Add a tooltip here later!!!!!
+        [Tooltip("The name of this configuration of this item")]
         [SerializeField] protected string m_name;
         [Tooltip("Is item picked up automatically when player enters trigger")]
         [SerializeField] protected bool m_autoPickup = true;
@@ -48,7 +48,6 @@ namespace GameBase
             if(m_autoPickup)
             {
                 OnPickedUp();           //Child class "OnPickedUp"
-                //ItemBaseOnPickedUp();   //Parent class "OnPickedUp"
             }
         }
 

@@ -41,14 +41,10 @@ namespace GameBase
         [Header("Inventory Screen")]
         [SerializeField] RectTransform m_inventoryScreenRect;
         [SerializeField] RectTransform m_inventoryBoxRect;
-        //[SerializeField] InventoryItemBox m_inventoryItemBoxScript;
         [SerializeField] GameObject m_inventoryItemBox;
         [SerializeField] public UnityEngine.UI.Button m_useButton;
         [SerializeField] public UnityEngine.UI.Button m_equipButton;
         [SerializeField] public UnityEngine.UI.Button m_discardButton;
-
-        //[SerializeField] float m_inventoryBoxWidthRatio = 0.75f;
-        //[SerializeField] float m_inventoryBoxHeightRatio = 0.75f;
 
         [SerializeField] int m_imageBoxWidth = 100;
         [SerializeField] int m_imageBoxHeight = 100;

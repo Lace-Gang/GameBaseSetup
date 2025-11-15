@@ -9,7 +9,6 @@ namespace GameBase
         [Tooltip("Should this instance be saved and loaded")]
         [SerializeField] protected bool m_save = true;
         [Tooltip("This field is absolutely REQUIRED if 'save' is checked to true, and should be unique between each instance of an object. (Zero if an invalid ID)")]
-        //[Tooltip("This field is absolutely REQUIRED and should be unique between each instance of an object. (Zero is an invalid ID)")]
         [SerializeField] protected int m_ID = 0;
         [Tooltip("Should 'if this item is active in the scene' be saved or not? (Allows items that have already been picked up to remain picked up")]
         [SerializeField] protected bool m_saveActiveInScene = false;
@@ -25,7 +24,11 @@ namespace GameBase
             Debug.Assert (m_ID != 0, "Item does not have a valid ID");
         }
 
-        public int GetID() { return m_ID; }
+        public int GetID() { return m_ID; } //Allows other scripts to get this item's ID
+
+
+
+        #region Save and Load
 
 
         /// <summary>
@@ -40,13 +43,13 @@ namespace GameBase
             if(m_saveActiveInScene)
             {
                 //Check boolData for key. If key exists, change value to current value, else add key with current value
-                if(data.boolData.ContainsKey(m_ID + ".ActiveInScene"))
+                if(data.boolData.ContainsKey("SavableItem." + m_ID + ".ActiveInScene"))
                 {
-                    data.boolData[m_ID + ".ActiveInScene"] = m_activeInScene;
+                    data.boolData["SavableItem." + m_ID + ".ActiveInScene"] = m_activeInScene;
                 }
                 else
                 {
-                    data.boolData.Add(m_ID + ".ActiveInScene", m_activeInScene);
+                    data.boolData.Add("SavableItem." + m_ID + ".ActiveInScene", m_activeInScene);
                 }
             }
 
@@ -54,13 +57,13 @@ namespace GameBase
             if(m_savePosition)
             {
                 //Check Vector3Data for key. If key exists, change value to current value, else add key with current value
-                if(data.vector3Data.ContainsKey(m_ID + ".Position"))
+                if(data.vector3Data.ContainsKey("SavableItem." + m_ID + ".Position"))
                 {
-                    data.vector3Data[m_ID + ".Position"] = transform.position;
+                    data.vector3Data["SavableItem." + m_ID + ".Position"] = transform.position;
                 }
                 else
                 {
-                    data.vector3Data.Add(m_ID + ".Position", transform.position);
+                    data.vector3Data.Add("SavableItem." + m_ID + ".Position", transform.position);
                 }
             }
 
@@ -68,13 +71,13 @@ namespace GameBase
             if (m_saveRotation)
             {
                 //Check quaternionData for key. If key exists, change value to current value, else add key with current value
-                if (data.quaternionData.ContainsKey(m_ID + ".Rotation"))
+                if (data.quaternionData.ContainsKey("SavableItem." + m_ID + ".Rotation"))
                 {
-                    data.quaternionData[m_ID + ".Rotation"] = transform.rotation;
+                    data.quaternionData["SavableItem." + m_ID + ".Rotation"] = transform.rotation;
                 }
                 else
                 {
-                    data.quaternionData.Add(m_ID + ".Rotation", transform.rotation);
+                    data.quaternionData.Add("SavableItem." + m_ID + ".Rotation", transform.rotation);
                 }
             }
         }
@@ -92,9 +95,9 @@ namespace GameBase
             if(m_saveActiveInScene)
             {
                 //Check boolData if key exists, if so load "Active in Scene", if not then do nothing
-                if(data.boolData.ContainsKey(m_ID + ".ActiveInScene"))
+                if(data.boolData.ContainsKey("SavableItem." + m_ID + ".ActiveInScene"))
                 {
-                    m_activeInScene = data.boolData[m_ID + ".ActiveInScene"];
+                    m_activeInScene = data.boolData["SavableItem." + m_ID + ".ActiveInScene"];
 
                     //Hide this object if not active in scene
                     m_renderer.enabled = m_activeInScene;     //item no longer visible
@@ -115,9 +118,9 @@ namespace GameBase
             if (m_savePosition)
             {
                 //Check if key exists in vector3Data, if so load position, if not then do nothing
-                if (data.vector3Data.ContainsKey(m_ID + ".Position"))
+                if (data.vector3Data.ContainsKey("SavableItem." + m_ID + ".Position"))
                 {
-                    transform.position = data.vector3Data[m_ID + ".Position"];
+                    transform.position = data.vector3Data["SavableItem." + m_ID + ".Position"];
                 }
             }
 
@@ -126,12 +129,15 @@ namespace GameBase
             if (m_saveRotation)
             {
                 //Check if key exists in item quaternionData, if so load rotation, if not then do nothing
-                if (data.quaternionData.ContainsKey(m_ID + ".Rotation"))
+                if (data.quaternionData.ContainsKey("SavableItem." + m_ID + ".Rotation"))
                 {
-                    transform.rotation = data.quaternionData[m_ID + ".Rotation"];
+                    transform.rotation = data.quaternionData["SavableItem." + m_ID + ".Rotation"];
                 }
             }
         }
+
+        #endregion Save and Load
+
 
     }
 }

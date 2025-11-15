@@ -798,6 +798,9 @@ namespace GameBase
             //Unloads UIDisplayScene
             StartCoroutine(UnloadScene("UIDisplayScene"));
 
+            //Clear inventory to prepare for loading the save file
+            Inventory.Instance.ClearInventory();
+
 
             //Spawns player character
             PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
@@ -846,6 +849,7 @@ namespace GameBase
 
             //Indicate player is alive and unpause game (in the event the game was paused)
             m_playerAlive = true;
+            m_pauseMenuOpen = false;
             UnpauseGame();
         }
 
@@ -859,6 +863,10 @@ namespace GameBase
             //coroutine executes. Only the first time after it is started
             if (m_validSaveFile && !m_saveHasAlreadyLoaded) 
             {
+                //Clear inventory to prepare for loading the save file
+                Inventory.Instance.ClearInventory();
+
+
                 //Loads game from Data Manager
                 DataPersistenceManager.Instance.LoadGame();
 

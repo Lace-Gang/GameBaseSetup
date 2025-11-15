@@ -6,34 +6,30 @@ using UnityEngine.UIElements;
 
 namespace GameBase
 {
-    public class Inventory : MonoBehaviour, IDataPersistence
+    public class Inventory : MonoBehaviour
     {
-        //private SerializableDictionary<int, int> m_inventory = new SerializableDictionary<int, int>();
-
         //Hidden Variables
-        int m_inventorySpace = 0;
-        int m_itemsInInventory = 0;
-
-        InventoryItem m_selectedItem;
-        InventoryItemBox m_selectedItemBox = null;
-        InventoryItem m_equippedItem;
+        InventoryItem m_selectedItem;               //What item is currently selected in the inventory screen (if any)
+        InventoryItemBox m_selectedItemBox = null;  //What item box is currently selected in the inventory screen (if any)
+        InventoryItem m_equippedItem;               //What item is currently equipped
 
         //Hidden Variable Lists
         private List<InventoryItemBox> m_inventoryItemBoxes = new List<InventoryItemBox>();     //stores item boxes in the inventory
 
 
         //Exposed Variables
+        [Header("General Inventory Configuration")]
+        [Tooltip("Should Inventory System be used")]
         [SerializeField] bool m_useInventory = false;
-        [SerializeField] EquippedItemBox m_equippedItemBox = null;
-
-        [SerializeField] List<InventoryItem> m_availableInventoryItems = new List<InventoryItem>();
-
-        //[SerializeField] List<Script> m_allScripts = new List<MonoBehaviour>();
-
-
-
         [Tooltip("If equipped item box is empty, next item added to inventory will be automatically equipped")]
         [SerializeField] bool m_sendFirstItemToEquipped = false;
+
+        [Header("Important References")]
+        [Tooltip("Reference to the Equipped Item Box in the HUD")]
+        [SerializeField] EquippedItemBox m_equippedItemBox = null;
+        [Tooltip("Any Inventory Item that should be savable must have at least one prefab in this list that contains that item's unique Script. Different" +
+            " item Configurations using the same script only need the script to be present once as a whole, not once each UNLESS they have different item sprites!")]
+        [SerializeField] List<InventoryItem> m_savableInventoryItems = new List<InventoryItem>();
 
 
 
@@ -43,6 +39,8 @@ namespace GameBase
         public bool GetUseInventory() { return m_useInventory; }    //Allows other scripts to see if inventory is being used
 
         public void SetEquippedItem(InventoryItem i) { m_equippedItem = i; }
+
+        #region Awake and Start
 
         /// <summary>
         /// Checks that only this instance of the Inventory exists at this time and notifies the user if this is not true.
@@ -65,26 +63,35 @@ namespace GameBase
         {
             //Generate Inventory screen and get references to item boxes
             m_inventoryItemBoxes = UserInterface.Instance.GenerateInventoryBox();
-
-            //track available inventory space
-            m_inventorySpace = m_inventoryItemBoxes.Count;
         }
 
+        #endregion Awake and Start
 
 
-        public InventoryItem FindItemByName(string name)
+        #region Inventory Functionality
+
+        /// <summary>
+        /// Finds the correct InventoryItem script
+        /// </summary>
+        /// <param name="scriptName">Name of script being searched for</param>
+        /// <param name="itemName">Item name as it is in the prefab that was added to the Savable Inventory Items</param>
+        /// <returns>The InventoryItem script on the first prefab in the list that fits the requirements. Returns null if no prefab is found</returns>
+        public InventoryItem FindItemByScriptNameAndItemName(string scriptName, string itemName)
         {
-            foreach(InventoryItem itemPrefab in m_availableInventoryItems)
+            //Searches through all prefabs in the Savable Item Inventory for a prefab that fits the requirements
+            foreach(InventoryItem itemPrefab in m_savableInventoryItems)
             {
-                if(itemPrefab.GetComponent<InventoryItem>() != null && itemPrefab.GetComponent<InventoryItem>().GetType().Name == name)
+                if(itemPrefab.GetComponent<InventoryItem>() != null && itemPrefab.GetComponent<InventoryItem>().GetType().Name == scriptName)   //Checks for correct script name
                 { 
-                    return itemPrefab;
+                    if(itemPrefab.GetComponent<InventoryItem>().GetItemName() == itemName)  //Checks for correct item name
+                    {
+                        return itemPrefab;  //If all conditions are met by a prefab, returns the script on that prefab
+                    }
                 }
             }
 
-            return null;
+            return null;    //If no prefab was found that fit the requirements, returns null
         }
-
 
 
         /// <summary>
@@ -97,8 +104,8 @@ namespace GameBase
             bool stacking = item.GetStackInstances();   //can item be stacked in inventory?
             bool itemAdded = false;                     //Has item been added yet?
 
-            //Auto-equips item if no item is equipped, and inventory is instructed to do so
-            if (m_equippedItem == null && m_sendFirstItemToEquipped)   
+            //Auto-equips item if no item is equipped, and inventory is instructed to do so and the item is equippable
+            if (item.GetEquippable() && m_equippedItem == null && m_sendFirstItemToEquipped)   
             {
                 m_equippedItemBox.AddItem(item);    //equip item
                 m_equippedItem = item;              //track equipped item
@@ -125,7 +132,6 @@ namespace GameBase
                     if (box.GetItemScript() == null) //adds item to first box that does not yet have an item
                     {
                         box.AddItem(item);
-                        m_itemsInInventory++;
                         itemAdded = true;
                         break;
                     }
@@ -138,18 +144,6 @@ namespace GameBase
 
 
         /// <summary>
-        /// Deselects the current selected item
-        /// </summary>
-        public void DeselectSelectedItem()
-        {
-            if (m_selectedItem != null) { m_selectedItemBox.m_button.interactable = true; } //if there is a selected item, marks item box as selectable again
-
-            //Stops tracking selected item and item box
-            m_selectedItemBox = null;
-            m_selectedItem = null;
-        }
-
-        /// <summary>
         /// Sets equipped item tracker to null
         /// </summary>
         public void OnEquippedItemEmpty()
@@ -157,7 +151,26 @@ namespace GameBase
             m_equippedItem = null;
         }
 
+        /// <summary>
+        /// Clears entire inventory, including the eqiupped item
+        /// </summary>
+        public void ClearInventory()
+        {
+            m_equippedItemBox.EmptyBox();
 
+            m_equippedItem = null;
+
+            foreach(InventoryItemBox box in m_inventoryItemBoxes)
+            {
+                box.EmptyBox();
+            }
+        }
+
+        #endregion Inventory Functionality
+
+
+
+        #region Select and Deselect Item In Inventory
 
         /// <summary>
         /// If item box has an item: Shows that item box has been selected, tracks selected item and item box, and shows inventory menu
@@ -194,7 +207,22 @@ namespace GameBase
 
         }
 
+        /// <summary>
+        /// Deselects the current selected item
+        /// </summary>
+        public void DeselectSelectedItem()
+        {
+            if (m_selectedItem != null) { m_selectedItemBox.m_button.interactable = true; } //if there is a selected item, marks item box as selectable again
 
+            //Stops tracking selected item and item box
+            m_selectedItemBox = null;
+            m_selectedItem = null;
+        }
+
+        #endregion Select and Deselect Item In Inventory
+
+
+        #region Item Menu Functions
 
         /// <summary>
         /// Uses the selected item, and updates number of item (if applicable)
@@ -273,58 +301,13 @@ namespace GameBase
 
 
             m_selectedItemBox.EmptyBox();   //empties selected inventory item box
-            m_itemsInInventory--;           //tracks number of items in inventory
 
             //stops tracking selected item and item box
             m_selectedItem = null;
             m_selectedItemBox = null;
         }
 
-
-        public void SaveData(ref GameData data)
-        {
-            //if(m_equippedItemBox.GetNumberOfItems() > 0)
-            //{
-            //    //Check stringData for key. If key exists, change value to current value, else add key with current value
-            //    if (data.stringData.ContainsKey("EquipedItemBox.ItemScript"))
-            //    {
-            //        data.stringData["EquipedItemBox.ItemScript"] = m_equippedItemBox.GetItemScript().GetType().Name;
-            //    }
-            //    else
-            //    {
-            //        data.stringData.Add("EquipedItemBox.ItemScript", m_equippedItemBox.GetItemScript().GetType().Name);
-            //    }
-            //
-            //    //Check intData for key. If key exists, change value to current value, else add key with current value
-            //    if (data.intData.ContainsKey("EquipedItemBox.NumberOfItems"))
-            //    {
-            //        data.intData["EquipedItemBox.NumberOfItems"] = m_equippedItemBox.GetNumberOfItems();
-            //    }
-            //    else
-            //    {
-            //        data.intData.Add("EquipedItemBox.NumberOfItems", m_equippedItemBox.GetNumberOfItems());
-            //    }
-            //}
-
-
-
-            //throw new System.NotImplementedException();
-        }
-
-        public void LoadData(GameData data)
-        {
-            //TestItem t = new TestItem();
-            //t.SetItemName("Test Item");
-            //t.SetUseFromInventory(false);
-            //t.SetEquippable(true);
-            //t.SetRemovable(true);
-            //t.SetConsumeAfterUse(false);
-            //t.SetStackInstances(true);
-            //
-            //m_equippedItemBox.AddItem(t);
-            //m_equippedItem = t;
-            ////throw new System.NotImplementedException();
-        }
+        #endregion Item Menu Functions
 
     }
 }

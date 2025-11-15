@@ -4,16 +4,7 @@ namespace GameBase
 {
     public class TestItem : InventoryItem, IInventoryItem
     {
-        //protected override bool m_equippable { get; set; } = true;
 
-        //public override void OnPickedUp()
-        //{
-        //    ////ItemBaseOnPickedUp();
-        //    //
-        //    //Debug.Log(this.prefa)
-        //    //
-        //    //HideItemInScene();
-        //}
 
         public override void Use()
         {
