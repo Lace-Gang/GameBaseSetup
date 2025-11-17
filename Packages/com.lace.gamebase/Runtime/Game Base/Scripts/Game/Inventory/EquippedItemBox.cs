@@ -29,7 +29,15 @@ namespace GameBase
 
 
 
-        #region Start and Update
+        #region Awake Start and Update
+
+        /// <summary>
+        /// Hides empty image
+        /// </summary>
+        private void Awake()
+        {
+            m_image.enabled = false;
+        }
 
         /// <summary>
         /// Adjusts the UI to properly indicate which key must be pressed to use the Equipped Item
@@ -63,7 +71,7 @@ namespace GameBase
             }
         }
 
-        #endregion Start and Update
+        #endregion Awake Start and Update
 
 
 
@@ -146,6 +154,17 @@ namespace GameBase
             m_image.sprite = m_itemSprite;
             m_nameText.text = (m_numItems > 0) ? m_itemName : string.Empty;
             m_numberText.text = (m_numItems > 1) ? m_numItems.ToString() : string.Empty;
+
+            if (m_itemSprite == null)
+            {
+                //Hides empty image if image is empty
+                m_image.enabled = false;
+            }
+            else
+            {
+                //Unhides image if image is not empty
+                m_image.enabled = true;
+            }
         }
 
         #endregion Equipped Item Box Functionality
@@ -207,17 +226,17 @@ namespace GameBase
                         string scriptName = data.stringData["EquippedItemBox.ItemScript"];
 
                         string itemName = "";
-
+                        
                         if (data.stringData.ContainsKey("EquippedItem.ItemName"))
                         {
                             itemName = data.stringData["EquippedItem.ItemName"];
                         }
-
+                        
                         //Obtains stored item script from the Inventory
                         InventoryItem itemScript = Inventory.Instance.FindItemByScriptNameAndItemName(scriptName, itemName);
 
                         //If a script was found, creates a new instance of that item to be stored in this Equipped Item Box
-                        if(itemScript != null)
+                        if (itemScript != null)
                         {
                             InventoryItem newItem = GameObject.Instantiate(itemScript); //Creates item
 

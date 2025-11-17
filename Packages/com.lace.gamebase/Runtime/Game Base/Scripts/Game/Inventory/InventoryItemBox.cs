@@ -64,6 +64,14 @@ namespace GameBase
 
         #endregion Getters and Setters
 
+        /// <summary>
+        /// Hides empty image
+        /// </summary>
+        private void Awake()
+        {
+            m_image.enabled = false;
+        }
+
 
         #region Inventory Item Box Functionality
 
@@ -123,6 +131,17 @@ namespace GameBase
             m_image.sprite = m_itemSprite;
             m_nameText.text = (m_numItems > 0)? m_itemName : string.Empty;
             m_numberText.text = (m_numItems > 1)? m_numItems.ToString() : string.Empty;
+
+            if(m_itemSprite == null)
+            {
+                //Hides empty image if image is empty
+                m_image.enabled = false;
+            }
+            else
+            {
+                //Unhides image if image is not empty
+                m_image.enabled = true;
+            }
         }
 
 
@@ -196,12 +215,12 @@ namespace GameBase
                         string scriptName = data.stringData[ m_boxID + ".ItemScript"];
 
                         string itemName = "";
-
+                        
                         if (data.stringData.ContainsKey(m_boxID + "Item" + ".ItemName"))
                         {
                             itemName = data.stringData[m_boxID + "Item" + ".ItemName"];
                         }
-
+                        
                         //Obtains stored item script from the Inventory
                         InventoryItem itemScript = Inventory.Instance.FindItemByScriptNameAndItemName(scriptName, itemName);
 

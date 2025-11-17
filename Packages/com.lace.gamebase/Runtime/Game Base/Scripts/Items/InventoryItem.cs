@@ -11,7 +11,9 @@ namespace GameBase
 
         //Exposed Variables
         [Header("Inventory Item Information")]
-
+        [Tooltip("Used to tell appart different configurations of the same item script in the inventory. Please set an InventoryID for each distinct configuration. And please use the same InventoryID" +
+            " for all instances of objects that share a distinct configuration.")]
+        [SerializeField] protected int m_inventoryID = 0;
 
 
         [Tooltip("The image that will be displayed for this item in the inventory screen (and HUD when equipped)")]
@@ -35,6 +37,7 @@ namespace GameBase
         public bool GetInInventory() { return m_inInventory; }                  //Allows other scripts to see if this item is in the inventory
         public Sprite GetInventorySprite() { return m_inventorySprite; }        //Allows other scripts to get this item's sprite
         public string GetItemName() { return m_name; }                          //Allows other scripts to see the name of this item
+        public int GetInventoryID() { return m_inventoryID; }                          //Allows other scripts to see the name of this item
         public bool GetStackInstances() { return m_stackInstancesInInventory; } //Allows other scripts to see if instances of this item should stack in the inventory
         public bool GetUseFromInventory() { return m_useFromInventory; }        //Allows other scripts to see if instances of this item can be used from the inventory
         public bool GetEquippable() { return m_equippable; }                    //Allows other scripts to see if instances of this item can be equipped
@@ -96,8 +99,8 @@ namespace GameBase
         /// <returns>If they have the same inventory related properties</returns>
         public static bool operator ==(InventoryItem a, InventoryItem b)
         {
-            return (a?.GetItemName() == b?.GetItemName() && a?.GetRemovable() == b?.GetRemovable() && a?.GetUseFromInventory() == b?.GetUseFromInventory() && a?.GetStackInstances() == b?.GetStackInstances()
-                && a?.m_equippable == b?.m_equippable && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse());
+            return (a?.m_name == b?.m_name && a?.m_inventoryID == b?.m_inventoryID && a?.m_removable == b?.m_removable && a?.m_useFromInventory == b?.m_useFromInventory && a?.m_stackInstancesInInventory == b?.m_stackInstancesInInventory
+                && a?.m_equippable == b?.m_equippable && a?.m_consumeAfterUse == b?.m_consumeAfterUse);
         }
 
         /// <summary>
@@ -108,8 +111,8 @@ namespace GameBase
         /// <returns>If they do not have the same inventory related properties</returns>
         public static bool operator !=(InventoryItem a, InventoryItem b)
         {
-            return !(a?.GetItemName() == b?.GetItemName() && a?.GetRemovable() == b?.GetRemovable() && a?.GetUseFromInventory() == b?.GetUseFromInventory() && a?.GetStackInstances() == b?.GetStackInstances()
-                && a?.m_equippable == b?.m_equippable && a?.GetConsumeAfterUse() == b?.GetConsumeAfterUse());
+            return !(a?.m_name == b?.m_name && a?.m_inventoryID == b?.m_inventoryID && a?.m_removable == b?.m_removable && a?.m_useFromInventory == b?.m_useFromInventory && a?.m_stackInstancesInInventory == b?.m_stackInstancesInInventory
+                && a?.m_equippable == b?.m_equippable && a?.m_consumeAfterUse == b?.m_consumeAfterUse);
         }
 
 
@@ -142,6 +145,16 @@ namespace GameBase
             else
             {
                 data.stringData.Add(boxID + ".ItemName", m_name);
+            }
+
+            //Save inventory ID
+            if (data.intData.ContainsKey(boxID + ".InventoryID"))
+            {
+                data.intData[boxID + ".InventoryID"] = m_inventoryID;
+            }
+            else
+            {
+                data.intData.Add(boxID + ".InventoryID", m_inventoryID);
             }
 
             //Save usable from inventory
@@ -210,6 +223,12 @@ namespace GameBase
                 m_name = data.stringData[boxID + ".ItemName"];
             }
 
+            //Load inventory ID
+            if (data.intData.ContainsKey(boxID + ".InventoryID"))
+            {
+                m_inventoryID = data.intData[boxID + ".InventoryID"];
+            }
+
             //Load usable from inventory
             if (data.boolData.ContainsKey(boxID + ".ItemUsableFromInventory"))
             {
@@ -250,7 +269,16 @@ namespace GameBase
         /// </summary>
         public override void OnPickedUp()
         {
-            AddToInventory();
+            //If inventory is being used, attempts to add self to inventory
+            if(Inventory.Instance.GetUseInventory())
+            {
+                AddToInventory();
+            }
+            else    //Otherwise, uses this item and then hides it in the scene
+            {
+                Use();
+                HideItemInScene();
+            }
         }
 
 

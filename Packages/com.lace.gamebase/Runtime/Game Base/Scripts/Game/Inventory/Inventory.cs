@@ -38,7 +38,7 @@ namespace GameBase
 
         public bool GetUseInventory() { return m_useInventory; }    //Allows other scripts to see if inventory is being used
 
-        public void SetEquippedItem(InventoryItem i) { m_equippedItem = i; }
+        public void SetEquippedItem(InventoryItem equippedItem) { m_equippedItem = equippedItem; }
 
         #region Awake and Start
 
@@ -61,7 +61,14 @@ namespace GameBase
         /// </summary>
         void Start()
         {
-            //Generate Inventory screen and get references to item boxes
+            //if inventory is not being used, hides Equipped Item Box
+            if(!m_useInventory)
+            {
+                m_equippedItemBox.gameObject.SetActive(false);
+                return;
+            }
+
+            //Generate Inventory screen and get references to item boxes (only if 'Use Inventory' is true)
             m_inventoryItemBoxes = UserInterface.Instance.GenerateInventoryBox();
         }
 
@@ -71,7 +78,7 @@ namespace GameBase
         #region Inventory Functionality
 
         /// <summary>
-        /// Finds the correct InventoryItem script
+        /// Finds the correct InventoryItem script from amoung the prefabs listed in the 'Savable Inventory Items' list
         /// </summary>
         /// <param name="scriptName">Name of script being searched for</param>
         /// <param name="itemName">Item name as it is in the prefab that was added to the Savable Inventory Items</param>

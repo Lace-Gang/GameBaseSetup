@@ -138,7 +138,7 @@ namespace GameBase
         /// </summary>
         private void Start()
         {
-            m_usesInventory = Inventory.Instance.GetUseInventory(); //Set if Inventory is being used
+            m_usesInventory = Inventory.Instance.GetUseInventory(); //Track if Inventory is being used
         }
 
 
