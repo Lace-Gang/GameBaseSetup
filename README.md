@@ -421,7 +421,7 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 <br>
   
 ### Creating A New Item
-1.) Make your item script a child of one of the abstract item scripts (or a child of an item script that derives from an abstact item script). For items that should be saved and loaded, use the "SavableItem" script. Otherwise, use the "ItemBase" script.
+1.) Make your item script a child of one of the abstract item scripts (or a child of an item script that derives from an abstact item script). For items that should appear in the inventory, use the "InventoryItem" script (these items will be able to save as well). For items that should be saved and loaded, use the "SavableItem" script. Otherwise, use the "ItemBase" script.
 <br>
   1a.) Non-Saving:
   <br>
@@ -431,9 +431,15 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
   <br>
   <img width="240" height="24" alt="image" src="https://github.com/user-attachments/assets/b23cda58-30e9-4b78-9331-190c53b7e246" />
   <br>
+  1c.) Inventory:
+  <br>
+  <img width="244" height="26" alt="image" src="https://github.com/user-attachments/assets/0a08e473-f43d-4189-91d5-5afb53595205" />
+<br>
 2.) When setting up the new item, ensure that the object has a Collider component, and that the Collider is set to "Trigger
 <br>
 <img width="294" height="99" alt="image" src="https://github.com/user-attachments/assets/2de013bb-d9df-4099-99a8-7310a2250dc6" />
+<br>
+3.) If the item you are setting up is an Inventory Item, additional instructions may be found [here](#creating-inventory-items)
 
 <br>
 <br>
@@ -443,6 +449,7 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 * [Set Up](#inventory-set-up)
 * [Adjusting Inventory Screen](#adjusting-inventory-screen)
 * [Creating Inventory Items](#inventory-items)
+* [Stacking Inventory Items](#stacking-inventory-items)
 * [Saving Inventory](#saving-inventory-items)
 
 ### Inventory Set Up
@@ -506,7 +513,7 @@ IMPORTANT TO NOTE: The Inventory Box is generated _at runtime!_ Adjusting the si
 <br>
 <img width="281" height="122" alt="image" src="https://github.com/user-attachments/assets/2029879a-2d63-4712-a173-345347f6d98e" />
 <br>
-  2a.) "Inventory ID" is a failsafe method to tell two distinct items appart. This MUST be unique if _both_: 
+2a.) "Inventory ID" is a failsafe method to tell two distinct items appart. This MUST be unique if _both_: 
   * Two or more items have all of the same properties but have different sprites
   * You do NOT want these items to stack. (stacking in this scenario will only display the sprite of the most recent item that was picked up)
   <br>
@@ -519,13 +526,38 @@ IMPORTANT TO NOTE: The Inventory Box is generated _at runtime!_ Adjusting the si
 <br>
   2e.) "Removable" - If set to "true" this item can be removed from the inventory without using the item, effectively discarding the item.
 <br>
-
-
-  
+  2f.) "Consume After Use" - If set to "true" then using this item will reduce the number of this item in the inventory by one. If set to "false" then this item can be used infinitely from the inventory.
 <br>
+  2g.) "Stack Instances In Inventory" - If set to "true" then multiple instances of this item can be stored together and will only take up one Inventory Slot. For full instructions on setting up Item Stacking in Inventory, see the instructions [here](#stacking-inventory-items)
+<br>
+
 #### Stacking Inventory Items
+When an item stacks in the inventory, that means that multiple instances of this item can be stored together and will only take up one Inventory Slot. There are a few requirements that must be met in order for items to stack in the inventory:
+<br>
+1.) In the "Inventory Item Information" on that object's script, "Stack Instances In Inventory" must be set to true.
+<br>
+<img width="137" height="128" alt="image" src="https://github.com/user-attachments/assets/e6efdd3d-7c0c-4f57-a440-01c449b7e556" />
+<br>
+2.) All other settings under "Inventory Item Information" must be identical between instances of an item you want to stack (with the exception of the "Inventory Sprite"). These settings are: "Inventory ID", "Use From Inventory", "Equippable", "Removable" and "Consume After Use". Any differences will result in the item NOT stacking.
+<br>
+3.) The "Name" setting in the "Basic Item Information" section must be the same between instances of the item you want to stack.
+<br>
+<img width="222" height="32" alt="image" src="https://github.com/user-attachments/assets/b9d48d35-2e50-449d-8d42-6ec08b941d0c" />
+
 
 ### Saving Inventory Items
+For an item to be saved once it has been added to the inventory certain steps MUST be taken:
+<br>
+1.) The item must be made into a prefab.
+<br>
+2.) Go to "BaseScene" -> "Game Instance" -> "Inventory". In the Inventory script, find the "Savable Inventory Items" property.
+<br>
+<img width="181" height="151" alt="image" src="https://github.com/user-attachments/assets/201027e7-129c-466f-9973-9903f3ee1c9d" />
+<br>
+3.) Add the prefab of the item you want to be saved to this list. This can be done by clicking and dragging the prefab onto the list from the Project Folder.
+<br>
+<img width="544" height="163" alt="image" src="https://github.com/user-attachments/assets/9d2f2a65-d083-474c-8496-779557745323" />
+<br>
 
 
 <br>
