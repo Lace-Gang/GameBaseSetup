@@ -11,6 +11,7 @@ This is where I will be creating my capstone and running some of my testing for 
 * [Health and Damage System](#health-and-damage-system)
 * [Save System](#save-system)
 * [Items](#items)
+* [Inventory System](#inventory-system)
 
 ## Installation and Setup Instructions
 * [Install From Disk](#install-from-disk)
@@ -420,7 +421,7 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 <br>
   
 ### Creating A New Item
-1.) Make your item script a child of one of the item scripts. For items that should be saved and loaded, use the "SavableItem" script. Otherwise, use the "ItemBase" script.
+1.) Make your item script a child of one of the abstract item scripts (or a child of an item script that derives from an abstact item script). For items that should be saved and loaded, use the "SavableItem" script. Otherwise, use the "ItemBase" script.
 <br>
   1a.) Non-Saving:
   <br>
@@ -437,6 +438,98 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 <br>
 <br>
 
+
+## Inventory System
+* [Set Up](#inventory-set-up)
+* [Adjusting Inventory Screen](#adjusting-inventory-screen)
+* [Creating Inventory Items](#inventory-items)
+* [Saving Inventory](#saving-inventory-items)
+
+### Inventory Set Up
+NOTE: The Inventory is already located in the 'BaseScene' as a part of the 'GameInstance' object, and does not need to be added to any scene.
+<br>
+<img width="545" height="284" alt="image" src="https://github.com/user-attachments/assets/cb8c7a3a-66ce-4fd1-a9ae-ab303380f68a" />
+<br>
+#### To use the Inventory System:
+1.) Ensure that "Use Inventory" is checked to "true"
+<br>
+<img width="212" height="97" alt="image" src="https://github.com/user-attachments/assets/79d72d29-2f52-48e8-9d1c-5e2e9eb6f215" />
+<br>
+2.) (Optional) If you want items to be automatically equipped when they are picked up and nothing else is eqiupped, ensure that "Send First Item To Equipped" is set to "true". Otherwise
+set it to "false.
+<br>
+<img width="182" height="98" alt="image" src="https://github.com/user-attachments/assets/2011e86c-42f3-4f8d-a60d-d12be9a75341" />
+<br>
+3.) Ensure that "Equipped Item Box" is NOT empty.
+<br>
+<img width="299" height="40" alt="image" src="https://github.com/user-attachments/assets/1a9d4982-bfe2-4349-a390-1ba3933a8230" />
+<br>
+  3a.) If "Equipped Item Box" IS empty, then go to "User Interface" -> "HUD", and find the "Equipped Item Box" located in the HUD. The click and drag "Equipped Item Box" object from the hierarchy into "Equipped Item Box" in the "Inventory" script.
+<br>
+<img width="545" height="244" alt="image" src="https://github.com/user-attachments/assets/2da0e2bb-1e1a-40d9-b5df-20c82253e62d" />
+<br>
+4.) (Optional) If you want the items in the inventory to save and load, follow the steps outlined [here](#saving-inventory-items)
+<br>
+5.) (Optional) The "EquippedItemBox" will display the key that when pressed will use the equipped item, as shown below.
+<br>
+<img width="75" height="68" alt="image" src="https://github.com/user-attachments/assets/417ac1eb-869c-45db-88b7-dcc7c53b2a4c" />
+  5a.) The default for this key is "E". To change this key, go to "UserInterface" -> "HUD" -> "EquippedBox" and in the "EquippedItemBox" script, change the "Use Key".
+  <br>
+  <img width="543" height="200" alt="image" src="https://github.com/user-attachments/assets/066cd9a7-72de-4dd6-b391-4148260848eb" />
+<br>
+6.) (Optional) This is the default layout and size of the Inventory when displayed in the Inventory Screen:
+<br>
+<img width="742" height="506" alt="image" src="https://github.com/user-attachments/assets/139a27fe-6402-4a5b-95da-3603d0b3ecdd" />
+<br>
+To adjust the size of the Inventory, or the dimensions or proportions of the layout, follow the steps outlined [here](#adjusting-inventory-system)
+
+  
+### Adjusting Inventory Screen
+IMPORTANT TO NOTE: The Inventory Box is generated _at runtime!_ Adjusting the size of the "InventoryBox" will not persist at runtime, nor will any size adjustments made to the "InventoryItemBox". However, _location_ adjustments may be made to the "InventoryBox", and these adjustments will persist.
+<br>
+1.) Go to "User Interface", then find the "Inventory Screen" section of the "User Interface" script.
+<br>
+<img width="283" height="215" alt="image" src="https://github.com/user-attachments/assets/45acef7d-84b6-4e0e-bd93-854c2bf7d0b4" />
+<br>
+  1a.) "Image Box Width" and "Image Box Height" can be used to adjust the size of the "InventoryItemBox" that are generated.
+  <br>
+  1b.) "Rows" and "Columns" can be used to alter the number of "InventoryItemBox" that are generated, as well as their layout.
+  <br>
+  1c.) "Margin" is the distance in between each "InventoryItemBox"
+  1d.) "Padding" is the distance from the edges of the "InventoryBox" to the nearest "InventoryItemBoxes"
+<br>
+
+### Inventory Items
+1.) To create an inventory item, first follow the steps located [here](#creating-a-new-item), then configure based on the following information.
+<br>
+2.) "InventoryItem" is a child class of "SavableItem", and as such shares all of the same properties in the editor. In addition to these properties, are the following:
+<br>
+<img width="281" height="122" alt="image" src="https://github.com/user-attachments/assets/2029879a-2d63-4712-a173-345347f6d98e" />
+<br>
+  2a.) "Inventory ID" is a failsafe method to tell two distinct items appart. This MUST be unique if _both_: 
+  * Two or more items have all of the same properties but have different sprites
+  * You do NOT want these items to stack. (stacking in this scenario will only display the sprite of the most recent item that was picked up)
+  <br>
+  2b.) "Inventory Sprite" if the image that will be displayed in the "InventoryScreen" and in the "EquippedBox" for this item. This must be an actual sprite, as opposed to a .JPEG, a .PNG or a material.
+  <br>
+  2c.) "Use From Inventory" - If set to "true" this item can be used directly from the "InventoryScreen" without equipping it first. If set to false, item must first be equipped before being used.
+<br>
+  2d.) "Equippable" - If set to "true" this item can be equipped. If set to false, this item cannot be equipped from the menu, and will not auto-equip even if the "Send First Item To Equipped" option is set to "true"
+  in the Inventory.
+<br>
+  2e.) "Removable" - If set to "true" this item can be removed from the inventory without using the item, effectively discarding the item.
+<br>
+
+
+  
+<br>
+#### Stacking Inventory Items
+
+### Saving Inventory Items
+
+
+<br>
+<br>
 
 # Art Credits:
 * Credit to Mixamo for the default player model and default player animations!
