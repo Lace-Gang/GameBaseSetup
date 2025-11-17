@@ -85,8 +85,6 @@ namespace GameBase
                 {
                     //For Instantanious damage, deals one instance of base damage, and then destroys self if "destroy on damage dealt" is true
                     case DamageDuration.INSTANTANIOUS:
-                        Debug.Log("Instant Damage Dealt!");
-
                         //Deals one instance of damage
                         other.GetComponent<IDamagableInterface>().TakeDamage(m_baseDamage, m_damageOwner);
                         //Destroys self (if applicable)

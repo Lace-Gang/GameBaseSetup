@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameBase
 {
-    public class TestItem2 : InventoryItem, IInventoryItem
+    public class TestItem2 : InventoryItem
     {
 
         //public override void OnPickedUp()

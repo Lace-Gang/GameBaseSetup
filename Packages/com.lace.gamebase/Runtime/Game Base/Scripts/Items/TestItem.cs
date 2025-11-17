@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameBase
 {
-    public class TestItem : InventoryItem, IInventoryItem
+    public class TestItem : InventoryItem
     {
 
 
