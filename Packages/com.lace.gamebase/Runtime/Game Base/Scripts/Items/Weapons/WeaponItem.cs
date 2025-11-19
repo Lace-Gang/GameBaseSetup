@@ -4,22 +4,38 @@ namespace GameBase
 {
     public class WeaponItem : InventoryItem
     {
+        //Hidden Variables
+        protected string m_weaponName = string.Empty;
+        protected int m_Amo = -1;
+        protected GameObject m_weaponMesh;
+
+
         //Exposed Variables
         [Header("Weapon Pikcup Item Details")]
         [Tooltip("The weapon that this item represents")]
-        [SerializeField] WeaponBase weapon;
-        [SerializeField] string weaponName;
-        [SerializeField] int weaponAmo;
+        [SerializeField] WeaponBase m_weaponScript;
+        //[SerializeField] string weaponName;
+        //[SerializeField] int weaponAmo;
+        [SerializeField] WeaponBase m_weapon;
+
+
+        private void Start()
+        {
+            m_weaponName = m_weaponScript.GetWeaponName();
+        }
+
+        public string GetWeaponName() { return m_weaponName; }
+        public int GetWeaponAmo() {  return m_Amo; }
 
 
 
-        public string GetWeaponName() { return weaponName; }
-        public int GetWeaponAmo() {  return weaponAmo; } 
+
 
 
         public void EquipWeapon()
         {
-            Debug.Log("Weapon Equipped");
+            //Debug.Log("Weapon Equipped");
+            GameInstance.Instance.GetPlayerScript().EquipWeapon(m_weapon);
         }
 
 
@@ -31,6 +47,14 @@ namespace GameBase
 
 
             //throw new System.NotImplementedException();
+        }
+
+
+        public override void OnPickedUp()
+        {
+            //m_weapon.SetActive(false);
+            m_weapon.HideWeapon();
+            base.OnPickedUp();
         }
     }
 }

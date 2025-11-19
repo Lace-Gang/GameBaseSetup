@@ -4743,6 +4743,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_useInventory: 1
   m_sendFirstItemToEquipped: 1
+  m_sendFirstWeaponToEquipped: 1
   m_equippedItemBox: {fileID: 1548058516}
   m_equippedWeaponBox: {fileID: 111872602}
   m_savableInventoryItems:

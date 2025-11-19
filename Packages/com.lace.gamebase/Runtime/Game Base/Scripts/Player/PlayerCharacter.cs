@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem; //allows for checking user inputs
 
@@ -16,6 +18,12 @@ namespace GameBase{
 
         //Hidden Variables
         private int m_lives;        //Number of lives player currently has
+        private WeaponBase m_weapon;
+
+
+        //Hidden Lists
+        //private List<Socket> m_sockets = new List<Socket>();
+        private Socket[] m_sockets;
 
         //Hidden Components
         PlayerController m_playerController;    //player controller component
@@ -130,6 +138,9 @@ namespace GameBase{
         {
             //Notifies Game Manager of current health state
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
+
+            m_sockets = GetComponentsInChildren<Socket>();
+            //m_sockets = sockets.to
         }
 
 
@@ -409,6 +420,28 @@ namespace GameBase{
 
         #endregion Upgrades and Powerups
 
+
+
+
+        public bool EquipWeapon(WeaponBase weapon)
+        {
+            foreach(Socket socket in m_sockets)
+            {
+                if(socket.GetSocketID() == weapon.GetSocketName())
+                {
+                    m_weapon = weapon;
+                    m_weapon.transform.parent = socket.transform;
+                    m_weapon.transform.position = socket.transform.position;
+                    m_weapon.transform.rotation = socket.transform.rotation;
+                    //m_weapon.transform.position = Vector3.zero;
+                    //m_weapon.transform.rotation = Quaternion.identity;
+                    m_weapon.ShowWeapon();
+                }
+            }
+
+
+            return false;
+        }
 
     }
 }

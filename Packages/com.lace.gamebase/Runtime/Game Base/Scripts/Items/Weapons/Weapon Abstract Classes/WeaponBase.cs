@@ -11,9 +11,23 @@ namespace GameBase
 
 
         //Exposed Variables
+        [SerializeField] string m_weaponName;
+        [SerializeField] string m_socketName = "PlayerRightHandWeaponSocket";
+        //[SerializeField] MeshFilter m_meshFilter;
+        //[SerializeField] GameObject m_esh;
+
+
+
+        //public GameObject GetMesh() { return m_mesh; }
+        //public MeshFilter GetMeshFilter() { return m_meshFilter; }
+        public string GetWeaponName() { return m_weaponName; }
+        public string GetSocketName() { return m_socketName; }
 
 
         public abstract void Attack();
+
+        public abstract void ShowWeapon();
+        public abstract void HideWeapon();
     }
 }
 

@@ -24,6 +24,8 @@ namespace GameBase
         [SerializeField] bool m_useInventory = false;
         [Tooltip("If equipped item box is empty, next item added to inventory will be automatically equipped")]
         [SerializeField] bool m_sendFirstItemToEquipped = false;
+        [Tooltip("If equipped weapon box is empty, next weapon added to inventory will be automatically equipped")]
+        [SerializeField] bool m_sendFirstWeaponToEquipped = false;
 
         [Header("Important References")]
         [Tooltip("Reference to the Equipped Item Box in the HUD")]
@@ -116,9 +118,16 @@ namespace GameBase
 
             //Debug.Log("ZERO");
 
-
-            //Auto-equips item if no item is equipped, and inventory is instructed to do so and the item is equippable
-            if (item.GetEquippable() && m_equippedItem == null && m_sendFirstItemToEquipped)   
+            //Auto-equips weapon if item is a WeaponItem and  no weapon is equipped, and inventory is instructed to do so and the weapon is equippable
+            if (item.GetComponent<WeaponItem>() != null && item.GetEquippable() && m_equippedWeapon == null && m_sendFirstWeaponToEquipped)
+            {
+                m_equippedWeaponBox.AddWeapon(item.GetComponent<WeaponItem>());
+                m_equippedWeapon = item;
+                item.GetComponent<WeaponItem>().EquipWeapon();
+                itemAdded = true;
+            }
+            //Auto-equips item if item is not a weapon and no item is equipped, and inventory is instructed to do so and the item is equippable
+            else if (item.GetComponent<WeaponItem>() == null && item.GetEquippable() && m_equippedItem == null && m_sendFirstItemToEquipped)
             {
                 //Debug.Log("ONE");
                 m_equippedItemBox.AddItem(item);    //equip item
@@ -127,7 +136,7 @@ namespace GameBase
             }
             else if (m_equippedItem != null && stacking && m_equippedItem == item)  //Checks if new item is the same as the equipped item, and adds to equipped item stack if so
             {
-                //Debug.Log("Two");
+                //Debug.Log("TWO");
 
                 m_equippedItemBox.AddItem(item);    //add to eqiupped item
                 itemAdded = true;
@@ -364,6 +373,11 @@ namespace GameBase
                 m_selectedItem = null;
                 m_selectedItemBox = null;
             }
+
+            m_equippedWeapon.GetComponent<WeaponItem>().EquipWeapon();
+
+            //equi.GetComponent<WeaponItem>().EquipWeapon();
+
         }
 
 
