@@ -147,7 +147,7 @@ namespace GameBase
 
 
         /// <summary>
-        /// Updates the inventory item box appearance in the UI
+        /// Updates the equipped item box appearance in the UI
         /// </summary>
         public void UpdateBox()
         {

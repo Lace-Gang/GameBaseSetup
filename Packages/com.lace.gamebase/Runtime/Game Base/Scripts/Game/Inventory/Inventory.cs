@@ -12,6 +12,7 @@ namespace GameBase
         InventoryItem m_selectedItem;               //What item is currently selected in the inventory screen (if any)
         InventoryItemBox m_selectedItemBox = null;  //What item box is currently selected in the inventory screen (if any)
         InventoryItem m_equippedItem;               //What item is currently equipped
+        InventoryItem m_equippedWeapon;             //What weapon is currently equipped
 
         //Hidden Variable Lists
         private List<InventoryItemBox> m_inventoryItemBoxes = new List<InventoryItemBox>();     //stores item boxes in the inventory
@@ -27,6 +28,8 @@ namespace GameBase
         [Header("Important References")]
         [Tooltip("Reference to the Equipped Item Box in the HUD")]
         [SerializeField] EquippedItemBox m_equippedItemBox = null;
+        [Tooltip("Reference to the Equipped Item Box in the HUD")]
+        [SerializeField] EquippedWeaponBox m_equippedWeaponBox = null;
         [Tooltip("Any Inventory Item that should be savable must have at least one prefab in this list that contains that item's unique Script. Different" +
             " item Configurations using the same script only need the script to be present once as a whole, not once each UNLESS they have different item sprites!")]
         [SerializeField] List<InventoryItem> m_savableInventoryItems = new List<InventoryItem>();
@@ -111,15 +114,21 @@ namespace GameBase
             bool stacking = item.GetStackInstances();   //can item be stacked in inventory?
             bool itemAdded = false;                     //Has item been added yet?
 
+            //Debug.Log("ZERO");
+
+
             //Auto-equips item if no item is equipped, and inventory is instructed to do so and the item is equippable
             if (item.GetEquippable() && m_equippedItem == null && m_sendFirstItemToEquipped)   
             {
+                //Debug.Log("ONE");
                 m_equippedItemBox.AddItem(item);    //equip item
                 m_equippedItem = item;              //track equipped item
                 itemAdded = true;
             }
             else if (m_equippedItem != null && stacking && m_equippedItem == item)  //Checks if new item is the same as the equipped item, and adds to equipped item stack if so
             {
+                //Debug.Log("Two");
+
                 m_equippedItemBox.AddItem(item);    //add to eqiupped item
                 itemAdded = true;
             }
@@ -132,12 +141,15 @@ namespace GameBase
                     //if (stacking && box.GetItemScript() != null && box.GetItemScript() == item)
                     if (stacking && box.GetItemScript() == item)
                     {
+                        //Debug.Log("THREE");
+
                         box.AddItem(item);
                         itemAdded = true;
                         break;
                     }
                     if (box.GetItemScript() == null) //adds item to first box that does not yet have an item
                     {
+                        //Debug.Log("FOUR");
                         box.AddItem(item);
                         itemAdded = true;
                         break;
@@ -257,6 +269,12 @@ namespace GameBase
         /// </summary>
         public void EqipSelectedItem()
         {
+            if(m_selectedItemBox.GetItemIsWeapon())
+            {
+                EqipSelectedWeapon();
+                return;
+            }
+
             //check if anything is equipped
             if (m_equippedItemBox.GetNumberOfItems() > 0)   //if so, swaps the inventory item with the selected item
             {
@@ -269,7 +287,7 @@ namespace GameBase
                 m_equippedItemBox.AddItem(m_selectedItem);
                 m_equippedItemBox.SetNumberOfItems(m_selectedItemBox.GetNumberOfItems());
 
-                //return previous inventory item to inventory
+                //return previous equipped item to inventory
                 m_selectedItemBox.EmptyBox();
                 m_selectedItemBox.AddItem(m_equippedItem);
                 m_selectedItemBox.SetNumberOfItems(numSwapItem);
@@ -297,6 +315,59 @@ namespace GameBase
                 m_selectedItemBox = null;
             }
         }
+
+
+
+        /// <summary>
+        /// Equips selected weapon, and if a weapon is already equipped, returns that weapon to the inventory
+        /// </summary>
+        public void EqipSelectedWeapon()
+        {
+            WeaponItem selectedWeapon = m_selectedItem as WeaponItem;
+
+            //check if anything is equipped
+            if (selectedWeapon != null && m_equippedWeaponBox.GetNumberOfWeapons() > 0)   //if so, swaps the inventory item with the selected item
+            {
+                //store previous equipped item number
+                int numSwapWeapon = m_equippedWeaponBox.GetNumberOfWeapons();
+
+
+                //move selected item to equipped item box
+                m_equippedWeaponBox.EmptyBox();
+                m_equippedWeaponBox.AddWeapon(selectedWeapon);
+                m_equippedWeaponBox.SetNumberOfWeapons(m_selectedItemBox.GetNumberOfItems());
+
+                //return previous equipped weapon to inventory
+                m_selectedItemBox.EmptyBox();
+                m_selectedItemBox.AddItem(m_equippedWeapon);
+                m_selectedItemBox.SetNumberOfItems(numSwapWeapon);
+
+                //track new equippd item
+                InventoryItem swapWeapon = m_equippedWeapon;    //store equipped item
+                m_equippedWeapon = m_selectedItem;
+                m_selectedItem = swapWeapon;
+            }
+            else    //if not, moves selected item to equipped item, and empties selected item box
+            {
+                //move selected item to equipped item box
+                m_equippedWeaponBox.AddWeapon(selectedWeapon);
+                m_equippedWeaponBox.SetNumberOfWeapons(m_selectedItemBox.GetNumberOfItems());
+
+                //track new equippd item
+                m_equippedWeapon = selectedWeapon;
+
+                UserInterface.Instance.m_inventoryMenuScreen.SetActive(false);  //hides inventory menu
+                m_selectedItemBox.m_button.interactable = true; //marks new selected item box as selectable again
+
+                //tracks that there is no selected item
+                m_selectedItemBox.EmptyBox();
+                m_selectedItem = null;
+                m_selectedItemBox = null;
+            }
+        }
+
+
+
 
         /// <summary>
         /// Removes the selected item from inventory

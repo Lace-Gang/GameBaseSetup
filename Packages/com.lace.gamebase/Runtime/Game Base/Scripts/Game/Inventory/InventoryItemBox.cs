@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace GameBase
         private string m_itemName = "";         //Name of the item currently being stored in this Inventory Item Box
         private int m_numItems = 0;             //Number of items currently being stored in this Inventory Item Box
         private Sprite m_itemSprite;            //The sprite of the item burrently being stored in this Inventory Item Box
+        private bool m_itemIsWeapon = false;            //Is the current item contained in this box a WeaponItem
 
 
         [Header("Important Components")]
@@ -28,12 +30,17 @@ namespace GameBase
         [SerializeField] TextMeshProUGUI m_nameText;
         [Tooltip("Text box to display number of items")]
         [SerializeField] TextMeshProUGUI m_numberText;
+        [Tooltip("Box containing ammunition text")]
+        [SerializeField] GameObject m_ammunitionTextBox;
+        [Tooltip("Text used to indicate remaining amount of ammunition (if applicable)")]
+        [SerializeField] TextMeshProUGUI m_ammunitionText;
 
 
         #region Getters and Setters
         public string GetItemName() { return m_itemName; }  //Allows other scripts to get the name of the item(s) being stored in this box
         public InventoryItem GetItemScript() { return m_item; }   //Allows other scripts to get the script of this item being held in this box
         public int GetNumberOfItems() { return m_numItems; }        //Allows other scripts to get how many items this box currently contains
+        public bool GetItemIsWeapon() {  return m_itemIsWeapon; }   //Allows other scripts to see if this box's item is a weapon
 
 
         public void SetNumberOfItems(int numItems) { m_numItems = numItems; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
@@ -64,14 +71,6 @@ namespace GameBase
 
         #endregion Getters and Setters
 
-        /// <summary>
-        /// Hides empty image
-        /// </summary>
-        private void Awake()
-        {
-            m_image.enabled = false;
-        }
-
 
         #region Inventory Item Box Functionality
 
@@ -84,6 +83,7 @@ namespace GameBase
             m_itemName = string.Empty;
             m_numItems = 0;
             m_itemSprite = null;
+            m_itemIsWeapon = false;
 
             UpdateBox();
         }
@@ -119,6 +119,12 @@ namespace GameBase
             
             m_numItems++;   //increment number of items stored in the box
 
+            //Check if item is a WeaponItem
+            if(m_item.GetComponent<WeaponItem>())
+            {
+                m_itemIsWeapon = true;
+            }
+
             UpdateBox();    //update box to propery display item
         }
 
@@ -132,7 +138,38 @@ namespace GameBase
             m_nameText.text = (m_numItems > 0)? m_itemName : string.Empty;
             m_numberText.text = (m_numItems > 1)? m_numItems.ToString() : string.Empty;
 
-            if(m_itemSprite == null)
+
+            if(m_numItems > 0 && m_item != null && m_item.GetComponent<WeaponItem>() != null)
+            {
+                //m_nameText.text = (m_numItems > 0) ? m_item.GetComponent<WeaponItem>().GetWeaponName() : string.Empty;
+                string weaponName = m_item.GetComponent<WeaponItem>().GetWeaponName();
+                m_nameText.text = (weaponName != string.Empty && weaponName != "") ? weaponName : m_itemName;
+                //m_nameText.text = (m_numItems <= 0) ? string.Empty : 
+                //    (m_item.GetComponent<WeaponItem>().GetWeaponName() != "" && m_item.GetComponent<WeaponItem>().GetWeaponName() != string.Empty)
+                //    ? m_item.GetComponent<WeaponItem>().GetWeaponName() : m_itemName;
+
+                int amo = m_item.GetComponent<WeaponItem>().GetWeaponAmo();
+                if(amo > 0)
+                {
+                    m_ammunitionTextBox.SetActive(true);
+                    m_ammunitionText.text = amo.ToString();
+                    //m_ammunitionText.text = (amo > 1) ? amo.ToString() : string.Empty;
+                }
+                else
+                {
+                    m_ammunitionText.text = string.Empty;
+                    m_ammunitionTextBox.SetActive(false);
+                }
+                //m_ammunitionText.text = (amo > 1) ? amo.ToString() : string.Empty;
+            }
+            else
+            {
+                m_ammunitionText.text= string.Empty;
+                m_ammunitionTextBox.SetActive(false);
+            }
+
+
+            if (m_itemSprite == null)
             {
                 //Hides empty image if image is empty
                 m_image.enabled = false;
@@ -188,7 +225,17 @@ namespace GameBase
                     data.stringData.Add( m_boxID + ".ItemScript", m_item.GetType().Name);
                 }
 
-                
+                //Save if the current item is a WeaponItem
+                if (data.boolData.ContainsKey(m_boxID + ".ItemIsWeapon"))
+                {
+                    data.boolData[m_boxID + ".ItemIsWeapon"] = m_itemIsWeapon;
+                }
+                else
+                {
+                    data.boolData.Add(m_boxID + ".ItemIsWeapon", m_itemIsWeapon);
+                }
+
+
 
                 //Saves the inventory related information for the item in this Inventory Item Box
                 m_item.SaveForInventory(ref data, m_boxID + "Item");
@@ -236,8 +283,21 @@ namespace GameBase
                             m_itemName = newItem.GetItemName();
                             m_itemSprite = newItem.GetInventorySprite();
 
-                            //Updates Box to properly reflect the current item
-                            UpdateBox();
+
+                            //Check for if item is a WeaponItem
+                            if (data.boolData.ContainsKey(m_boxID + ".ItemIsWeapon"))
+                            {
+                                m_itemIsWeapon = data.boolData[m_boxID + ".ItemIsWeapon"];
+
+
+                                //if(m_itemIsWeapon)
+                                //{
+                                //    Debug.Log("Loaded a weapon!");
+                                //}
+                            }
+
+
+                            
                         }
                         else
                         {
@@ -245,6 +305,9 @@ namespace GameBase
                         }
                     }
                 }
+
+                //Updates Box to properly reflect the current item
+                UpdateBox();
             }
         }
 

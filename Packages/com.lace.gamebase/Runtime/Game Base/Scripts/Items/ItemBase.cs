@@ -31,7 +31,7 @@ namespace GameBase
         /// <param name="other">Collider that entered the trigger (handled by game engine)</param>
         private void OnTriggerEnter(Collider other)
         {
-            if(other.GetComponent<PlayerCharacter>() != null)
+            if (other.GetComponent<PlayerCharacter>() != null)
             {
                 ItemBaseTriggerEnter();
             }
@@ -45,7 +45,7 @@ namespace GameBase
         /// <returns></returns>
         protected void ItemBaseTriggerEnter()
         {
-            if(m_autoPickup)
+            if (m_autoPickup)
             {
                 OnPickedUp();           //Child class "OnPickedUp"
             }
