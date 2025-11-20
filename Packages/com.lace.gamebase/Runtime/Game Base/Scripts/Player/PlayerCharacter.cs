@@ -64,6 +64,9 @@ namespace GameBase{
             return m_lives;
         }
 
+
+        //public WeaponBase GetWeapon() { return m_weapon; }  //Allows other scripts to get the character's current weapon
+
         /// <summary>
         /// Sets respawn health percentage
         /// </summary>
@@ -337,7 +340,7 @@ namespace GameBase{
         /// <param name="owner">Owning object of the damage being taken</param>
         public void TakeDamage(float damage, GameObject owner)
         {
-            if(!m_isDamagable || !m_alive || m_invincibleTime > 0) return; //only execute damage if the player is set to damagable, is alive, and is not currently invincible
+            if(!m_isDamagable || !m_alive || m_invincibleTime > 0 || owner.name == "Player") return; //only execute damage if the player is set to damagable, is alive, is not currently invincible, and is not the damage owner
 
             //Passes damage to health component
             bool isDead = m_playerHealth.AddToHealth(-damage);
@@ -433,9 +436,9 @@ namespace GameBase{
                     m_weapon.transform.parent = socket.transform;
                     m_weapon.transform.position = socket.transform.position;
                     m_weapon.transform.rotation = socket.transform.rotation;
-                    //m_weapon.transform.position = Vector3.zero;
-                    //m_weapon.transform.rotation = Quaternion.identity;
                     m_weapon.ShowWeapon();
+
+                    m_playerController.SetWeapon(m_weapon);
                 }
             }
 

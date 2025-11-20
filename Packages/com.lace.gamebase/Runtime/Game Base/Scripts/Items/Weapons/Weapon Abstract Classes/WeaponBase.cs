@@ -15,6 +15,9 @@ namespace GameBase
         [SerializeField] string m_socketName = "PlayerRightHandWeaponSocket";
         //[SerializeField] MeshFilter m_meshFilter;
         //[SerializeField] GameObject m_esh;
+        [SerializeField] protected float m_attackDuration = 1f;
+        public float GetAttackDuration() { return m_attackDuration; }
+
 
 
 

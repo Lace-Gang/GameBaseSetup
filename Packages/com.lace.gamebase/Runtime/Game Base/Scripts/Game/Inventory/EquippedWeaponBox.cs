@@ -40,13 +40,14 @@ namespace GameBase
             m_image.enabled = false;
         }
 
-        ///// <summary>
-        ///// Adjusts the UI to properly indicate which key must be pressed to use the Equipped Item
-        ///// </summary>
-        //private void Start()
-        //{
-        //    m_keyIndicatorText.text = m_useKey.ToString();
-        //}
+       /// <summary>
+       /// Adjusts the UI to properly indicate which key must be pressed to use the Equipped Item
+       /// </summary>
+       private void Start()
+       {
+           //m_keyIndicatorText.text = m_useKey.ToString();
+           m_ammunitionText.text = string.Empty;
+       }
 
 
 

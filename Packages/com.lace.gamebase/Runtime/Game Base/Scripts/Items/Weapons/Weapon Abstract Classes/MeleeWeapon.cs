@@ -15,7 +15,9 @@ namespace GameBase
         [SerializeField] protected DamageSource m_damageSource;
 
 
-        [SerializeField] protected float m_attackDuration = 1f;
+        //[SerializeField] protected float m_attackDuration = 1f;
+
+        //public float GetAttackDuration() { return m_attackDuration; }
 
 
         private void Awake()

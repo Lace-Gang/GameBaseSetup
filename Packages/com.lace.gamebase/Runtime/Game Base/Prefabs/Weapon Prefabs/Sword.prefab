@@ -127,9 +127,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5000001
-  m_Height: 2
+  m_Height: 2.010511
   m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+  m_Center: {x: 0.000000074505806, y: 0.0052554607, z: -0.000000074505806}
 --- !u!1 &2027010658031189864
 GameObject:
   m_ObjectHideFlags: 0
@@ -178,9 +178,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_weaponName: Sword
   m_socketName: PlayerRightHandWeaponSocket
+  m_attackDuration: 0.5
   m_hitBox: {fileID: 3166778728323023636}
   m_damageSource: {fileID: 7029797772009449984}
-  m_attackDuration: 1
 --- !u!1 &4820741451204704484
 GameObject:
   m_ObjectHideFlags: 0

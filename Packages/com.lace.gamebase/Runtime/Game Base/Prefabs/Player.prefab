@@ -320,6 +320,23 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   m_sprintSpeed: 6
+  attackAction:
+    m_Name: Attack
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: bf709c51-51e2-41d1-9b97-dfbc174b95e6
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: e8115f55-4988-4f70-82c0-14f7eb58025e
+      m_Path: <Mouse>/leftButton
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Attack
+      m_Flags: 0
+    m_Flags: 0
   m_fallDamageEnabled: 1
   m_baseFallDamage: 15
   m_minFallTime: 1

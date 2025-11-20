@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
+using System.Collections;
 
 
 namespace GameBase
@@ -18,6 +19,7 @@ namespace GameBase
         private CharacterController m_controller;       //Character controller component
         private Animator m_animator;                    //Player animator component
         private Transform m_view;                       //Player focused camera transform
+        private WeaponBase m_weapon = null;             //Player's equipped weapon
 
         //Required values at start
         private float m_gravity = -9.8f;                //Gravity scale
@@ -26,6 +28,7 @@ namespace GameBase
         private bool m_isSprinting = false;             //Is the player currently sprinting
         private bool m_onGround = true;                 //Is the player currently standing on something, or are they in the air
         private bool m_hasJumped = false;               //Has the player recently jumped without having hit the ground since
+        private bool m_isAttacking = false;
         private bool m_isDead = false;                  //Is the player dead
 
         //Calculated at runtime
@@ -69,6 +72,10 @@ namespace GameBase
         [Tooltip("Adjusted max player movement speed used when sprinting")]
         [SerializeField] float m_sprintSpeed = 6f;
 
+        [Header("Attack Action")]
+        [Tooltip("Player Input to attack")]
+        [SerializeField] InputAction attackAction;
+
         [Header("Fall Damage")]
         [Tooltip("Does player take fall damage")]
         [SerializeField] bool m_fallDamageEnabled = false;
@@ -80,6 +87,24 @@ namespace GameBase
         [SerializeField] bool m_scaleFallDamage;
         [Tooltip("Multiplier for scaling fall damage with time")]
         [SerializeField] float m_fallDamageScaler = 4;
+
+        //Allows player weapon to be set by other scripts
+        public void SetWeapon(WeaponBase weapon) 
+        {
+            m_weapon = weapon;
+            //m_weapon.GetComponent<DamageSource>().SetDamageOwner(this.gameObject);
+            if(m_weapon == null)
+            {
+                m_animator.SetLayerWeight(1, 0);
+            }
+            else if (m_weapon.GetComponent<MeleeWeapon>() != null)
+            {
+                m_animator.SetLayerWeight(1, 1);
+
+            }
+            
+
+        }    
 
         #region Awake, Enable, Disable, Start, Update
 
@@ -100,6 +125,7 @@ namespace GameBase
             jumpAction.performed += OnJump;
             sprintAction.started += OnSprint;
             sprintAction.canceled += OnSprint;
+            attackAction.performed += OnAttack;
         }
 
         /// <summary>
@@ -111,6 +137,7 @@ namespace GameBase
             moveAction.Enable();
             jumpAction.Enable();
             sprintAction.Enable();
+            attackAction.Enable();
         }
 
         /// <summary>
@@ -122,6 +149,7 @@ namespace GameBase
             moveAction.Disable();
             jumpAction.Disable();
             sprintAction.Disable();
+            attackAction.Disable();
         }
 
 
@@ -231,8 +259,18 @@ namespace GameBase
             //Apply gravity
             m_velocity.y += m_gravity * Time.deltaTime;
 
-            //Apply Movment
-            m_controller.Move(m_velocity * Time.deltaTime);
+            //Apply Movement
+            if(!m_isAttacking)  //apply all movement if player is not attacking
+            {
+                m_controller.Move(m_velocity * Time.deltaTime);
+            }
+            else //only apply vertical movement if player is attacking               
+            {
+                m_controller.Move(new Vector3(0, m_velocity.y, 0) * Time.deltaTime);
+            }
+
+            ////Apply Movment
+            //m_controller.Move(m_velocity * Time.deltaTime);
         }
 
 
@@ -330,10 +368,28 @@ namespace GameBase
         /// <exception cref="NotImplementedException">Class has not been implemented yet and should not yet be used</exception>
         private void OnAttack(InputAction.CallbackContext ctx)
         {
-            //player cannot attack when dead
-            if(m_isDead) return;
+            //player cannot attack when dead or if there is no weapon or player is already attacking
+            if(m_isDead || m_weapon == null || m_isAttacking) return;
 
-            throw new NotImplementedException("Player Attack logic is not yet defined");
+            m_weapon.Attack();  //tells weapon to attack
+
+            //updates that player is attacking
+            m_isAttacking = true;   
+            StartCoroutine(AttackTimer(m_weapon.GetAttackDuration()));
+
+            //Update animator to attack
+            m_animator.SetTrigger("OneHandSwordAttack");
+        }
+
+        /// <summary>
+        /// Sets timer to update when player has finished attack
+        /// </summary>
+        /// <param name="timer">How long does attack last</param>
+        /// <returns>Yield return for Coroutine function</returns>
+        private IEnumerator AttackTimer(float timer)
+        {
+            yield return new WaitForSeconds(timer);
+            m_isAttacking = false;  //updates that player is no longer attacking
         }
 
 
