@@ -42,7 +42,6 @@ namespace GameBase
 
         public override void ShowWeapon()
         {
-            //m_hitBox.enabled = true;
             GetComponentInChildren<MeshRenderer>().enabled = true;
 
         }
@@ -50,8 +49,6 @@ namespace GameBase
         public override void HideWeapon()
         {
             GetComponentInChildren<MeshRenderer>().enabled = false;
-            //m_hitBox.enabled = false;
-            //m_damageSource.enabled = false;
         }
 
 

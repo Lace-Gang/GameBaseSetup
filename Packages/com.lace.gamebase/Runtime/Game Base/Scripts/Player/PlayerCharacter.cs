@@ -437,6 +437,7 @@ namespace GameBase{
                     m_weapon.transform.position = socket.transform.position;
                     m_weapon.transform.rotation = socket.transform.rotation;
                     m_weapon.ShowWeapon();
+                    m_weapon.SetWeaponOwner(gameObject);
 
                     m_playerController.SetWeapon(m_weapon);
                 }

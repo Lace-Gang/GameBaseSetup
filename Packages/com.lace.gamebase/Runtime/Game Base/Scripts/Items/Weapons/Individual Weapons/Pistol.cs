@@ -2,9 +2,7 @@ using UnityEngine;
 
 namespace GameBase
 {
-    [RequireComponent(typeof(Collider))]
-    [RequireComponent(typeof(DamageSource))]
-    public class ProjectileBase : MonoBehaviour
+    public class Pistol : ProjectileWeapon
     {
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()

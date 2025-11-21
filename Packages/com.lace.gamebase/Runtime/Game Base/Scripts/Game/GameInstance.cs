@@ -30,6 +30,8 @@ namespace GameBase
         private List<IPrompter> m_activePrompters = new List<IPrompter>();
         private IPrompter m_currentDisplayPrompter;
 
+        private List<GameObject> m_projectiles = new List<GameObject>();
+
 
         //Exposed Variables
         [Header("Critical Information and References")]
@@ -965,5 +967,25 @@ namespace GameBase
         }
 
         #endregion State Transitioning
+
+
+
+        #region Spawn and Manage Objects
+
+        /// <summary>
+        /// Spawns an object using the GameInstance as the parent
+        /// </summary>
+        /// <param name="objectPrefab"></param>
+        /// <returns></returns>
+        public GameObject SpawnObjectInWorld(GameObject objectPrefab)
+        {
+            if (objectPrefab == null || objectPrefab.GetComponent<Projectile>() == null) return null;
+
+            GameObject projectile = GameObject.Instantiate(objectPrefab, transform);
+            return projectile;
+        }
+
+
+        #endregion Spawn and Manage Objects
     }
 }

@@ -79,7 +79,7 @@ namespace GameBase
             if (GameInstance.Instance.getPaused()) return;
 
             //Does nothing if object cannot be damaged by this damage
-            if (other.GetComponent<IDamagableInterface>() != null && (other != m_damageOwner || m_canDamageOwner))
+            if (other.GetComponent<IDamagableInterface>() != null && (other.gameObject != m_damageOwner || m_canDamageOwner))
             {
                 switch (m_damageDuration)
                 {
@@ -88,7 +88,7 @@ namespace GameBase
                         //Deals one instance of damage
                         other.GetComponent<IDamagableInterface>().TakeDamage(m_baseDamage, m_damageOwner);
                         //Destroys self (if applicable)
-                        if (this.m_destroyOnDamageDealt) GameObject.Destroy(this);
+                        if (this.m_destroyOnDamageDealt) GameObject.Destroy(this.gameObject);
                         break;
                     //For Inrement damage, tracks how many damageable objects are within the hit box, begins timer (if timer is not on), and deals one instance of damage to the 
                     //current object entering the hit box if "deal damage on enter" is set to true

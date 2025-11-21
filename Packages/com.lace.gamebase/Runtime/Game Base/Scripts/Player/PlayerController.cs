@@ -96,13 +96,22 @@ namespace GameBase
             if(m_weapon == null)
             {
                 m_animator.SetLayerWeight(1, 0);
+                m_animator.SetLayerWeight(4, 0);
             }
             else if (m_weapon.GetComponent<MeleeWeapon>() != null)
             {
-                m_animator.SetLayerWeight(1, 1);
-
+                m_animator.SetLayerWeight(1, 0.9f);
             }
-            
+            else if (m_weapon.GetComponent<ProjectileWeapon>() != null)
+            {
+                m_animator.SetLayerWeight(4, 0.9f);
+            }
+            else
+            {
+                m_animator.SetLayerWeight(4, 0);
+                m_animator.SetLayerWeight(1, 0);
+            }
+
 
         }    
 
@@ -260,17 +269,17 @@ namespace GameBase
             m_velocity.y += m_gravity * Time.deltaTime;
 
             //Apply Movement
-            if(!m_isAttacking)  //apply all movement if player is not attacking
-            {
-                m_controller.Move(m_velocity * Time.deltaTime);
-            }
-            else //only apply vertical movement if player is attacking               
-            {
-                m_controller.Move(new Vector3(0, m_velocity.y, 0) * Time.deltaTime);
-            }
+            //if(!m_isAttacking)  //apply all movement if player is not attacking
+            //{
+            //    m_controller.Move(m_velocity * Time.deltaTime);
+            //}
+            //else //only apply vertical movement if player is attacking               
+            //{
+            //    m_controller.Move(new Vector3(0, m_velocity.y, 0) * Time.deltaTime);
+            //}
 
-            ////Apply Movment
-            //m_controller.Move(m_velocity * Time.deltaTime);
+            //Apply Movment
+            m_controller.Move(m_velocity * Time.deltaTime);
         }
 
 
@@ -378,7 +387,10 @@ namespace GameBase
             StartCoroutine(AttackTimer(m_weapon.GetAttackDuration()));
 
             //Update animator to attack
-            m_animator.SetTrigger("OneHandSwordAttack");
+            m_animator.SetTrigger("OneHandedMeleeAttack");
+            //m_animator.SetLayerWeight(2, 0.9f);
+
+            //m_animator.
         }
 
         /// <summary>
@@ -390,6 +402,8 @@ namespace GameBase
         {
             yield return new WaitForSeconds(timer);
             m_isAttacking = false;  //updates that player is no longer attacking
+            //m_animator.SetLayerWeight(2, 0);
+
         }
 
 
