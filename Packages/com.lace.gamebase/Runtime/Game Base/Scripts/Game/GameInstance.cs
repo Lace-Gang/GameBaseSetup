@@ -807,6 +807,12 @@ namespace GameBase
             //Clear inventory to prepare for loading the save file
             Inventory.Instance.ClearInventory();
 
+            //Reset ammunition to default values
+            foreach(AmmunitionTracker tracker in m_ammunitionList)
+            {
+                tracker.ResetAmmunition();
+            }
+
 
             //Spawns player character
             PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();

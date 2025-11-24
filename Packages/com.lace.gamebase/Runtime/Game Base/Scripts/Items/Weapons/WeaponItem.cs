@@ -28,11 +28,11 @@ namespace GameBase
 
         private void Start()
         {
-            m_ammoTracker = m_weapon.GetAmmunitionTracker();
+            m_ammoTracker = m_weapon?.GetAmmunitionTracker();
         }
 
 
-        public string GetWeaponName() { return m_weapon.GetWeaponName(); }      //Allows other scripts to get the name of the weapon being held in this item
+        public string GetWeaponName() { return m_weapon?.GetWeaponName(); }      //Allows other scripts to get the name of the weapon being held in this item
         public AmmunitionTracker GetAmmunitionTracker() { return m_ammoTracker; }
 
         //public int GetAmmoAmount() {  return m_ammoAmount; }                    //Allows other scripts to see how much amo the weapon being held in this item still has
@@ -58,7 +58,7 @@ namespace GameBase
         /// </summary>
         public void EquipWeapon()
         {
-            GameInstance.Instance.GetPlayerScript().EquipWeapon(m_weapon);
+            if(m_weapon != null) GameInstance.Instance.GetPlayerScript()?.EquipWeapon(m_weapon);
         }
 
 

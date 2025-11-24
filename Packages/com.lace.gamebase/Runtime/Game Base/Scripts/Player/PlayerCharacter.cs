@@ -126,6 +126,9 @@ namespace GameBase{
             //Set Other Values
             m_lives = m_baseLives;
 
+            m_sockets = GetComponentsInChildren<Socket>();
+
+
 
             //Set HUD values
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());    //Sets health bar
@@ -142,8 +145,7 @@ namespace GameBase{
             //Notifies Game Manager of current health state
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
 
-            m_sockets = GetComponentsInChildren<Socket>();
-            //m_sockets = sockets.to
+            //m_sockets = GetComponentsInChildren<Socket>();
         }
 
 
@@ -433,6 +435,7 @@ namespace GameBase{
         /// <returns>Whether the weapon was equipped successfully</returns>
         public bool EquipWeapon(WeaponBase weapon)
         {
+            if(m_sockets == null) return false;
             //looks for a socket on the player to connect the item to
             foreach(Socket socket in m_sockets)
             {

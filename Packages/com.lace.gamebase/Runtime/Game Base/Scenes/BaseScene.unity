@@ -4738,6 +4738,8 @@ MonoBehaviour:
   - {fileID: 1375783634633655360, guid: 1fef5ecbf04f3f240999e2612b1ab315, type: 3}
   - {fileID: 4537818999554023761, guid: fe59ec6a0000c7b4e93aff99dfdc83aa, type: 3}
   - {fileID: 6737439283771186450, guid: affa23bbb5803f241876f2a6dd6095d3, type: 3}
+  - {fileID: 4131251556426263620, guid: aac2c4c6c4316044098d395c0dda862d, type: 3}
+  - {fileID: 6737439283771186450, guid: 1e262c6a6e60bcf40a9e1a0a32444c45, type: 3}
 --- !u!1 &849022269
 GameObject:
   m_ObjectHideFlags: 0
@@ -11211,6 +11213,14 @@ PrefabInstance:
     - target: {fileID: 4792439973748620907, guid: 946a9783705779b4db17bfb80d9cb89a, type: 3}
       propertyPath: m_Name
       value: BulletAmmunitionTracker
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849487520742760784, guid: 946a9783705779b4db17bfb80d9cb89a, type: 3}
+      propertyPath: m_ID
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849487520742760784, guid: 946a9783705779b4db17bfb80d9cb89a, type: 3}
+      propertyPath: m_save
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6965648808559190988, guid: 946a9783705779b4db17bfb80d9cb89a, type: 3}
       propertyPath: m_LocalPosition.x

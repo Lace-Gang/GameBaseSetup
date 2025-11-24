@@ -106,10 +106,12 @@ namespace GameBase
             }
             else if (m_weapon.GetComponent<MeleeWeapon>() != null)
             {
+                m_animator.SetLayerWeight(4, 0);
                 m_animator.SetLayerWeight(1, 0.9f);
             }
             else if (m_weapon.GetComponent<ProjectileWeapon>() != null)
             {
+                m_animator.SetLayerWeight(1, 0);
                 m_animator.SetLayerWeight(4, 0.9f);
             }
             else

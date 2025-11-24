@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GameBase
 {
-    public class AmmunitionTracker : MonoBehaviour
+    public class AmmunitionTracker : MonoBehaviour, IDataPersistence
     {
         //Hidden Variables
         protected int m_ammunitionAmount;
@@ -13,6 +13,9 @@ namespace GameBase
         //Exposed Variables
         [SerializeField] protected AmmunitionType m_type;
         [SerializeField] protected int m_startingAmount = 0;
+        [SerializeField] protected bool m_save = false;
+        [Tooltip("This field is absolutely REQUIRED if 'save' is checked to true, and should be unique between each instance of an object. (Zero if an invalid ID)")]
+        [SerializeField] protected int m_ID = 0;
 
 
 
@@ -28,6 +31,22 @@ namespace GameBase
         private void Awake()
         {
             m_ammunitionAmount = m_startingAmount;
+        }
+
+
+        void Start()
+        {
+            //An individual ID MUST be assigned to each savable item
+            Debug.Assert(m_ID != 0, "Ammunition Tracker (for " + m_type.GetName() + ") does not have a valid ID");
+        }
+
+
+        #region Functionality
+
+        public void ResetAmmunition()
+        {
+            m_ammunitionAmount = m_startingAmount;
+            NotifyUsers();
         }
 
         public void DecrementAmmunition()
@@ -67,5 +86,47 @@ namespace GameBase
                 user.OnAmmunitionChange(m_ammunitionAmount);
             }
         }
+
+        #endregion Functionality
+
+
+        #region Save and Load
+        public void SaveData(ref GameData data)
+        {
+            if (m_save)
+            {
+                //Save amount of ammunition
+                if (data.intData.ContainsKey("AmmunitionTracker." + m_ID + ".AmmunitionAmount"))
+                {
+                    data.intData["AmmunitionTracker." + m_ID + ".AmmunitionAmount"] = m_ammunitionAmount;
+                }
+                else
+                {
+                    data.intData.Add("AmmunitionTracker." + m_ID + ".AmmunitionAmount", m_ammunitionAmount);
+                }
+            }
+        }
+
+
+        public void LoadData(GameData data)
+        {
+            if (m_save)
+            {
+                //Load amount of ammunition
+                if (data.intData.ContainsKey("AmmunitionTracker." + m_ID + ".AmmunitionAmount"))
+                {
+                    m_ammunitionAmount = data.intData["AmmunitionTracker." + m_ID + ".AmmunitionAmount"];
+                }
+                else
+                {
+                    m_ammunitionAmount = m_startingAmount;
+                }
+
+                NotifyUsers();
+            }
+        }
+
+
+        #endregion Save and Load
     }
 }

@@ -191,8 +191,10 @@ namespace GameBase
         public void ClearInventory()
         {
             m_equippedItemBox.EmptyBox();
+            m_equippedWeaponBox.EmptyBox();
 
             m_equippedItem = null;
+            m_equippedWeapon = null;
 
             foreach(InventoryItemBox box in m_inventoryItemBoxes)
             {
