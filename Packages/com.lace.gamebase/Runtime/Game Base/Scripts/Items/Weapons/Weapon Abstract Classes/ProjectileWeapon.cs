@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace GameBase
 {
-    public abstract class ProjectileWeapon : WeaponBase
+    public abstract class ProjectileWeapon : WeaponBase, IAmmunitionUser
     {
         //Hidden Variables
         //protected AmmunitionTracker m_ammunitionTracker;
@@ -38,7 +38,13 @@ namespace GameBase
 
             //m_ammoAmount = (m_startingAmo >= 0) ? m_startingAmo : 0; //sets amount of amo at start
 
-            m_ammunitionTracker = GameInstance.Instance.FindAmmunitionTracker(m_ammunitionType.GetName());
+            //m_ammunitionTracker = GameInstance.Instance.FindAmmunitionTracker(m_ammunitionType.GetName());
+            SubscribeToTracker();
+        }
+
+        private void OnDestroy()
+        {
+            UnsubscribeFromTracker();
         }
 
 
@@ -71,7 +77,7 @@ namespace GameBase
             {
                 //m_ammoAmount--;
                 m_ammunitionTracker.DecrementAmmunition();
-                UserInterface.Instance.UpdateWeaponBoxAmo();
+                //UserInterface.Instance.UpdateWeaponBoxAmo();
             }
         }
 
@@ -90,5 +96,27 @@ namespace GameBase
         {
             GetComponentInChildren<MeshRenderer>().enabled = false;
         }
+
+        #region Ammunition User
+
+        public void SubscribeToTracker()
+        {
+            m_ammunitionTracker = GameInstance.Instance.FindAmmunitionTracker(m_ammunitionType.GetName());
+            m_ammunitionTracker.AddUser(this);
+            m_ammoAmount = m_ammunitionTracker.GetAmmunitionAmount();
+        }
+
+        public void UnsubscribeFromTracker()
+        {
+            if(m_ammunitionTracker != null) m_ammunitionTracker.RemoveUser(this);
+            m_ammoAmount = -1;
+        }
+
+        public void OnAmmunitionChange(int ammount)
+        {
+            m_ammoAmount = ammount;
+        }
+
+        #endregion Ammunition User
     }
 }

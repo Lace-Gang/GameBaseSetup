@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace GameBase
 {
-    public class InventoryItemBox : MonoBehaviour, IDataPersistence
+    public class InventoryItemBox : MonoBehaviour, IDataPersistence, IAmmunitionUser
     {
         //Hidden Variables
         private string m_boxID = "ItemBox";     //Unique ID of this Inventory Item Box
@@ -17,6 +17,7 @@ namespace GameBase
         private int m_numItems = 0;             //Number of items currently being stored in this Inventory Item Box
         private Sprite m_itemSprite;            //The sprite of the item burrently being stored in this Inventory Item Box
         private bool m_itemIsWeapon = false;            //Is the current item contained in this box a WeaponItem
+        private AmmunitionTracker m_ammoTracker = null;
 
 
         [Header("Important Components")]
@@ -84,6 +85,7 @@ namespace GameBase
             m_numItems = 0;
             m_itemSprite = null;
             m_itemIsWeapon = false;
+            UnsubscribeFromTracker();
 
             UpdateBox();
         }
@@ -134,6 +136,8 @@ namespace GameBase
         /// </summary>
         public void UpdateBox()
         {
+            UnsubscribeFromTracker();
+
             m_image.sprite = m_itemSprite;
             m_nameText.text = (m_numItems > 0)? m_itemName : string.Empty;
             m_numberText.text = (m_numItems > 1)? m_numItems.ToString() : string.Empty;
@@ -153,22 +157,25 @@ namespace GameBase
                 //    ? m_item.GetComponent<WeaponItem>().GetWeaponName() : m_itemName;
 
                 //int amo = m_item.GetComponent<WeaponItem>().GetAmmoAmount();
-                int amo = weaponScript.CheckAmoAmount();
-                if(amo >= 0)
-                {
-                    m_ammunitionTextBox.SetActive(true);
-                    m_ammunitionText.text = amo.ToString();
-                    //m_ammunitionText.text = (amo > 1) ? amo.ToString() : string.Empty;
-                }
-                else
-                {
-                    m_ammunitionText.text = string.Empty;
-                    m_ammunitionTextBox.SetActive(false);
-                }
+                ////int amo = weaponScript.CheckAmoAmount();
+                ////if(amo >= 0)
+                ////{
+                ////    m_ammunitionTextBox.SetActive(true);
+                ////    m_ammunitionText.text = amo.ToString();
+                ////    //m_ammunitionText.text = (amo > 1) ? amo.ToString() : string.Empty;
+                ////}
+                ////else
+                ////{
+                ////    m_ammunitionText.text = string.Empty;
+                ////    m_ammunitionTextBox.SetActive(false);
+                ////}
                 //m_ammunitionText.text = (amo > 1) ? amo.ToString() : string.Empty;
+
+                SubscribeToTracker();
             }
             else
             {
+                UnsubscribeFromTracker();
                 m_ammunitionText.text= string.Empty;
                 m_ammunitionTextBox.SetActive(false);
             }
@@ -314,6 +321,45 @@ namespace GameBase
                 //Updates Box to properly reflect the current item
                 UpdateBox();
             }
+        }
+
+        public void SubscribeToTracker()
+        {
+            WeaponItem weaponItem = m_item.GetComponent<WeaponItem>();
+
+            m_ammoTracker = weaponItem.GetAmmunitionTracker();
+            if (m_ammoTracker != null)
+            {
+                m_ammoTracker.AddUser(this);
+                int ammoAmount = m_ammoTracker.GetAmmunitionAmount();
+
+                m_ammunitionText.text = ammoAmount.ToString();
+                m_ammunitionTextBox.SetActive(true);
+            }
+            else
+            {
+                m_ammunitionText.text = string.Empty;
+                m_ammunitionTextBox.SetActive(false);
+            }
+        }
+
+        public void UnsubscribeFromTracker()
+        {
+            if (m_ammoTracker != null)
+            {
+                m_ammoTracker.RemoveUser(this);
+                //int ammoAmount = -1;
+
+                m_ammunitionText.text = string.Empty;
+                m_ammunitionTextBox.SetActive(false);
+            }
+        }
+
+        public void OnAmmunitionChange(int ammount)
+        {
+            int ammoAmount = m_ammoTracker.GetAmmunitionAmount();
+
+            m_ammunitionText.text = ammoAmount.ToString();
         }
 
         #endregion Save and Load

@@ -1,3 +1,5 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameBase
@@ -6,6 +8,7 @@ namespace GameBase
     {
         //Hidden Variables
         protected int m_ammunitionAmount;
+        protected List<IAmmunitionUser> m_users = new List<IAmmunitionUser>();
 
         //Exposed Variables
         [SerializeField] protected AmmunitionType m_type;
@@ -30,17 +33,39 @@ namespace GameBase
         public void DecrementAmmunition()
         {
             m_ammunitionAmount--;
+            NotifyUsers();
         }
 
 
         public void AddAmmunition(int  amount)
         {
             m_ammunitionAmount += amount;
+            NotifyUsers();
         }
 
         public void RemoveAmmunition(int amount)
         {
             m_ammunitionAmount -= amount;
+            NotifyUsers();
+        }
+
+
+        public void AddUser(IAmmunitionUser user)
+        {
+            if(!m_users.Contains(user)) m_users.Add(user);
+        }
+
+        public void RemoveUser(IAmmunitionUser user)
+        {
+            m_users.Remove(user);
+        }
+
+        public void NotifyUsers()
+        {
+            foreach (IAmmunitionUser user in m_users)
+            {
+                user.OnAmmunitionChange(m_ammunitionAmount);
+            }
         }
     }
 }

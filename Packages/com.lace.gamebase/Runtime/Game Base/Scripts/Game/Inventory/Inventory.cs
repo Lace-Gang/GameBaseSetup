@@ -125,6 +125,13 @@ namespace GameBase
                 item.GetComponent<WeaponItem>().EquipWeapon();
                 itemAdded = true;
             }
+            else if(item.GetComponent<AmmunitionRefillItem>() != null)
+            {
+                AmmunitionRefillItem refill = item.GetComponent<AmmunitionRefillItem>();
+                GameInstance.Instance.FindAmmunitionTracker(refill.GetAmmunitionType().GetName()).AddAmmunition(refill.GetAmmunitionAmount());
+                itemAdded = true;
+                //AmmunitionTracker tracker = GameInstance.Instance.FindAmmunitionTracker(item.GetComponent<AmmunitionItem>().GetAmmunitionType().GetName());
+            }
             //Auto-equips item if item is not a weapon and no item is equipped, and inventory is instructed to do so and the item is equippable
             else if (item.GetComponent<WeaponItem>() == null && item.GetEquippable() && m_equippedItem == null && m_sendFirstItemToEquipped)
             {

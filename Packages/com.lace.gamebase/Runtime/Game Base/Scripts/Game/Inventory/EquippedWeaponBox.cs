@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace GameBase
 {
-    public class EquippedWeaponBox : MonoBehaviour, IDataPersistence
+    public class EquippedWeaponBox : MonoBehaviour, IDataPersistence, IAmmunitionUser
     {
         //Hidden Variables
         private string m_itemName = "";           //Name of the weaponItem currently being stored in this Equipped Weapon Box
@@ -13,6 +13,7 @@ namespace GameBase
         private int m_ammoAmount = 0;             //Amount of amo this weapon has
         private WeaponItem m_weaponItem = null;       //Script of the item currently being stored in this Equipped Weapon Box
         private Sprite m_weaponSprite;            //The sprite of the item burrently being stored in this Equipped Weapon Box
+        private AmmunitionTracker m_ammoTracker = null;
 
         [Header("Important Components")]
         [Tooltip("Image component to display item sprite")]
@@ -117,6 +118,8 @@ namespace GameBase
             m_ammoAmount = 0;
             m_weaponSprite = null;
 
+            UnsubscribeFromTracker();
+
             UpdateBox();
         }
 
@@ -154,6 +157,9 @@ namespace GameBase
             m_numWeapons++;   //increment number of weapons stored in the box
 
             UpdateBox();    //update box to propery display weapon
+
+            
+            SubscribeToTracker();
         }
 
 
@@ -163,8 +169,6 @@ namespace GameBase
         /// </summary>
         public void UpdateBox()
         {
- 
-
             m_ammoAmount = (m_weaponItem != null) ? m_weaponItem.CheckAmoAmount() : -1;
 
             m_image.sprite = m_weaponSprite;
@@ -172,18 +176,18 @@ namespace GameBase
             m_numberText.text = (m_numWeapons > 1) ? m_numWeapons.ToString() : string.Empty;
             //m_ammunitionText.text = (m_ammoAmount > 0) ? m_ammoAmount.ToString() : string.Empty;
 
-            if(m_ammoAmount > 0)
-            {
-                //if weapon uses amo (ammo is greater than one), shows current amount of amo and makes sure that the box that displays it is visible
-                m_ammunitionText.text = m_ammoAmount.ToString();
-                m_ammunitionTextBox.SetActive(true);
-            }
-            else
-            {
-                //if weapon does not use ammo (ammo is less than zero), hide ammo text and the box that would normallly display it
-                m_ammunitionText.text = string.Empty;
-                m_ammunitionTextBox.SetActive(false);
-            }
+            //if(m_ammoAmount > 0)
+            //{
+            //    //if weapon uses amo (ammo is greater than one), shows current amount of amo and makes sure that the box that displays it is visible
+            //    m_ammunitionText.text = m_ammoAmount.ToString();
+            //    m_ammunitionTextBox.SetActive(true);
+            //}
+            //else
+            //{
+            //    //if weapon does not use ammo (ammo is less than zero), hide ammo text and the box that would normallly display it
+            //    m_ammunitionText.text = string.Empty;
+            //    m_ammunitionTextBox.SetActive(false);
+            //}
 
             if (m_weaponSprite == null)
             {
@@ -197,26 +201,26 @@ namespace GameBase
             }
         }
 
-        /// <summary>
-        /// Checks current amount of ammo and updates display accordingly
-        /// </summary>
-        public void UpdateAmmo()
-        {
-            m_ammoAmount = m_weaponItem.CheckAmoAmount();
-
-            if (m_ammoAmount > 0)
-            {
-                //if weapon uses amo (ammo is greater than one), shows current amount of amo and makes sure that the box that displays it is visible
-                m_ammunitionText.text = m_ammoAmount.ToString();
-                m_ammunitionTextBox.SetActive(true);
-            }
-            else
-            {
-                //if weapon does not use ammo (ammo is less than zero), hide ammo text and the box that would normallly display it
-                m_ammunitionText.text = string.Empty;
-                m_ammunitionTextBox.SetActive(false);
-            }
-        }
+        ///// <summary>
+        ///// Checks current amount of ammo and updates display accordingly
+        ///// </summary>
+        //public void UpdateAmmo()
+        //{
+        //    //m_ammoAmount = m_weaponItem.CheckAmoAmount();
+        //
+        //    //if (m_ammoAmount > 0)
+        //    //{
+        //    //    //if weapon uses amo (ammo is greater than one), shows current amount of amo and makes sure that the box that displays it is visible
+        //    //    m_ammunitionText.text = m_ammoAmount.ToString();
+        //    //    m_ammunitionTextBox.SetActive(true);
+        //    //}
+        //    //else
+        //    //{
+        //    //    //if weapon does not use ammo (ammo is less than zero), hide ammo text and the box that would normallly display it
+        //    //    m_ammunitionText.text = string.Empty;
+        //    //    m_ammunitionTextBox.SetActive(false);
+        //    //}
+        //}
 
         #endregion Equipped Weapon Box Functionality
 
@@ -313,6 +317,43 @@ namespace GameBase
                     }
                 }                     
             }
+        }
+
+        public void SubscribeToTracker()
+        {
+            m_ammoTracker = m_weaponItem.GetAmmunitionTracker();
+            if(m_ammoTracker != null)
+            {
+                m_ammoTracker.AddUser(this);
+                m_ammoAmount = m_ammoTracker.GetAmmunitionAmount();
+
+                m_ammunitionText.text = m_ammoAmount.ToString();
+                m_ammunitionTextBox.SetActive(true);
+            }
+            else
+            {
+                m_ammunitionText.text = string.Empty;
+                m_ammunitionTextBox.SetActive(false);
+            }
+        }
+
+        public void UnsubscribeFromTracker()
+        {
+            if(m_ammoTracker != null)
+            {
+                m_ammoTracker.RemoveUser(this);
+                m_ammoAmount = -1;
+
+                m_ammunitionText.text = string.Empty;
+                m_ammunitionTextBox.SetActive(false);
+            }
+        }
+
+        public void OnAmmunitionChange(int ammount)
+        {
+            m_ammoAmount = m_ammoTracker.GetAmmunitionAmount();
+
+            m_ammunitionText.text = m_ammoAmount.ToString();
         }
         #endregion Save and Load
 

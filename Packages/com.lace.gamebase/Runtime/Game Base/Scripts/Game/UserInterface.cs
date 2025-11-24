@@ -274,13 +274,13 @@ namespace GameBase
             m_interactionPromptScreen.SetActive(false);
         }
 
-        /// <summary>
-        /// Tells EquippedWeaponBox to update it's ammo
-        /// </summary>
-        public void UpdateWeaponBoxAmo()
-        {
-            m_weaponBox.UpdateAmmo();
-        }
+        ///// <summary>
+        ///// Tells EquippedWeaponBox to update it's ammo
+        ///// </summary>
+        //public void UpdateWeaponBoxAmo()
+        //{
+        //    m_weaponBox.UpdateAmmo();
+        //}
 
         #endregion HUD Updates
 
