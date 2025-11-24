@@ -3,35 +3,29 @@ using UnityEngine;
 
 namespace GameBase
 {
-    //[RequireComponent(typeof(Collider))]
-    //[RequireComponent(typeof(DamageSource))]
     public class MeleeWeapon : WeaponBase
     {
-        //Hidden Variables
-        //protected DamageSource m_hitBox;
-
         //Exposed Variabls
         [SerializeField] protected Collider m_hitBox;
         [SerializeField] protected DamageSource m_damageSource;
 
 
-        //[SerializeField] protected float m_attackDuration = 1f;
-
-        //public float GetAttackDuration() { return m_attackDuration; }
+        public override void SetWeaponOwner(GameObject owner) { m_weaponOwner = owner; m_damageSource.SetDamageOwner(owner); }     //Allows other scripts to set the owner of this weapon
 
 
-        private void Awake()
-        {
-            //m_hitBox = GetComponent<DamageSource>();
-        }
 
+        /// <summary>
+        /// Turns off hitbox (collider)
+        /// </summary>
         private void Start()
         {
             m_hitBox.enabled = false;
         }
 
 
-
+        /// <summary>
+        /// Turns on hit box (collider) and sets a timer to turn it back off
+        /// </summary>
         public override void Attack()
         {
             m_hitBox.enabled = true;
@@ -39,13 +33,18 @@ namespace GameBase
         }
 
 
-
+        /// <summary>
+        /// Makes weapon visible
+        /// </summary>
         public override void ShowWeapon()
         {
             GetComponentInChildren<MeshRenderer>().enabled = true;
 
         }
 
+        /// <summary>
+        /// Makes weapon invisible
+        /// </summary>
         public override void HideWeapon()
         {
             GetComponentInChildren<MeshRenderer>().enabled = false;
@@ -53,7 +52,10 @@ namespace GameBase
 
 
 
-
+        /// <summary>
+        /// Turns hitbox (collider) off after the length of the attackDuration
+        /// </summary>
+        /// <returns></returns>
         protected IEnumerator AttackTimer()
         {
             yield return new WaitForSeconds(m_attackDuration);

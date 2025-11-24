@@ -21,7 +21,7 @@ namespace GameBase
         void Start()
         {
             //An individual ID MUST be assigned to each savable item
-            Debug.Assert (m_ID != 0, "Item does not have a valid ID");
+            Debug.Assert (m_ID != 0, "Item (" + m_name + ") does not have a valid ID");
         }
 
         public int GetID() { return m_ID; } //Allows other scripts to get this item's ID

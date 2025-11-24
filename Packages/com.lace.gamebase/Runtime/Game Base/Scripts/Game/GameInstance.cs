@@ -65,6 +65,10 @@ namespace GameBase
         [Tooltip("Time (in seconds) after the player respawns when they cannot be hurt")]
         [SerializeField] float m_respawnInvincibilityTimer = 2f;
 
+        [Header("Object Tracking")]
+        [Tooltip("List Of Ammunition Types To Track")]
+        [SerializeField] List<AmmunitionTracker> m_ammunitionList = new List<AmmunitionTracker>();
+
 
 
         [Header("Save and Load Conditions")]
@@ -975,8 +979,8 @@ namespace GameBase
         /// <summary>
         /// Spawns an object using the GameInstance as the parent
         /// </summary>
-        /// <param name="objectPrefab"></param>
-        /// <returns></returns>
+        /// <param name="objectPrefab">Prefab of the object being spawned</param>
+        /// <returns>Reference to the object being spawned</returns>
         public GameObject SpawnObjectInWorld(GameObject objectPrefab)
         {
             if (objectPrefab == null || objectPrefab.GetComponent<Projectile>() == null) return null;
@@ -985,6 +989,22 @@ namespace GameBase
             return projectile;
         }
 
+        
+        public AmmunitionTracker FindAmmunitionTracker(string ammunitionName)
+        {
+            AmmunitionTracker tracker = null;
+
+            foreach(AmmunitionTracker aT in m_ammunitionList)
+            {
+                if(aT.GetAmmunition().GetName() == ammunitionName)
+                {
+                    tracker = aT;
+                    break;
+                }
+            }
+
+            return tracker;
+        }
 
         #endregion Spawn and Manage Objects
     }

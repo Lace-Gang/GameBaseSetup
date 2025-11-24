@@ -88,11 +88,17 @@ namespace GameBase
         [Tooltip("Multiplier for scaling fall damage with time")]
         [SerializeField] float m_fallDamageScaler = 4;
 
-        //Allows player weapon to be set by other scripts
+        
+        /// <summary>
+        /// Sets the weapon held by the player
+        /// </summary>
+        /// <param name="weapon">The weapon that the player is to be holding</param>
         public void SetWeapon(WeaponBase weapon) 
-        {
+        {   
+            //Sets current weapon
             m_weapon = weapon;
-            //m_weapon.GetComponent<DamageSource>().SetDamageOwner(this.gameObject);
+            
+            //Adjusts weights of animator blend layers depending on what weapon type (or lack thereof) is being held at this time
             if(m_weapon == null)
             {
                 m_animator.SetLayerWeight(1, 0);
@@ -387,10 +393,7 @@ namespace GameBase
             StartCoroutine(AttackTimer(m_weapon.GetAttackDuration()));
 
             //Update animator to attack
-            m_animator.SetTrigger("OneHandedMeleeAttack");
-            //m_animator.SetLayerWeight(2, 0.9f);
-
-            //m_animator.
+            if(m_weapon.GetComponent<MeleeWeapon>() != null) m_animator.SetTrigger("OneHandedMeleeAttack");
         }
 
         /// <summary>
@@ -402,8 +405,6 @@ namespace GameBase
         {
             yield return new WaitForSeconds(timer);
             m_isAttacking = false;  //updates that player is no longer attacking
-            //m_animator.SetLayerWeight(2, 0);
-
         }
 
 

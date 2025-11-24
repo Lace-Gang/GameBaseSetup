@@ -31,6 +31,7 @@ namespace GameBase
         [SerializeField] private TextMeshProUGUI m_winScreenScoreText;
         [SerializeField] private TextMeshProUGUI m_looseScreenScoreText;
         [SerializeField] private TextMeshProUGUI m_InteractionPromptText;
+        [SerializeField] private EquippedWeaponBox m_weaponBox;
 
         [Header("Main Menu Components")]
         [Tooltip("'Load Game Button' object. Only visible if 'Load From Main Menu' is set to true in the Game Instance")]
@@ -271,6 +272,14 @@ namespace GameBase
         public void HidePromptBox()
         {
             m_interactionPromptScreen.SetActive(false);
+        }
+
+        /// <summary>
+        /// Tells EquippedWeaponBox to update it's ammo
+        /// </summary>
+        public void UpdateWeaponBoxAmo()
+        {
+            m_weaponBox.UpdateAmmo();
         }
 
         #endregion HUD Updates

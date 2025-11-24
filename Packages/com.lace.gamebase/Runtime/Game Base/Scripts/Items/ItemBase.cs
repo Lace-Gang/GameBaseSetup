@@ -67,7 +67,9 @@ namespace GameBase
         /// </summary>
         public abstract void OnPickedUp();
 
-
+        /// <summary>
+        /// Allows item to be used
+        /// </summary>
         public abstract void Use();
     }
 }

@@ -139,17 +139,22 @@ namespace GameBase
             m_numberText.text = (m_numItems > 1)? m_numItems.ToString() : string.Empty;
 
 
-            if(m_numItems > 0 && m_item != null && m_item.GetComponent<WeaponItem>() != null)
+            WeaponItem weaponScript = m_item?.GetComponent<WeaponItem>();
+
+            //if(m_numItems > 0 && m_item != null && m_item.GetComponent<WeaponItem>() != null)
+            if(m_numItems > 0 && m_item != null && weaponScript != null)
             {
                 //m_nameText.text = (m_numItems > 0) ? m_item.GetComponent<WeaponItem>().GetWeaponName() : string.Empty;
-                string weaponName = m_item.GetComponent<WeaponItem>().GetWeaponName();
+                //string weaponName = m_item.GetComponent<WeaponItem>().GetWeaponName();
+                string weaponName = weaponScript.GetWeaponName();
                 m_nameText.text = (weaponName != string.Empty && weaponName != "") ? weaponName : m_itemName;
                 //m_nameText.text = (m_numItems <= 0) ? string.Empty : 
                 //    (m_item.GetComponent<WeaponItem>().GetWeaponName() != "" && m_item.GetComponent<WeaponItem>().GetWeaponName() != string.Empty)
                 //    ? m_item.GetComponent<WeaponItem>().GetWeaponName() : m_itemName;
 
-                int amo = m_item.GetComponent<WeaponItem>().GetWeaponAmo();
-                if(amo > 0)
+                //int amo = m_item.GetComponent<WeaponItem>().GetAmmoAmount();
+                int amo = weaponScript.CheckAmoAmount();
+                if(amo >= 0)
                 {
                     m_ammunitionTextBox.SetActive(true);
                     m_ammunitionText.text = amo.ToString();

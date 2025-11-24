@@ -38,7 +38,6 @@ namespace GameBase
 
 
 
-
         public static Inventory Instance { get; private set; }  //Allows other scripts to get the singleton instance of the Inventory
 
         public bool GetUseInventory() { return m_useInventory; }    //Allows other scripts to see if inventory is being used

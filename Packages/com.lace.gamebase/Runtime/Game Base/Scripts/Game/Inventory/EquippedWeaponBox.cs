@@ -23,8 +23,10 @@ namespace GameBase
         [SerializeField] TextMeshProUGUI m_nameText;
         [Tooltip("Text box to display number of weapons")]
         [SerializeField] TextMeshProUGUI m_numberText;
-        [Tooltip("Text used to indicate remaining amount of ammunition (if applicable)")]
+        [Tooltip("Text used to indicate remaining amount of ammunition")]
         [SerializeField] TextMeshProUGUI m_ammunitionText;
+        [Tooltip("Box used to display remaining ammunitioin")]
+        [SerializeField] GameObject m_ammunitionTextBox;
         
 
 
@@ -87,6 +89,7 @@ namespace GameBase
 
 
         public void SetNumberOfWeapons(int numWeapons) { m_numWeapons = numWeapons; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
+        public void SetAmmoAmount(int numWeapons) { m_numWeapons = numWeapons; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
 
         /// <summary>
         /// Sets this box's image
@@ -146,7 +149,7 @@ namespace GameBase
             m_itemName = weaponItem.GetItemName();
             m_weaponName = weaponItem.GetWeaponName();
             m_weaponSprite = weaponItem.GetInventorySprite();
-            m_ammoAmount = weaponItem.GetWeaponAmo();
+            m_ammoAmount = weaponItem.GetAmmoAmount();
 
             m_numWeapons++;   //increment number of weapons stored in the box
 
@@ -160,10 +163,27 @@ namespace GameBase
         /// </summary>
         public void UpdateBox()
         {
+ 
+
+            m_ammoAmount = (m_weaponItem != null) ? m_weaponItem.CheckAmoAmount() : -1;
+
             m_image.sprite = m_weaponSprite;
             m_nameText.text = (m_numWeapons <= 0) ? string.Empty : (m_weaponName != "" && m_weaponName != string.Empty)? m_weaponName : m_itemName;
             m_numberText.text = (m_numWeapons > 1) ? m_numWeapons.ToString() : string.Empty;
-            m_ammunitionText.text = (m_ammoAmount > 1) ? m_ammoAmount.ToString() : string.Empty;
+            //m_ammunitionText.text = (m_ammoAmount > 0) ? m_ammoAmount.ToString() : string.Empty;
+
+            if(m_ammoAmount > 0)
+            {
+                //if weapon uses amo (ammo is greater than one), shows current amount of amo and makes sure that the box that displays it is visible
+                m_ammunitionText.text = m_ammoAmount.ToString();
+                m_ammunitionTextBox.SetActive(true);
+            }
+            else
+            {
+                //if weapon does not use ammo (ammo is less than zero), hide ammo text and the box that would normallly display it
+                m_ammunitionText.text = string.Empty;
+                m_ammunitionTextBox.SetActive(false);
+            }
 
             if (m_weaponSprite == null)
             {
@@ -174,6 +194,27 @@ namespace GameBase
             {
                 //Unhides image if image is not empty
                 m_image.enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Checks current amount of ammo and updates display accordingly
+        /// </summary>
+        public void UpdateAmmo()
+        {
+            m_ammoAmount = m_weaponItem.CheckAmoAmount();
+
+            if (m_ammoAmount > 0)
+            {
+                //if weapon uses amo (ammo is greater than one), shows current amount of amo and makes sure that the box that displays it is visible
+                m_ammunitionText.text = m_ammoAmount.ToString();
+                m_ammunitionTextBox.SetActive(true);
+            }
+            else
+            {
+                //if weapon does not use ammo (ammo is less than zero), hide ammo text and the box that would normallly display it
+                m_ammunitionText.text = string.Empty;
+                m_ammunitionTextBox.SetActive(false);
             }
         }
 

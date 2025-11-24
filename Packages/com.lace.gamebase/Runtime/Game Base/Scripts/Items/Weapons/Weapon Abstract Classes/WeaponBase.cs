@@ -7,7 +7,10 @@ namespace GameBase
     public abstract class WeaponBase : MonoBehaviour
     {
         //Hidden Variables
+        protected AmmunitionTracker m_ammunitionTracker = null;
         protected GameObject m_weaponOwner = null;    //Who or what is using this projectile weapon
+        protected int m_ammoAmount = -1;               //Amount of ammunition this weapon currently has (defaults to negative one which indicates that the weapon does not use ammo)
+
 
 
 
@@ -22,15 +25,17 @@ namespace GameBase
         [SerializeField] protected float m_attackDuration = 1f;
 
 
-
+        public AmmunitionTracker GetAmmunitionTracker() { return m_ammunitionTracker; }
         public float GetAttackDuration() { return m_attackDuration; }   //Allows other scripts to see this weapon's attack duration
 
         //public GameObject GetMesh() { return m_mesh; }
         //public MeshFilter GetMeshFilter() { return m_meshFilter; }
         public string GetWeaponName() { return m_weaponName; }      //Allows other scripts to get the name of this weapon
         public string GetSocketName() { return m_socketName; }      //Allows other scripts to get the name of the script this weapon is supposed to be equipped to
+        public virtual int GetAmmoAmount() { return m_ammoAmount; }
 
-        public void SetWeaponOwner(GameObject owner) { m_weaponOwner = owner; }     //Allows other scripts to set the owner of this weapon
+
+        public virtual void SetWeaponOwner(GameObject owner) { m_weaponOwner = owner; }     //Allows other scripts to set the owner of this weapon
 
         /// <summary>
         /// Does anything required by this weapon in order to attack with this weapon

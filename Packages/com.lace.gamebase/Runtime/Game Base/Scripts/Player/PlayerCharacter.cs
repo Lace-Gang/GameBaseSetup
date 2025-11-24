@@ -340,7 +340,8 @@ namespace GameBase{
         /// <param name="owner">Owning object of the damage being taken</param>
         public void TakeDamage(float damage, GameObject owner)
         {
-            if(!m_isDamagable || !m_alive || m_invincibleTime > 0 || owner.name == "Player") return; //only execute damage if the player is set to damagable, is alive, is not currently invincible, and is not the damage owner
+            //if(!m_isDamagable || !m_alive || m_invincibleTime > 0 || owner.name == "Player") return; //only execute damage if the player is set to damagable, is alive, is not currently invincible, and is not the damage owner
+            if(!m_isDamagable || !m_alive || m_invincibleTime > 0) return; //only execute damage if the player is set to damagable, is alive, is not currently invincible, and is not the damage owner
 
             //Passes damage to health component
             bool isDead = m_playerHealth.AddToHealth(-damage);
@@ -425,26 +426,53 @@ namespace GameBase{
 
 
 
-
+        /// <summary>
+        /// Equips a weapon
+        /// </summary>
+        /// <param name="weapon">The weapon being equipped</param>
+        /// <returns>Whether the weapon was equipped successfully</returns>
         public bool EquipWeapon(WeaponBase weapon)
         {
+            //looks for a socket on the player to connect the item to
             foreach(Socket socket in m_sockets)
             {
                 if(socket.GetSocketID() == weapon.GetSocketName())
                 {
+                    m_weapon?.HideWeapon();
+
+
+
+                    //if a socket it found, sets weapon transform based on the socket transform
                     m_weapon = weapon;
                     m_weapon.transform.parent = socket.transform;
                     m_weapon.transform.position = socket.transform.position;
-                    m_weapon.transform.rotation = socket.transform.rotation;
-                    m_weapon.ShowWeapon();
-                    m_weapon.SetWeaponOwner(gameObject);
 
-                    m_playerController.SetWeapon(m_weapon);
+                    //Quaternion q = new Quaternion(socket.transform.rotation.x, socket.transform.rotation.y + 70, socket.transform.rotation.z - 90, socket.transform .rotation.w);
+                    //Quaternion q1 = new Quaternion(-1, 0, 0, (Mathf.PI / 2));
+                    Quaternion q1 = new Quaternion(-1, 0, 0, 1);
+                    //m_weapon.transform.rotation = socket.transform.rotation * q1;
+
+
+                    //Quaternion q2 = new Quaternion(0, 0, 1, (Mathf.PI / 2));
+                    Quaternion q2 = new Quaternion(0, 0, 1, 1);
+                    m_weapon.transform.rotation = socket.transform.rotation * q1 * q2;
+                    //Quaternion q = new Quaternion(socket.transform.rotation.w * (Mathf.PI/2) + socket.transform.rotation.z,
+                    //    socket.transform.rotation.x * (Mathf.PI/2) - socket.transform.rotation.y,
+                    //    socket.transform.rotation.y * (Mathf.PI/2) + socket.transform.rotation.x,
+                    //    socket.transform.rotation.z * (Mathf.PI/2) - socket.transform.rotation.w);
+                    //
+
+                    m_weapon.ShowWeapon();  //makes weapon visible
+                    m_weapon.SetWeaponOwner(gameObject);    //tells weapon who it is equipped to
+
+                    m_playerController.SetWeapon(m_weapon); //notifies playerController of the change in weapon
+
+                    return true;    //returns false if the weapon was successfully equipped
                 }
             }
 
 
-            return false;
+            return false;   //returns false if the weapon was not successfully equipped (liktely means there is no socket with an ID matching the specified name
         }
 
     }
