@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1557292135098898528}
   - component: {fileID: 2840883073494611526}
+  - component: {fileID: 5996962421614332476}
   - component: {fileID: 9014676184851742881}
   - component: {fileID: 3652044206375421966}
   - component: {fileID: 1203890828474865899}
@@ -52,6 +53,20 @@ MonoBehaviour:
   m_name: Coin
   m_autoPickup: 1
   m_scoreIncrease: 2
+--- !u!114 &5996962421614332476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676330882194840908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!33 &9014676184851742881
 MeshFilter:
   m_ObjectHideFlags: 0

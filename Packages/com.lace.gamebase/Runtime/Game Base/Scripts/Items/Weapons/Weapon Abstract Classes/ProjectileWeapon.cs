@@ -68,7 +68,6 @@ namespace GameBase
             //properly configures projectile through script
             DamagingProjectile projectileScript = projectileObject.GetComponent<DamagingProjectile>();
             projectileScript.SetDamageOwner(m_weaponOwner);
-            //projectileScript.SetTrajectory(m_weaponOwner.transform.forward, 100f);
             projectileScript.SetTrajectory(-m_firePoint.transform.forward, 100f);
             projectileScript.StartLifetimeTimer();  //tells projectile to destroy itself after lifespan lapses
 

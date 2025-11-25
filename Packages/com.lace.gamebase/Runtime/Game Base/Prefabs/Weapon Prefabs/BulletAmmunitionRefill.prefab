@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2472942770223877220}
   - component: {fileID: 7306788139365019675}
+  - component: {fileID: 7342612041283582325}
   - component: {fileID: 2945314401105809668}
   - component: {fileID: 1701554167591746304}
   - component: {fileID: 6571693143894731595}
@@ -65,6 +66,20 @@ MonoBehaviour:
   m_stackInstancesInInventory: 0
   m_ammunition: {fileID: 5912152810476522973, guid: 45ff6cccb77a89f4087bc74ea8fddfb8, type: 3}
   m_ammunitionAmount: 10
+--- !u!114 &7342612041283582325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7965828536937477784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!33 &2945314401105809668
 MeshFilter:
   m_ObjectHideFlags: 0

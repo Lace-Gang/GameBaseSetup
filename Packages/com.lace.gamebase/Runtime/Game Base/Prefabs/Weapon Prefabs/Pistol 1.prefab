@@ -227,6 +227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8916653686745527139}
   - component: {fileID: 2812458567877405055}
+  - component: {fileID: 1875121911221990048}
   m_Layer: 0
   m_Name: Pistol 1
   m_TagString: Untagged
@@ -268,7 +269,24 @@ MonoBehaviour:
   m_attackDuration: 1
   m_firePoint: {fileID: 2929919443905286065}
   m_ammunition: {fileID: 1549970614215082423, guid: f968f15cb9a065242a22f2145a97c5ac, type: 3}
+  m_ammunitionType: {fileID: 0}
+  m_consumesAmo: 1
+  m_ignoreAmmoAmount: 0
   m_startingAmo: 10
+--- !u!114 &1875121911221990048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2856380622489572393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!1 &8827693978034615866
 GameObject:
   m_ObjectHideFlags: 0

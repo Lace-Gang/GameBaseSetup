@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 6472646179676775821}
   - component: {fileID: 3008352245986845908}
+  - component: {fileID: 44699187483287330}
+  - component: {fileID: -8718726183906752279}
   - component: {fileID: 572292642452962398}
   - component: {fileID: 1986633981086554998}
   - component: {fileID: 834294904356312939}
-  - component: {fileID: 44699187483287330}
   - component: {fileID: 4366615069429675378}
   m_Layer: 0
   m_Name: Bullet
@@ -51,9 +52,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_collider: {fileID: 834294904356312939}
   m_renderer: {fileID: 1986633981086554998}
-  m_hasLifespan: 1
   m_lifespan: 5
   m_lifeSpan: 0
+--- !u!114 &44699187483287330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549970614215082423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ba1688c6e8bc5340ba5a5204f9558cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_damageOwner: {fileID: 0}
+  m_damageDuration: 0
+  m_baseDamage: 10
+  m_canDamageOwner: 0
+  m_destroyOnDamageDealt: 1
+  m_increment: 1
+  m_dealDamageOnEnter: 1
+--- !u!114 &-8718726183906752279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549970614215082423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!33 &572292642452962398
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -128,25 +161,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &44699187483287330
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1549970614215082423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ba1688c6e8bc5340ba5a5204f9558cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_damageOwner: {fileID: 0}
-  m_damageDuration: 0
-  m_baseDamage: 10
-  m_canDamageOwner: 0
-  m_destroyOnDamageDealt: 1
-  m_increment: 1
-  m_dealDamageOnEnter: 1
 --- !u!54 &4366615069429675378
 Rigidbody:
   m_ObjectHideFlags: 0

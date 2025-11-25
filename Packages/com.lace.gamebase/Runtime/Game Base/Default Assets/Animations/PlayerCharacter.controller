@@ -865,7 +865,7 @@ AnimatorController:
   - serializedVersion: 5
     m_Name: PistolLayer
     m_StateMachine: {fileID: -1941817641922868106}
-    m_Mask: {fileID: 31900000, guid: 2fb0e7ea4c8cb1f43b28a8c212bbb085, type: 2}
+    m_Mask: {fileID: 31900000, guid: fc8184f461f3c554bb15b254a0909180, type: 2}
     m_Motions: []
     m_Behaviours: []
     m_BlendingMode: 0

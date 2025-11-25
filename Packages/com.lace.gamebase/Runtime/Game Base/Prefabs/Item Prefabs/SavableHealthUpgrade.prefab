@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8585210734054585059}
   - component: {fileID: 8111913481689276229}
+  - component: {fileID: 1459653133343335654}
   - component: {fileID: 7341504915913851687}
   - component: {fileID: 2296653490737372711}
   - component: {fileID: 577866853185898891}
@@ -59,6 +60,20 @@ MonoBehaviour:
   m_upgradeAmount: 10
   m_healToFull: 0
   m_healingAmount: 0
+--- !u!114 &1459653133343335654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2039620595679478464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!33 &7341504915913851687
 MeshFilter:
   m_ObjectHideFlags: 0

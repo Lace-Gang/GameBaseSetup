@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8899086571201800937}
   - component: {fileID: 7819752362316270838}
+  - component: {fileID: 548670270988588201}
   - component: {fileID: 4564816949570711604}
   - component: {fileID: 4729325479386894601}
   - component: {fileID: 2216966462174393660}
@@ -52,6 +53,20 @@ MonoBehaviour:
   m_name: Recovery Heart
   m_autoPickup: 1
   m_healAmount: 10
+--- !u!114 &548670270988588201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6629112549512240727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!33 &4564816949570711604
 MeshFilter:
   m_ObjectHideFlags: 0

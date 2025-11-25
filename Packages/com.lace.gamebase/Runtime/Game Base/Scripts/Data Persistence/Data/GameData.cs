@@ -13,5 +13,6 @@ namespace GameBase
         public SerializableDictionary<string, string> stringData = new SerializableDictionary<string, string>();
         public SerializableDictionary<string, Vector3> vector3Data = new SerializableDictionary<string, Vector3>();
         public SerializableDictionary<string, Quaternion> quaternionData = new SerializableDictionary<string, Quaternion>();
+        public SerializableDictionary<string, List<string>> stringListData = new SerializableDictionary<string, List<string>>();
     }
 }

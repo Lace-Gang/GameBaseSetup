@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8579334383721218670}
   - component: {fileID: 4468114815029679688}
   - component: {fileID: 4998980646738195550}
+  - component: {fileID: 8371133439816813598}
   m_Layer: 0
   m_Name: PistolWeaponPickup
   m_TagString: Untagged
@@ -64,7 +65,6 @@ MonoBehaviour:
   m_removable: 0
   m_consumeAfterUse: 0
   m_stackInstancesInInventory: 0
-  m_weaponScript: {fileID: 6517679317202527039}
   m_weapon: {fileID: 6517679317202527039}
 --- !u!33 &8579334383721218670
 MeshFilter:
@@ -140,6 +140,20 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8371133439816813598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316255474036708099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!1001 &9040042646685502016
 PrefabInstance:
   m_ObjectHideFlags: 0

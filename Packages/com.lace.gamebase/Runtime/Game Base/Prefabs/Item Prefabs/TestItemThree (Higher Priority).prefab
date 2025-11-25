@@ -137,6 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9089624117859060986}
   - component: {fileID: 5493821054626209116}
+  - component: {fileID: 8501955406201884576}
   - component: {fileID: 6384821318545707292}
   - component: {fileID: 1473884932798783501}
   - component: {fileID: 1212762928369410178}
@@ -191,6 +192,20 @@ MonoBehaviour:
   m_removable: 0
   m_consumeAfterUse: 0
   m_stackInstancesInInventory: 0
+--- !u!114 &8501955406201884576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7115026927620569625}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!33 &6384821318545707292
 MeshFilter:
   m_ObjectHideFlags: 0

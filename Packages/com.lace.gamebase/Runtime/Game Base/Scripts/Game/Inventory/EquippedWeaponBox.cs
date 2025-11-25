@@ -171,7 +171,6 @@ namespace GameBase
         {
             m_ammoAmount = (m_weaponItem != null) ? m_weaponItem.CheckAmoAmount() : -1;
 
-            Debug.Log("num weapons" + m_numWeapons);
             m_image.sprite = m_weaponSprite;
             m_nameText.text = (m_numWeapons <= 0) ? string.Empty : (m_weaponName != "" && m_weaponName != string.Empty)? m_weaponName : m_itemName;
             m_numberText.text = (m_numWeapons > 1) ? m_numWeapons.ToString() : string.Empty;

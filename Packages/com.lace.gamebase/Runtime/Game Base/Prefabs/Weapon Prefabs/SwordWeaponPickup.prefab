@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6882596253867280071}
   - component: {fileID: 6737439283771186450}
+  - component: {fileID: 4933451168303981940}
   - component: {fileID: 4905620811300468184}
   - component: {fileID: 6342588482511468929}
   - component: {fileID: 3911106813027796169}
@@ -64,8 +65,21 @@ MonoBehaviour:
   m_removable: 1
   m_consumeAfterUse: 0
   m_stackInstancesInInventory: 0
-  m_weaponScript: {fileID: 7314861389112338875}
   m_weapon: {fileID: 7314861389112338875}
+--- !u!114 &4933451168303981940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3734714009791975288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!33 &4905620811300468184
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -151,6 +165,10 @@ PrefabInstance:
     - target: {fileID: 2027010658031189864, guid: badaa64f720f33242b9324d7ad27603c, type: 3}
       propertyPath: m_Name
       value: Sword
+      objectReference: {fileID: 0}
+    - target: {fileID: 2980510040656095046, guid: badaa64f720f33242b9324d7ad27603c, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4399366661504173521, guid: badaa64f720f33242b9324d7ad27603c, type: 3}
       propertyPath: m_LocalPosition.x

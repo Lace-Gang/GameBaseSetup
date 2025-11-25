@@ -1,5 +1,8 @@
 using GameBase;
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 namespace GameBase
 {
@@ -102,19 +105,51 @@ namespace GameBase
 
                     ////Adjust camera position to prevent other objects from blocking line of sight to target
                     //casts ray from target to camera to check for objects that would block the camera view
-                    RaycastHit hit;
-                    Vector3 cameraDirection = transform.position - m_target.position; 
 
-                    //If an object is in the way, adjusts camera position to keep target in view.
-                    if(Physics.Raycast(m_target.position, cameraDirection, out hit))
+                    Vector3 cameraDirection = transform.position - m_target.position;
+
+                    //find all objects in between target and camera
+                    RaycastHit[] hits = Physics.RaycastAll(m_target.position, cameraDirection, Vector3.Distance(transform.position, m_target.transform.position));
+
+                    if (hits.Length > 0)                         
                     {
-                        //Moves camera to nearest point in view of target within max orbit radius
-                        float distance = Mathf.Min(hit.distance, m_orbitRadius);
-                        transform.position = m_target.position - (transform.rotation * Vector3.forward * distance);
+                        float hitDistance = float.MaxValue;
+                        Vector3 hitNormal = Vector3.zero;
+                        bool adjustCamera = false;
 
-                        //Prevent Camera view from clipping through solid objects (prevents players from seeing through those objects)
-                        transform.Translate(hit.normal * 0.15f);
+
+                        foreach(RaycastHit hit in hits) //for each object
+                        {
+                            //Check for a TagManager component in the object or its children
+                            TagManager manager = hit.collider.gameObject.GetComponent<TagManager>();
+
+                            if (manager == null)
+                            {
+                                manager = hit.collider.gameObject.GetComponentInChildren<TagManager>();
+
+                            }
+
+                            //Check if there is a TagManager component with a "IgnoredByOrbitalCamera" tag and if that object is closer than any others that have been checked. If not, record data from the hit
+                            if ((manager == null || !manager.SearchForTag("IgnoredByOrbitalCamera")) && hit.distance < hitDistance) 
+                            {
+                                hitDistance = hit.distance;
+                                hitNormal = hit.normal;
+                                adjustCamera = true;    //indicates camera needs to be adjusted
+                            }
+                        }
+
+                        //if camera needs to adjust, adjusts camera
+                        if(adjustCamera)
+                        {
+                            //Moves camera to nearest point in view of target within max orbit radius
+                            float distance = Mathf.Min(hitDistance, m_orbitRadius);
+                            transform.position = m_target.position - (transform.rotation * Vector3.forward * distance);
+
+                            //Prevent Camera view from clipping through solid objects (prevents players from seeing through those objects)
+                            transform.Translate(hitNormal * 0.15f);
+                        }
                     }
+
                     break;
 
                 default:

@@ -140,6 +140,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4399366661504173521}
   - component: {fileID: 6956639284827429780}
+  - component: {fileID: 8393451694662332475}
   m_Layer: 0
   m_Name: Sword 1
   m_TagString: Untagged
@@ -181,6 +182,20 @@ MonoBehaviour:
   m_attackDuration: 0.75
   m_hitBox: {fileID: 3166778728323023636}
   m_damageSource: {fileID: 7029797772009449984}
+--- !u!114 &8393451694662332475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027010658031189864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3bbfc9bd22d860747b5990a637f196bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_tags:
+  - IgnoredByOrbitalCamera
 --- !u!1 &4820741451204704484
 GameObject:
   m_ObjectHideFlags: 0
