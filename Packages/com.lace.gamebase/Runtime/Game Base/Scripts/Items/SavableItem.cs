@@ -20,8 +20,14 @@ namespace GameBase
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            //An individual ID MUST be assigned to each savable item
-            Debug.Assert (m_ID != 0, "Item (" + m_name + ") does not have a valid ID");
+            //only checks when not saving because objects instantiated during loading phase will not have an ID on start (but it's okay)
+            if(this is InventoryItem && (GameInstance.Instance.m_gameState == GameState.LOADSAVE || GameInstance.Instance.m_gameState == GameState.LOADTITLE)) return;
+            //if(GameInstance.Instance.m_gameState != GameState.LOADSAVE && GameInstance.Instance.m_gameState != GameState.LOADTITLE)
+            ////{
+                //An individual ID MUST be assigned to each savable item
+                Debug.Assert (m_ID != 0, "Item (" + m_name + ") does not have a valid ID");
+            
+            //}
         }
 
         public int GetID() { return m_ID; } //Allows other scripts to get this item's ID

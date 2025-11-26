@@ -88,7 +88,7 @@ namespace GameBase
         [Tooltip("Multiplier for scaling fall damage with time")]
         [SerializeField] float m_fallDamageScaler = 4;
 
-        
+
         /// <summary>
         /// Sets the weapon held by the player
         /// </summary>
@@ -122,6 +122,18 @@ namespace GameBase
 
 
         }    
+
+
+        public void DisableAudioListener()
+        {
+            m_camera.GetComponent<AudioListener>().enabled = false;
+        }
+
+        public void EnableAudioListener()
+        {
+            m_camera.GetComponent<AudioListener>().enabled = true;
+        }
+
 
         #region Awake, Enable, Disable, Start, Update
 

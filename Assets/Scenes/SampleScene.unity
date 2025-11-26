@@ -131,6 +131,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SwordWeaponPickup
       objectReference: {fileID: 0}
+    - target: {fileID: 6737439283771186450, guid: 1e262c6a6e60bcf40a9e1a0a32444c45, type: 3}
+      propertyPath: m_ID
+      value: 11212
+      objectReference: {fileID: 0}
     - target: {fileID: 6882596253867280071, guid: 1e262c6a6e60bcf40a9e1a0a32444c45, type: 3}
       propertyPath: m_LocalPosition.x
       value: 8.873966

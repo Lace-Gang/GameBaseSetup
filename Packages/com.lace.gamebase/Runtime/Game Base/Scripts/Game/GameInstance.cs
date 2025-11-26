@@ -9,6 +9,8 @@ namespace GameBase
 {
     public class GameInstance : MonoBehaviour, IDataPersistence
     {
+        string x = "0";
+
         //Hidden Variables
         private int m_ID = 0;                                   //GameManager ID - Used for the Save System
         
@@ -22,6 +24,14 @@ namespace GameBase
         private bool m_restartingGame = false;                  //Has player indicated from pause menu to restart since the last update
 
         private bool m_saveHasAlreadyLoaded = false;            //Tracks if the save file has been loaded so that it isn't loaded repeatedly
+        private bool m_playerIsSpawned = false;            
+        private bool m_playerIsDespawned = false;            
+        private bool m_UIAdjusted = false;            
+        private bool m_SceneDefaultsCompleted = false;            
+        private bool m_SceneLoaded = false;            
+        private bool m_FadeOutCompleted = false;            
+        private bool m_FadeInCompleted = false;            
+        //private bool m_ = false;            
 
         private GameObject m_playerCharacter;                   //Reference to the Player Character
         private PlayerCharacter m_playerScript;                 //Reference to the Player Character Script
@@ -203,6 +213,10 @@ namespace GameBase
                     //load level and HUD, spawns player (if applicable), and optionally loads from save file
                     StartCoroutine(LoadGame());
 
+                    break;
+
+                case GameState.LOADGAME:
+                    //Allows game to load before transitioning to PLAYGAME state
                     break;
 
                 case GameState.LOADSAVE:
@@ -730,37 +744,65 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadTitle()
         {
-            //turn on title screen
-            UserInterface.Instance.m_titleScreen.SetActive(true);
-
-            //turn off other UI screens and HUD
-            UserInterface.Instance.m_mainMenuScreen.SetActive(false);
-            UserInterface.Instance.m_HUD.SetActive(false);
-            UserInterface.Instance.m_winScreen.SetActive(false);
-            UserInterface.Instance.m_loseScreen.SetActive(false);
-            UserInterface.Instance.m_pauseScreen.SetActive(false);
-
-            //loads UIDisplayScene
-            yield return StartCoroutine(LoadScene("UIDisplayScene"));
-
-            //unloads game screen
-            StartCoroutine(UnloadScene(m_gameSceneName));
-
-            m_musicPlayer?.Stop();
-
-            //plays audio
-            if(m_playsMusic && m_titleScreenMusic != null)
+            if(!m_UIAdjusted)
             {
-                m_musicPlayer?.PlayOneShot(m_titleScreenMusic);
+                //turn on title screen
+                UserInterface.Instance.m_titleScreen.SetActive(true);
+
+                //turn off other UI screens and HUD
+                UserInterface.Instance.m_mainMenuScreen.SetActive(false);
+                UserInterface.Instance.m_HUD.SetActive(false);
+                UserInterface.Instance.m_winScreen.SetActive(false);
+                UserInterface.Instance.m_loseScreen.SetActive(false);
+                UserInterface.Instance.m_pauseScreen.SetActive(false);
+
+                m_UIAdjusted = true;
             }
 
-            //Fade Screen In
-            //m_userInterface.FadeScreen();
-            yield return StartCoroutine(UserInterface.Instance.FadeIn());
+            if(!m_SceneLoaded)
+            {
+                //loads UIDisplayScene
+                yield return StartCoroutine(LoadScene("UIDisplayScene"));
+
+                //unloads game screen
+                StartCoroutine(UnloadScene(m_gameSceneName));
+
+                m_SceneLoaded = true;
+            }
+
+
+            if(!m_SceneDefaultsCompleted)
+            {
+                m_musicPlayer?.Stop();
+
+                //plays audio
+                if(m_playsMusic && m_titleScreenMusic != null)
+                {
+                    m_musicPlayer?.PlayOneShot(m_titleScreenMusic);
+                }
+
+                m_SceneDefaultsCompleted = true;
+            }
+
+            if(!m_FadeInCompleted)
+            {
+                //Fade Screen In
+                //m_userInterface.FadeScreen();
+                yield return StartCoroutine(UserInterface.Instance.FadeIn());
+
+                m_FadeInCompleted = true;
+            }
+
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
+
+            m_UIAdjusted = false;
+            m_SceneLoaded = false;
+            m_SceneDefaultsCompleted = false;
+            m_FadeInCompleted = false;
         }
 
         /// <summary>
@@ -769,58 +811,101 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadMainMenu()
         {
-            //Fade Screen Out
-            yield return StartCoroutine(UserInterface.Instance.FadeOut());
+            m_gameState = GameState.MAINMENUSCREEN;
 
-
-            //turn on main menu screen
-            UserInterface.Instance.m_mainMenuScreen.SetActive(true);
-
-            //Only displays "Load" button if it is indicated that that button should be present
-            if(m_loadFromMainMenu)
+            if (!m_FadeOutCompleted)
             {
-                UserInterface.Instance.m_loadButtonObject.SetActive(true);
 
-                //If there is no valid save to load, makes button non-interactable
-                UserInterface.Instance.m_loadButton.interactable = m_validSaveFile;
+                //Fade Screen Out
+                yield return StartCoroutine(UserInterface.Instance.FadeOut());
+
+                m_FadeOutCompleted = true;
             }
 
 
+            if(!m_UIAdjusted)
+            {
+                //turn on main menu screen
+                UserInterface.Instance.m_mainMenuScreen.SetActive(true);
 
-            //turn off other UI screens and HUD
-            UserInterface.Instance.m_titleScreen.SetActive(false);
-            UserInterface.Instance.m_HUD.SetActive(false);
-            UserInterface.Instance.m_winScreen.SetActive(false);
-            UserInterface.Instance.m_loseScreen.SetActive(false);
-            UserInterface.Instance.m_pauseScreen.SetActive(false);
+                //Only displays "Load" button if it is indicated that that button should be present
+                if(m_loadFromMainMenu)
+                {
+                    UserInterface.Instance.m_loadButtonObject.SetActive(true);
 
-            //loads UIDisplayScene
-            yield return StartCoroutine(LoadScene("UIDisplayScene"));
+                    //If there is no valid save to load, makes button non-interactable
+                    UserInterface.Instance.m_loadButton.interactable = m_validSaveFile;
+                }
 
-            //unloads game screen
-            StartCoroutine(UnloadScene(m_gameSceneName));
 
-            //update audio
-            m_musicPlayer?.Stop();
+
+                //turn off other UI screens and HUD
+                UserInterface.Instance.m_titleScreen.SetActive(false);
+                UserInterface.Instance.m_HUD.SetActive(false);
+                UserInterface.Instance.m_winScreen.SetActive(false);
+                UserInterface.Instance.m_loseScreen.SetActive(false);
+                UserInterface.Instance.m_pauseScreen.SetActive(false);
+
+                if(m_playerScript != null)
+                {
+                    //disable Player Audio listener to avoid issues
+                    m_playerScript.GetComponent<PlayerController>().DisableAudioListener();
+                }
+
+                m_UIAdjusted = true;
+            }
+
+            if(!m_SceneLoaded)
+            {
+                //loads UIDisplayScene
+                yield return StartCoroutine(LoadScene("UIDisplayScene"));
+
+                //unloads game screen
+                StartCoroutine(UnloadScene(m_gameSceneName));
+
+                m_SceneLoaded = true;
+            }
+
+            if(!m_SceneDefaultsCompleted)
+            {
+                //update audio
+                m_musicPlayer?.Stop();
             
-            if (m_playsMusic && m_musicPlayer != null)
-            {
-                m_musicPlayer.volume = 0.5f;    //Raise Music Volume
+                if (m_playsMusic && m_musicPlayer != null)
+                {
+                    m_musicPlayer.volume = 0.5f;    //Raise Music Volume
+                }
+
+                if (m_playsMusic && m_mainMenuScreenMusic != null)
+                {
+                    m_musicPlayer?.PlayOneShot(m_mainMenuScreenMusic);
+                }
+                
+                m_SceneDefaultsCompleted = true;
             }
 
-            if (m_playsMusic && m_mainMenuScreenMusic != null)
+
+            if(!m_FadeInCompleted)
             {
-                m_musicPlayer?.PlayOneShot(m_mainMenuScreenMusic);
+
+
+                //m_userInterface.FadeScreen();
+                yield return StartCoroutine(UserInterface.Instance.FadeIn());
+
+                m_FadeInCompleted = true;
             }
 
-
-
-            //m_userInterface.FadeScreen();
-            yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+
+
+            m_FadeOutCompleted = false;
+            m_UIAdjusted = false;
+            m_SceneLoaded = false;
+            m_SceneDefaultsCompleted = false;
+            m_FadeInCompleted = false;
         }
 
         /// <summary>
@@ -829,18 +914,31 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadGame()
         {
-            //Fade Out
-            yield return StartCoroutine (UserInterface.Instance.FadeOut());
+            m_gameState = GameState.LOADGAME;
 
-            //turns off User Interface screens
-            UserInterface.Instance.m_titleScreen.SetActive(false);
-            UserInterface.Instance.m_mainMenuScreen.SetActive(false);
-            UserInterface.Instance.m_winScreen.SetActive(false);
-            UserInterface.Instance.m_loseScreen.SetActive(false);
-            UserInterface.Instance.m_pauseScreen.SetActive(false);
+            if(!m_FadeOutCompleted)
+            {
+                //Fade Out
+                yield return StartCoroutine(UserInterface.Instance.FadeOut());
 
-            //Turns on HUD
-            UserInterface.Instance.m_HUD.SetActive(true);
+                m_FadeOutCompleted = true;
+            }
+
+
+            if (!m_UIAdjusted)
+            {
+                //turns off User Interface screens
+                UserInterface.Instance.m_titleScreen.SetActive(false);
+                UserInterface.Instance.m_mainMenuScreen.SetActive(false);
+                UserInterface.Instance.m_winScreen.SetActive(false);
+                UserInterface.Instance.m_loseScreen.SetActive(false);
+                UserInterface.Instance.m_pauseScreen.SetActive(false);
+
+                //Turns on HUD
+                UserInterface.Instance.m_HUD.SetActive(true);
+
+                m_UIAdjusted = true;
+            }
 
             //Restarts Game if applicable
             if(m_restartingGame)
@@ -849,58 +947,77 @@ namespace GameBase
                 m_restartingGame = false;
             }
 
-            //Loads Game scene
-            yield return StartCoroutine(LoadScene(m_gameSceneName));
-
-            //Unloads UIDisplayScene
-            StartCoroutine(UnloadScene("UIDisplayScene"));
-
-            //Clear inventory to prepare for loading the save file
-            Inventory.Instance.ClearInventory();
-
-            //Reset ammunition to default values
-            foreach(AmmunitionTracker tracker in m_ammunitionList)
+            if(!m_SceneLoaded)
             {
-                tracker.ResetAmmunition();
+                //Loads Game scene
+                yield return StartCoroutine(LoadScene(m_gameSceneName));
+
+                //Unloads UIDisplayScene
+                StartCoroutine(UnloadScene("UIDisplayScene"));
+
+                m_SceneLoaded = true;
             }
 
 
-            //Spawns player character
-            PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
-            if(spawnPoint != null)
+            //yield return StartCoroutine(SpawnPlayer());
+
+            if(!m_playerIsSpawned)
             {
-                //Destroy previous Player if such a Player exists
-                if (m_playerCharacter != null)
+                //Spawns player character
+                PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
+                if(spawnPoint != null)
                 {
-                    GameObject.Destroy(m_playerCharacter);
-                    m_playerScript = null;
+                    //Destroy previous Player if such a Player exists
+                    if (m_playerCharacter != null)
+                    {
+                        GameObject.Destroy(m_playerCharacter);
+                        m_playerScript = null;
+                    }
+                    m_playerCharacter = GameObject.Instantiate(m_playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);   //Create player
+                    m_playerScript = m_playerCharacter.GetComponentInChildren<PlayerCharacter>();   //Get reference to PlayerCharacter component
+                    m_playerScript.SetRespawnHealthType(m_respawnHealthPercentage);   //Set health percentage on respawn
+                    m_playerCharacter.SetActive(true);      //Activate Player
+                } 
+                else
+                {
+                    //Notify user if there is no spawn point. Without a spawn point, a player cannot be spawned.
+                    Debug.LogError("No PlayerSpawnPoint was located in the scene! Player will not be spawned.");
                 }
-                m_playerCharacter = GameObject.Instantiate(m_playerPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);   //Create player
-                m_playerScript = m_playerCharacter.GetComponentInChildren<PlayerCharacter>();   //Get reference to PlayerCharacter component
-                m_playerScript.SetRespawnHealthType(m_respawnHealthPercentage);   //Set health percentage on respawn
-                m_playerCharacter.SetActive(true);      //Activate Player
-            } 
-            else
-            {
-                //Notify user if there is no spawn point. Without a spawn point, a player cannot be spawned.
-                Debug.LogError("No PlayerSpawnPoint was located in the scene! Player will not be spawned.");
+
+
+                m_playerIsSpawned = true;
             }
 
-            //Resets Score
-            m_score = 0;
-            UserInterface.Instance.UpdateScore(m_score);
 
-            //update audio
-            m_musicPlayer?.Stop();
-
-            if (m_playsMusic && m_gameBackgroundMusic  != null)
+            if(!m_SceneDefaultsCompleted)
             {
-                m_musicPlayer?.PlayOneShot(m_gameBackgroundMusic);
-            }
+                //Clear inventory to prepare for loading the save file
+                Inventory.Instance.ClearInventory();
 
-            //Lock Cursor and make cursor invisible
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+                //Reset ammunition to default values
+                foreach(AmmunitionTracker tracker in m_ammunitionList)
+                {
+                    tracker.ResetAmmunition();
+                }
+
+                //Resets Score
+                m_score = 0;
+                UserInterface.Instance.UpdateScore(m_score);
+
+                //update audio
+                m_musicPlayer?.Stop();
+
+                if (m_playsMusic && m_gameBackgroundMusic  != null)
+                {
+                    m_musicPlayer?.PlayOneShot(m_gameBackgroundMusic);
+                }
+
+                //Lock Cursor and make cursor invisible
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+
+                m_SceneDefaultsCompleted = true;
+            }
 
             //Load save file if applicable. If not, transition to "Play Game" game state
             if (m_loadOnPlay)
@@ -908,13 +1025,15 @@ namespace GameBase
                 m_gameState = GameState.LOADSAVE;
                 StartCoroutine(LoadSaveTransition());
             }
-            else
+            else if (!m_FadeInCompleted)
             {
+                //Fade In
+                yield return StartCoroutine (UserInterface.Instance.FadeIn());
+
                 //transition to "play game" GameState
                 m_gameState = GameState.PLAYGAME;
 
-                //Fade In
-                yield return StartCoroutine (UserInterface.Instance.FadeIn());
+                m_FadeInCompleted = true;
             }
 
 
@@ -922,6 +1041,13 @@ namespace GameBase
             m_playerAlive = true;
             m_pauseMenuOpen = false;
             UnpauseGame();
+
+            m_FadeOutCompleted = false;
+            m_SceneLoaded = false;
+            m_playerIsSpawned = false;
+            m_UIAdjusted = false;
+            m_SceneDefaultsCompleted = false;
+            m_FadeInCompleted = false;
         }
 
         /// <summary>
@@ -942,28 +1068,36 @@ namespace GameBase
                 DataPersistenceManager.Instance.LoadGame();
 
 
-                ////Once game is loaded, moves player to the current transform of the Player Spawn Point
-                //PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
-                //if (spawnPoint != null)
-                //{
-                //    m_playerScript.SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
-                //}
-                //else
-                //{
-                //    //Notifies user if there is no Player Spawn Point in the scene after loading the data
-                //    Debug.LogError("No PlayerSpawnPoint was located in the scene when loading! Player will not be moved correctly!");
-                //}
+                //Once game is loaded, moves player to the current transform of the Player Spawn Point
+                PlayerSpawnPoint spawnPoint = FindFirstObjectByType<PlayerSpawnPoint>();
+                if (spawnPoint != null)
+                {
+                    m_playerScript.SetPlayerTransform(spawnPoint.transform.position, spawnPoint.transform.rotation);
+                }
+                else
+                {
+                    //Notifies user if there is no Player Spawn Point in the scene after loading the data
+                    Debug.LogError("No PlayerSpawnPoint was located in the scene when loading! Player will not be moved correctly!");
+                }
+
 
                 m_saveHasAlreadyLoaded = true;  //prevents this code from executing more than once while the coroutine executes
             }
 
-            //Fade in
-            yield return StartCoroutine(UserInterface.Instance.FadeIn());
+            if(!m_FadeInCompleted)
+            {
+                //Fade in
+                yield return StartCoroutine(UserInterface.Instance.FadeIn());
+
+                m_FadeInCompleted = true;
+            }
+
 
            
             //With the coroutine finished executing, set this back to false so
             //that the coroutine executes all code the next time it is started
-            m_saveHasAlreadyLoaded = false;   
+            m_saveHasAlreadyLoaded = false;
+            m_FadeInCompleted = false;
             
             m_playerAlive = true;   //Set player to alive
             m_gameState = GameState.PLAYGAME;   //Transition to "Play Game" game state
@@ -975,39 +1109,79 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadWinScreen()
         {
-            //Fade Out
-            yield return StartCoroutine(UserInterface.Instance.FadeOut());
-
-            //turns off other UI screens and HUD
-            UserInterface.Instance.m_titleScreen.SetActive(false);
-            UserInterface.Instance.m_mainMenuScreen.SetActive(false);
-            UserInterface.Instance.m_HUD.SetActive(false);
-            UserInterface.Instance.m_loseScreen.SetActive(false);
-            UserInterface.Instance.m_pauseScreen.SetActive(false);
-
-            //Turns on win screen
-            UserInterface.Instance.m_winScreen.SetActive(true);
-
-            //loads UIDisplayScene
-            yield return StartCoroutine(LoadScene("UIDisplayScene"));
-
-            //unloads Game screen
-            StartCoroutine(UnloadScene(m_gameSceneName));
-
-            //update audio
-            m_musicPlayer?.Stop();
-
-            if (m_playsMusic && m_winScreenMusic != null)
+            if(!m_FadeOutCompleted)
             {
-                m_musicPlayer?.PlayOneShot(m_winScreenMusic);
+                //Fade Out
+                yield return StartCoroutine(UserInterface.Instance.FadeOut());
+
+                m_FadeOutCompleted = true;
             }
 
-            //Unlock Cursor and make cursor visible
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if(!m_UIAdjusted)
+            {
+                //turns off other UI screens and HUD
+                UserInterface.Instance.m_titleScreen.SetActive(false);
+                UserInterface.Instance.m_mainMenuScreen.SetActive(false);
+                UserInterface.Instance.m_HUD.SetActive(false);
+                UserInterface.Instance.m_loseScreen.SetActive(false);
+                UserInterface.Instance.m_pauseScreen.SetActive(false);
 
-            //Fade In
-            yield return StartCoroutine(UserInterface.Instance.FadeIn());
+                //Turns on win screen
+                UserInterface.Instance.m_winScreen.SetActive(true);
+
+
+                //disable Player Audio listener to avoid issues
+                m_playerScript.GetComponent<PlayerController>().DisableAudioListener();
+           
+                m_UIAdjusted = true;
+            }
+
+
+
+            if(!m_SceneLoaded)
+            {
+                //loads UIDisplayScene
+                yield return StartCoroutine(LoadScene("UIDisplayScene"));
+
+                //unloads Game screen
+                StartCoroutine(UnloadScene(m_gameSceneName));
+
+                m_SceneLoaded = true;
+            }
+
+            if(!m_SceneDefaultsCompleted)
+            {
+                //update audio
+                m_musicPlayer?.Stop();
+
+                if (m_playsMusic && m_winScreenMusic != null)
+                {
+                    m_musicPlayer?.PlayOneShot(m_winScreenMusic);
+                }
+
+                //Unlock Cursor and make cursor visible
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
+                m_SceneDefaultsCompleted = true;
+            }
+
+            if(!m_FadeInCompleted)
+            {
+                //Fade In
+                yield return StartCoroutine(UserInterface.Instance.FadeIn());
+
+                m_FadeInCompleted = true;
+            }
+
+
+
+            m_FadeOutCompleted = false;
+            m_UIAdjusted = false;
+            //m_playerIsDespawned = false;
+            m_SceneLoaded = false;
+            m_SceneDefaultsCompleted = false;
+            m_FadeInCompleted = false;           
         }
 
         /// <summary>
@@ -1016,40 +1190,81 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadLooseScreen()
         {
-            //Fade Out
-            yield return StartCoroutine(UserInterface.Instance.FadeOut());
-
-            //turns off other UI screens and HUD
-            UserInterface.Instance.m_titleScreen.SetActive(false);
-            UserInterface.Instance.m_mainMenuScreen.SetActive(false);
-            UserInterface.Instance.m_HUD.SetActive(false);
-            UserInterface.Instance.m_winScreen.SetActive(false);
-            UserInterface.Instance.m_pauseScreen.SetActive(false);
-
-            //Turns on win screen
-            UserInterface.Instance.m_loseScreen.SetActive(true);
-
-            //loads UIDisplayScene
-            yield return StartCoroutine(LoadScene("UIDisplayScene"));
-
-            //unloads Game screen
-            StartCoroutine(UnloadScene(m_gameSceneName));
-
-            //update audio
-            m_musicPlayer?.Stop();
-
-            if (m_playsMusic && m_looseScreenMusic != null)
+            if(!m_FadeOutCompleted)
             {
-                m_musicPlayer?.PlayOneShot(m_looseScreenMusic);
+                //Fade Out
+                yield return StartCoroutine(UserInterface.Instance.FadeOut());
+
+                m_FadeOutCompleted = true;
             }
 
-            //Unlock Cursor and make cursor visible
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
 
-            //Fade In
-            yield return StartCoroutine(UserInterface.Instance.FadeIn());
+            if(!m_UIAdjusted)
+            {
+                //turns off other UI screens and HUD
+                UserInterface.Instance.m_titleScreen.SetActive(false);
+                UserInterface.Instance.m_mainMenuScreen.SetActive(false);
+                UserInterface.Instance.m_HUD.SetActive(false);
+                UserInterface.Instance.m_winScreen.SetActive(false);
+                UserInterface.Instance.m_pauseScreen.SetActive(false);
+
+                //Turns on win screen
+                UserInterface.Instance.m_loseScreen.SetActive(true);
+
+                //disable Player Audio listener to avoid issues
+                m_playerScript.GetComponent<PlayerController>().DisableAudioListener();
+
+                m_UIAdjusted = true;
+            }
+
+            if(!m_SceneLoaded)
+            {
+                //loads UIDisplayScene
+                yield return StartCoroutine(LoadScene("UIDisplayScene"));
+            
+                //unloads Game screen
+                StartCoroutine(UnloadScene(m_gameSceneName));
+
+                m_SceneLoaded = true;
+            }
+
+            if(!m_SceneDefaultsCompleted)
+            {
+                //update audio
+                m_musicPlayer?.Stop();
+
+                if (m_playsMusic && m_looseScreenMusic != null)
+                {
+                    m_musicPlayer?.PlayOneShot(m_looseScreenMusic);
+                }
+
+                //Unlock Cursor and make cursor visible
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+
+                m_SceneDefaultsCompleted = true;
+            }
+
+            if(!m_FadeInCompleted)
+            {
+                //Fade In
+                yield return StartCoroutine(UserInterface.Instance.FadeIn());
+
+                m_FadeInCompleted = true;
+            }
+
+
+            m_FadeOutCompleted = false;
+            m_UIAdjusted = false;
+            m_SceneLoaded = false;
+            m_SceneDefaultsCompleted = false;
+            m_FadeInCompleted = false;
         }
+
+
+        
+
+
 
         #endregion State Transitioning
 

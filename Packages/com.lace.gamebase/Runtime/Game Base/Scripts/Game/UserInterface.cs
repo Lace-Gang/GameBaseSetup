@@ -136,7 +136,10 @@ namespace GameBase
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
             }
 
-            GameInstance.Instance.m_gameState = GameState.LOADMAINMENU;     //Transition to "Load Main Menu" game state
+            if(GameInstance.Instance.m_gameState != GameState.MAINMENUSCREEN)
+            {
+                GameInstance.Instance.m_gameState = GameState.LOADMAINMENU;     //Transition to "Load Main Menu" game state
+            }
         }
 
 
@@ -266,7 +269,7 @@ namespace GameBase
             Color c = m_fadeScreen.GetComponent<UnityEngine.UI.Image>().color;
 
             //Increase alpha channel
-            for (float alpha = 0; alpha <= 1; alpha += 0.01f)
+            for (float alpha = 0; alpha <= 1; alpha += 0.01f)            
             {
                 c.a = alpha;
                 m_fadeScreen.GetComponent<UnityEngine.UI.Image>().color = c;   //Apply new alpha

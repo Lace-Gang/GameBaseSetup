@@ -28,7 +28,8 @@ namespace GameBase
 
 
         public string GetWeaponName() { return m_weapon?.GetWeaponName(); }      //Allows other scripts to get the name of the weapon being held in this item
-        public AmmunitionTracker GetAmmunitionTracker() { return m_ammoTracker; }
+        //public AmmunitionTracker GetAmmunitionTracker() { return m_ammoTracker; }
+        public AmmunitionTracker GetAmmunitionTracker() { return m_weapon?.GetAmmunitionTracker(); ; }
 
         /// <summary>
         /// Allows other scripts to see how much amo the weapon being held in this item still has

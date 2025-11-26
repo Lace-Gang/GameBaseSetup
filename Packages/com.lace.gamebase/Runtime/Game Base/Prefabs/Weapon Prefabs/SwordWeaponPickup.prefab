@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e07203c2802f154aa619f193a82c8aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_renderer: {fileID: 6342588482511468929}
+  m_renderer: {fileID: 6706184157387733068}
   m_collider: {fileID: 3911106813027796169}
   m_name: Test Weapon
   m_autoPickup: 1
@@ -218,6 +218,11 @@ PrefabInstance:
 --- !u!4 &4036590397224351742 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4399366661504173521, guid: badaa64f720f33242b9324d7ad27603c, type: 3}
+  m_PrefabInstance: {fileID: 362936965054100015}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6706184157387733068 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6347911408052259427, guid: badaa64f720f33242b9324d7ad27603c, type: 3}
   m_PrefabInstance: {fileID: 362936965054100015}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &7314861389112338875 stripped

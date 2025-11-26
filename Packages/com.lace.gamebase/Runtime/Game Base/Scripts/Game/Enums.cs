@@ -10,6 +10,7 @@ namespace GameBase
         LOADMAINMENU,
         MAINMENUSCREEN,
         STARTGAME,
+        LOADGAME,
         LOADSAVE,
         PLAYGAME,
         WINGAME,

@@ -43,6 +43,7 @@ namespace GameBase
         public bool GetUseInventory() { return m_useInventory; }    //Allows other scripts to see if inventory is being used
 
         public void SetEquippedItem(InventoryItem equippedItem) { m_equippedItem = equippedItem; }  //Allows other scripts to set an equipped item
+        public void SetEquippedWeapon(InventoryItem equippedWeapon) { m_equippedWeapon = equippedWeapon; }  //Allows other scripts to set an equipped item
 
         #region Awake and Start
 
@@ -114,6 +115,8 @@ namespace GameBase
         {
             bool stacking = item.GetStackInstances();   //can item be stacked in inventory?
             bool itemAdded = false;                     //Has item been added yet?
+
+            Debug.Log(m_equippedWeapon == null);
 
             //Auto-equips weapon if item is a WeaponItem and  no weapon is equipped, and inventory is instructed to do so and the weapon is equippable
             if (item.GetComponent<WeaponItem>() != null && item.GetEquippable() && m_equippedWeapon == null && m_sendFirstWeaponToEquipped)

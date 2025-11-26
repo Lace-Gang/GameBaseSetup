@@ -147,7 +147,21 @@ namespace GameBase
             m_image.sprite = m_weaponSprite;
             m_nameText.text = (m_numWeapons <= 0) ? string.Empty : (m_weaponName != "" && m_weaponName != string.Empty)? m_weaponName : m_itemName;
             m_numberText.text = (m_numWeapons > 1) ? m_numWeapons.ToString() : string.Empty;
-            
+
+            //if (m_numItems > 0 && m_item != null && weaponScript != null)
+            //{
+            //    string weaponName = weaponScript.GetWeaponName();
+            //    m_nameText.text = (weaponName != string.Empty && weaponName != "") ? weaponName : m_itemName;
+            //
+            //
+            //    SubscribeToTracker();
+            //}
+            //else
+            //{
+            //    UnsubscribeFromTracker();
+            //    m_ammunitionText.text = string.Empty;
+            //    m_ammunitionTextBox.SetActive(false);
+            //}
 
             if (m_weaponSprite == null)
             {
@@ -159,6 +173,11 @@ namespace GameBase
                 //Unhides image if image is not empty
                 m_image.enabled = true;
             }
+        }
+
+        public void UpdateAmmoIndicator()
+        {
+
         }
 
         
@@ -242,14 +261,16 @@ namespace GameBase
 
                             //Properly adds item to box
                             m_weaponItem = newWeapon;
-                            m_itemName = newWeapon.GetItemName();
+                            //m_itemName = newWeapon.GetItemName();
+                            m_itemName = newWeapon.GetWeaponName();
                             m_weaponSprite = newWeapon.GetInventorySprite();
 
                             //Updates Box to properly reflect the current item
                             UpdateBox();
 
                             //Notifies Inventory of the new equipped item
-                            Inventory.Instance.SetEquippedItem(newWeapon);
+                            Inventory.Instance.SetEquippedWeapon(newWeapon);
+                            SubscribeToTracker();
 
                             newWeapon.EquipWeapon();
                         }

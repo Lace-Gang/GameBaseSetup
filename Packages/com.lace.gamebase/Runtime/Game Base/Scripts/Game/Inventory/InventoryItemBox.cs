@@ -115,6 +115,8 @@ namespace GameBase
         /// <param name="item">Item being added</param>
         public void AddItem(InventoryItem item)
         {
+            UnsubscribeFromTracker();
+
             m_item = item;
             m_itemName = item.GetItemName();
             m_itemSprite = item.GetInventorySprite();
@@ -136,7 +138,7 @@ namespace GameBase
         /// </summary>
         public void UpdateBox()
         {
-            UnsubscribeFromTracker();
+            //UnsubscribeFromTracker();
 
             m_image.sprite = m_itemSprite;
             m_nameText.text = (m_numItems > 0)? m_itemName : string.Empty;

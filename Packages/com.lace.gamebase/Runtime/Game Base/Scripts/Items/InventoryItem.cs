@@ -258,6 +258,10 @@ namespace GameBase
             {
                 m_stackInstancesInInventory = data.boolData[boxID + ".ItemStackInstances"];
             }
+
+
+            HideItemInScene();  //Hide item in scene (because it has already been picked up)
+            
         }
        
        
