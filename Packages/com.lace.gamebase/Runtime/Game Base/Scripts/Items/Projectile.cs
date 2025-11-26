@@ -17,18 +17,26 @@ namespace GameBase
 
 
         [Header("Projectile Base Information")]
-        //[Tooltip("Does this projectile have a max lifespan")]
-        //[SerializeField] protected bool m_hasLifespan = true;
         [Tooltip("What is the lifespan of this object in seconds")]
         [SerializeField] protected float m_lifespan = 5f;
+        //[SerializeField] protected bool m_destroyOnHit = true;
 
 
-        //public bool GetHasLifespan() { return m_hasLifespan; }  //Allows other scripts to see this projectile's lifespan
-       
 
-       //public void SetLifespan(float lifespan) { m_lifespan = lifespan; }   //Allows other scripts to set this projectile's lifespan
+        public float GetLifespan() { return m_lifespan; }  //Allows other scripts to see this projectile's lifespan
+        public void SetLifespan(float lifespan) { m_lifespan = lifespan; }   //Allows other scripts to set this projectile's lifespan
 
         
+
+        //private void OnTriggerEnter(Collider other)
+        //{
+        //    if(!other.isTrigger && m_destroyOnHit)
+        //    {
+        //        GameObject.Destroy(this.gameObject);
+        //    }
+        //}
+
+
         /// <summary>
         /// Starts the lifetime timer. The projectile will be destroyed after its lifespan lapses
         /// </summary>

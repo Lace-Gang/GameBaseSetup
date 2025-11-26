@@ -7,9 +7,9 @@ namespace GameBase
     public abstract class WeaponBase : MonoBehaviour
     {
         //Hidden Variables
-        protected AmmunitionTracker m_ammunitionTracker = null;
-        protected GameObject m_weaponOwner = null;    //Who or what is using this projectile weapon
-        protected int m_ammoAmount = -1;               //Amount of ammunition this weapon currently has (defaults to negative one which indicates that the weapon does not use ammo)
+        protected AmmunitionTracker m_ammunitionTracker = null; //Tracker for this weapon's ammunition (if applicable)
+        protected GameObject m_weaponOwner = null;              //Who or what is using this projectile weapon
+        protected int m_ammoAmount = -1;                        //Amount of ammunition this weapon currently has (defaults to negative one which indicates that the weapon does not use ammo)
 
 
 
@@ -19,8 +19,10 @@ namespace GameBase
         [SerializeField] string m_weaponName;
         [Tooltip("Name of the weapon socket on which this weapon is intended to be equipped")]
         [SerializeField] string m_socketName = "PlayerRightHandWeaponSocket";
-        //[SerializeField] MeshFilter m_meshFilter;
-        //[SerializeField] GameObject m_esh;
+        [Tooltip("Does a sound play when an attack using this weapon is triggered")]
+        [SerializeField] protected bool m_playAttackSound = false;
+        [Tooltip("Sound that plays when attacking with this weapon")]
+        [SerializeField] protected AudioSource m_attackAudio;
         [Tooltip("How long does an attack with this weapon last")]
         [SerializeField] protected float m_attackDuration = 1f;
 

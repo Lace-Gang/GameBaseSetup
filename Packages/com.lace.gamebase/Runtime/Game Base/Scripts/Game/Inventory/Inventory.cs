@@ -42,7 +42,7 @@ namespace GameBase
 
         public bool GetUseInventory() { return m_useInventory; }    //Allows other scripts to see if inventory is being used
 
-        public void SetEquippedItem(InventoryItem equippedItem) { m_equippedItem = equippedItem; }
+        public void SetEquippedItem(InventoryItem equippedItem) { m_equippedItem = equippedItem; }  //Allows other scripts to set an equipped item
 
         #region Awake and Start
 
@@ -115,8 +115,6 @@ namespace GameBase
             bool stacking = item.GetStackInstances();   //can item be stacked in inventory?
             bool itemAdded = false;                     //Has item been added yet?
 
-            //Debug.Log("ZERO");
-
             //Auto-equips weapon if item is a WeaponItem and  no weapon is equipped, and inventory is instructed to do so and the weapon is equippable
             if (item.GetComponent<WeaponItem>() != null && item.GetEquippable() && m_equippedWeapon == null && m_sendFirstWeaponToEquipped)
             {
@@ -130,20 +128,16 @@ namespace GameBase
                 AmmunitionRefillItem refill = item.GetComponent<AmmunitionRefillItem>();
                 GameInstance.Instance.FindAmmunitionTracker(refill.GetAmmunitionType().GetName()).AddAmmunition(refill.GetAmmunitionAmount());
                 itemAdded = true;
-                //AmmunitionTracker tracker = GameInstance.Instance.FindAmmunitionTracker(item.GetComponent<AmmunitionItem>().GetAmmunitionType().GetName());
             }
             //Auto-equips item if item is not a weapon and no item is equipped, and inventory is instructed to do so and the item is equippable
             else if (item.GetComponent<WeaponItem>() == null && item.GetEquippable() && m_equippedItem == null && m_sendFirstItemToEquipped)
             {
-                //Debug.Log("ONE");
                 m_equippedItemBox.AddItem(item);    //equip item
                 m_equippedItem = item;              //track equipped item
                 itemAdded = true;
             }
             else if (m_equippedItem != null && stacking && m_equippedItem == item)  //Checks if new item is the same as the equipped item, and adds to equipped item stack if so
             {
-                //Debug.Log("TWO");
-
                 m_equippedItemBox.AddItem(item);    //add to eqiupped item
                 itemAdded = true;
             }
@@ -153,18 +147,14 @@ namespace GameBase
                 foreach (InventoryItemBox box in m_inventoryItemBoxes)
                 {
                     //If item can be stacked, stacks item if box contains items of the same name
-                    //if (stacking && box.GetItemScript() != null && box.GetItemScript() == item)
                     if (stacking && box.GetItemScript() == item)
                     {
-                        //Debug.Log("THREE");
-
                         box.AddItem(item);
                         itemAdded = true;
                         break;
                     }
                     if (box.GetItemScript() == null) //adds item to first box that does not yet have an item
                     {
-                        //Debug.Log("FOUR");
                         box.AddItem(item);
                         itemAdded = true;
                         break;

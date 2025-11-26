@@ -11,10 +11,6 @@ namespace GameBase
         Rigidbody m_rb;
 
 
-        //Exposed Variables
-        [SerializeField] float m_lifeSpan = 0f;
-
-
         /// <summary>
         /// Gets rigidbody component
         /// </summary>
@@ -41,7 +37,7 @@ namespace GameBase
         /// <param name="velocity">Desired Velocity of the projectile</param>
         public override void SetTrajectory(Vector3 direction, float velocity)
         {
-            m_rb.AddForce(direction * velocity, ForceMode.Impulse); //
+            m_rb.AddForce(direction * velocity, ForceMode.Impulse);
         }
     }
 }

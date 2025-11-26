@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem; //allows for checking user inputs
@@ -9,6 +10,7 @@ namespace GameBase{
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent (typeof(Animator))]
     [RequireComponent (typeof(Health))]
+    [RequireComponent (typeof(AudioSource))]
     public class PlayerCharacter : MonoBehaviour, IDataPersistence, IDamagableInterface
     {
         //Hidden Values
@@ -17,8 +19,9 @@ namespace GameBase{
         float m_respawnHealthPercentage = 100f;     //What percentage of health the player will have after respawning (Defaults to full health)
 
         //Hidden Variables
-        private int m_lives;        //Number of lives player currently has
-        private WeaponBase m_weapon;
+        private int m_lives;                    //Number of lives player currently has
+        private WeaponBase m_weapon;            //Current equipped weapon
+        protected bool m_playingSound = false;  //Is the Player Character currently playing any audio
 
 
         //Hidden Lists
@@ -29,25 +32,37 @@ namespace GameBase{
         PlayerController m_playerController;    //player controller component
         Rigidbody m_rigidbody;                  //rigidbody component
         Health m_playerHealth;                  //health component
+        AudioSource m_audioSource;
 
         //Player Info
         [Header("General Player Information")]
         [Tooltip("Transform of the PLAYER CHARACTER object.")]
         [SerializeField] Transform m_transform;
         [Tooltip("Unique ID")]
-        [SerializeField] string m_ID;   //player unique ID
+        [SerializeField] protected string m_ID;   //player unique ID
         [Tooltip("Whether the player can receive damage through the Game Base damage system")]
-        [SerializeField] bool m_isDamagable = true;
+        [SerializeField] protected bool m_isDamagable = true;
         [Tooltip("Number of lives player starts with")]
-        [SerializeField] int m_baseLives = 1;
+        [SerializeField] protected int m_baseLives = 1;
 
         [Header("Player Save Informition")]
-        [SerializeField] bool m_saves = false;
-        [SerializeField] bool m_savePosition = false;
-        [SerializeField] bool m_saveRotation = false;
-        [SerializeField] bool m_saveLives = false;
-        [SerializeField] bool m_saveCurrentHealth = false;
-        [SerializeField] bool m_saveMaxHealth = false;
+        [SerializeField] protected bool m_saves = false;
+        [SerializeField] protected bool m_savePosition = false;
+        [SerializeField] protected bool m_saveRotation = false;
+        [SerializeField] protected bool m_saveLives = false;
+        [SerializeField] protected bool m_saveCurrentHealth = false;
+        [SerializeField] protected bool m_saveMaxHealth = false;
+
+
+        [Header("Player Audio Information")]
+        [Tooltip("Play sound when player is damaged")]
+        [SerializeField] protected bool m_playDamageSound = false;
+        [Tooltip("Sound to play when player is damaged")]
+        [SerializeField] protected AudioClip m_damagedSound;
+        [Tooltip("Play sound when player dies")]
+        [SerializeField] protected bool m_playDeathSound = false;
+        [Tooltip("Sound to play when player dies")]
+        [SerializeField] protected AudioClip m_deathSound;
 
 
 
@@ -119,6 +134,7 @@ namespace GameBase{
             m_playerController = GetComponent<PlayerController>();
             m_rigidbody = GetComponent<Rigidbody>();
             m_playerHealth = GetComponent<Health>();
+            m_audioSource = GetComponent<AudioSource>();
 
             //Sets important values in references
             m_rigidbody.isKinematic = true; //Rigidbody must be kinematic for character movement to function
@@ -359,6 +375,14 @@ namespace GameBase{
                 OnDeath();
             } else
             {
+                //(Optionally) play audio
+                if (m_playDamageSound && !m_playingSound)
+                {
+                    m_audioSource.PlayOneShot(m_damagedSound);
+                    m_playingSound = true;
+                    StartCoroutine(AudioTimer(m_damagedSound.length));
+                }
+
                 //If player health greater than zero, executes player hit state
                 m_playerController.OnTakeHit();
             }
@@ -384,6 +408,14 @@ namespace GameBase{
         {
             m_alive = false;    //Sets that player is not alive
             m_playerController.OnDeath();   //Tells PlayerController to trigger the player death state
+            
+            //(Optionally) play audio
+            if(m_playDeathSound)
+            {
+                m_audioSource.PlayOneShot(m_deathSound);
+                m_playingSound = true;
+                StartCoroutine(AudioTimer(m_deathSound.length));
+            }
 
             StartCoroutine(GameInstance.Instance.OnPLayerDeath());  //Notify Game Instance of Player Death
         }
@@ -425,6 +457,14 @@ namespace GameBase{
 
 
         #endregion Upgrades and Powerups
+
+
+        private IEnumerator AudioTimer(float timer)
+        {
+            yield return new WaitForSeconds(timer);
+
+            m_playingSound = false;
+        }
 
 
 

@@ -16,16 +16,11 @@ namespace GameBase
         [Tooltip("The weapon being stored in this item")]
         [SerializeField] WeaponBase m_weapon;
 
-        ///// <summary>
-        ///// Tracks the name of the weapon
-        ///// </summary>
-        //private void Start()
-        //{
-        //    //m_weaponName = m_weaponScript.GetWeaponName();
-        //    m_weaponName = m_weapon.GetWeaponName();
-        //}
+        
 
-
+        /// <summary>
+        /// Lets other scripts get the ammunition tracker of the weapon this WeaponItem represents
+        /// </summary>
         private void Start()
         {
             m_ammoTracker = m_weapon?.GetAmmunitionTracker();
@@ -35,18 +30,24 @@ namespace GameBase
         public string GetWeaponName() { return m_weapon?.GetWeaponName(); }      //Allows other scripts to get the name of the weapon being held in this item
         public AmmunitionTracker GetAmmunitionTracker() { return m_ammoTracker; }
 
-        //public int GetAmmoAmount() {  return m_ammoAmount; }                    //Allows other scripts to see how much amo the weapon being held in this item still has
+        /// <summary>
+        /// Allows other scripts to see how much amo the weapon being held in this item still has
+        /// </summary>
+        /// <returns>Amount of ammunition</returns>
         public int GetAmmoAmount() {
             if (m_ammoTracker == null) return -1;
             m_ammoAmount = m_ammoTracker.GetAmmunitionAmount(); return m_ammoAmount;
-        }                    //Allows other scripts to see how much amo the weapon being held in this item still has
+        }
 
-        //public int CheckAmoAmount() { m_ammoAmount = m_weapon.GetAmmoAmount(); return m_ammoAmount; }   //Allows other scripts to set the amount of ammo the weapon being held in this item sti
+        /// <summary>
+        /// Prompts Weapon Item to check Ammunition Amount
+        /// </summary>
+        /// <returns>Ammunition Amoount</returns>
         public int CheckAmoAmount() 
         {
             if (m_ammoTracker == null) return -1;
             m_ammoAmount = m_ammoTracker.GetAmmunitionAmount(); return m_ammoAmount; 
-        }   //Allows other scripts to set the amount of ammo the weapon being held in this item sti
+        }
 
         
 

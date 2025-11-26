@@ -386,7 +386,7 @@ namespace GameBase
         private void OnAttack(InputAction.CallbackContext ctx)
         {
             //player cannot attack when dead or if there is no weapon or player is already attacking
-            if(m_isDead || m_weapon == null || m_isAttacking) return;
+            if(m_isDead || m_weapon == null || m_isAttacking || GameInstance.Instance.getPaused()) return;
 
             m_weapon.Attack();  //tells weapon to attack
 
@@ -396,6 +396,7 @@ namespace GameBase
 
             //Update animator to attack
             if(m_weapon.GetComponent<MeleeWeapon>() != null) m_animator.SetTrigger("OneHandedMeleeAttack");
+            if(m_weapon.GetComponent<ProjectileWeapon>() != null) m_animator.SetTrigger("PistolAttack");
         }
 
         /// <summary>
@@ -435,6 +436,12 @@ namespace GameBase
             OnDisable();                    //Disable player movement input
             m_movementInput = Vector2.zero; //Sets current player movement input vector to zero
 
+            //adjust animator layers accordingly
+            m_animator.SetLayerWeight(1, 0);
+            m_animator.SetLayerWeight(2, 0);
+            m_animator.SetLayerWeight(3, 0);
+            m_animator.SetLayerWeight(4, 0);
+
             m_animator.SetTrigger("Die");   //Sets death animation trigger in the animator
         }
 
@@ -448,6 +455,13 @@ namespace GameBase
 
             m_animator.SetTrigger("Jump");  //Tell animator component to jump (looks like player is getting up, and helps animator leave the "die" state)
 
+            m_animator.SetLayerWeight(3, 1); //return "DefaultLeftArmLayer" to fully visible
+
+            //Set weapon if a weapon is already equipped
+            if (m_weapon != null)
+            {
+                SetWeapon(m_weapon);
+            }
         }
 
         #endregion Player States

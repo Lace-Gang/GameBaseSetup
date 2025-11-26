@@ -11,5 +11,6 @@ namespace GameBase
 
 
         public string GetName() {  return m_name; }
+        public GameObject GetAmmunition() {  return m_ammunition; }
     }
 }

@@ -7,6 +7,7 @@ namespace GameBase
     {
         //Hidden Variables
         protected bool m_activeInScene = true;  //Is the object currently present in the world
+        //protected AudioSource m_audioSource;    //AudioSource of this item (if applicable)
 
 
         //Exposed Variables
@@ -19,10 +20,22 @@ namespace GameBase
         [SerializeField] protected string m_name;
         [Tooltip("Is item picked up automatically when player enters trigger")]
         [SerializeField] protected bool m_autoPickup = true;
-        
 
-        
-
+        ////[SerializeField] protected bool m_playAudioOnPickup = false;
+        //[SerializeField] protected bool m_playAudioOnUse = false;
+        //[SerializeField] protected AudioClip m_useAudio;
+        //
+        //
+        ///// <summary>
+        ///// Creates audio source if one will be necessary
+        ///// </summary>
+        //private void Awake()
+        //{
+        //    if(m_playAudioOnUse)
+        //    {
+        //        m_audioSource = new AudioSource();
+        //    }
+        //}
 
 
         /// <summary>

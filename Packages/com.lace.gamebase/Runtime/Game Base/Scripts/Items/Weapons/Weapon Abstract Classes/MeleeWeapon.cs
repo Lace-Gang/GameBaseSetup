@@ -28,6 +28,12 @@ namespace GameBase
         /// </summary>
         public override void Attack()
         {
+            //Play attack audio
+            if (m_playAttackSound && m_attackAudio != null)
+            {
+                m_attackAudio.Play();
+            }
+
             m_hitBox.enabled = true;
             StartCoroutine(AttackTimer());
         }

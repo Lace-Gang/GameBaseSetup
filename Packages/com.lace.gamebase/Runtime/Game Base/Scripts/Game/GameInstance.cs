@@ -33,6 +33,9 @@ namespace GameBase
         private List<GameObject> m_projectiles = new List<GameObject>();
 
 
+        
+
+
         //Exposed Variables
         [Header("Critical Information and References")]
         [Tooltip("What Game State the game will be in when the game is first opened")]
@@ -88,6 +91,19 @@ namespace GameBase
 
         [Header("Save and Load Information")]
         [SerializeField] bool m_saveScore = false;
+
+
+        [Header("Audio Information")]
+        [Tooltip("Does the GameInstance play audio (ie background music)")]
+        [SerializeField] bool m_playsMusic = false;
+        [SerializeField] bool m_maintainMusic = false;
+        [SerializeField] AudioSource m_musicPlayer;
+        [SerializeField] AudioClip m_titleScreenMusic;
+        [SerializeField] AudioClip m_mainMenuScreenMusic;
+        [SerializeField] AudioClip m_gameBackgroundMusic;
+        [SerializeField] AudioClip m_winScreenMusic;
+        [SerializeField] AudioClip m_looseScreenMusic;
+
 
 
         #region Getters and Setters
@@ -434,6 +450,13 @@ namespace GameBase
         {
             //Pause Game
             Time.timeScale = 0;
+            m_paused = true;
+
+            //Lower Music Volume
+            if(m_playsMusic && m_musicPlayer != null)
+            {
+                m_musicPlayer.volume = 0.25f;
+            }
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
@@ -446,7 +469,14 @@ namespace GameBase
         private void UnpauseGame()
         {
             //Unpause game
-            Time.timeScale = 1;     
+            Time.timeScale = 1;
+            m_paused = false;
+
+            //Raise Music Volume
+            if (m_playsMusic && m_musicPlayer != null)
+            {
+                m_musicPlayer.volume = 0.5f;
+            }
 
             //Lock Cursor and make cursor invisible
             Cursor.lockState = CursorLockMode.Locked;
@@ -716,6 +746,14 @@ namespace GameBase
             //unloads game screen
             StartCoroutine(UnloadScene(m_gameSceneName));
 
+            m_musicPlayer?.Stop();
+
+            //plays audio
+            if(m_playsMusic && m_titleScreenMusic != null)
+            {
+                m_musicPlayer?.PlayOneShot(m_titleScreenMusic);
+            }
+
             //Fade Screen In
             //m_userInterface.FadeScreen();
             yield return StartCoroutine(UserInterface.Instance.FadeIn());
@@ -762,7 +800,20 @@ namespace GameBase
             //unloads game screen
             StartCoroutine(UnloadScene(m_gameSceneName));
 
-            //yield return new WaitForSeconds(1);
+            //update audio
+            m_musicPlayer?.Stop();
+            
+            if (m_playsMusic && m_musicPlayer != null)
+            {
+                m_musicPlayer.volume = 0.5f;    //Raise Music Volume
+            }
+
+            if (m_playsMusic && m_mainMenuScreenMusic != null)
+            {
+                m_musicPlayer?.PlayOneShot(m_mainMenuScreenMusic);
+            }
+
+
 
             //m_userInterface.FadeScreen();
             yield return StartCoroutine(UserInterface.Instance.FadeIn());
@@ -838,6 +889,14 @@ namespace GameBase
             //Resets Score
             m_score = 0;
             UserInterface.Instance.UpdateScore(m_score);
+
+            //update audio
+            m_musicPlayer?.Stop();
+
+            if (m_playsMusic && m_gameBackgroundMusic  != null)
+            {
+                m_musicPlayer?.PlayOneShot(m_gameBackgroundMusic);
+            }
 
             //Lock Cursor and make cursor invisible
             Cursor.lockState = CursorLockMode.Locked;
@@ -935,6 +994,14 @@ namespace GameBase
             //unloads Game screen
             StartCoroutine(UnloadScene(m_gameSceneName));
 
+            //update audio
+            m_musicPlayer?.Stop();
+
+            if (m_playsMusic && m_winScreenMusic != null)
+            {
+                m_musicPlayer?.PlayOneShot(m_winScreenMusic);
+            }
+
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -967,6 +1034,14 @@ namespace GameBase
 
             //unloads Game screen
             StartCoroutine(UnloadScene(m_gameSceneName));
+
+            //update audio
+            m_musicPlayer?.Stop();
+
+            if (m_playsMusic && m_looseScreenMusic != null)
+            {
+                m_musicPlayer?.PlayOneShot(m_looseScreenMusic);
+            }
 
             //Unlock Cursor and make cursor visible
             Cursor.lockState = CursorLockMode.None;

@@ -60,6 +60,11 @@ namespace GameBase
         [Tooltip("'Save Game button' Object. Only visible if 'Save From Pause Menu' is set to true in the Game Instance")]
         [SerializeField] public GameObject m_saveButton;
 
+        [Header("UI Audio")]
+        [SerializeField] bool m_useAudio = false;
+        [SerializeField] AudioSource m_audioSource;
+        [SerializeField] AudioClip m_buttonClickSound;
+
 
 
 
@@ -97,6 +102,11 @@ namespace GameBase
         /// </summary>
         public void NewGameClicked()
         {
+            if(m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             GameInstance.Instance.SetLoadOnPlay(false); //Notifies GameInstance that a New Game should be loaded and not a saved game
             GameInstance.Instance.m_gameState = GameState.STARTGAME;    //Transitions to "Start Game" game state
         }
@@ -107,6 +117,11 @@ namespace GameBase
         /// </summary>
         public void UnpauseClicked()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             GameInstance.Instance.TogglePauseMenu();    //Tells pause menu to close (if it is open)
         }
 
@@ -116,6 +131,11 @@ namespace GameBase
         /// </summary>
         public void MainMenuClicked()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             GameInstance.Instance.m_gameState = GameState.LOADMAINMENU;     //Transition to "Load Main Menu" game state
         }
 
@@ -125,6 +145,11 @@ namespace GameBase
         /// </summary>
         public void SaveClicked()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             DataPersistenceManager.Instance.SaveGame(); //Tells DataPersistenceManager to save the game
         }
 
@@ -134,6 +159,11 @@ namespace GameBase
         /// </summary>
         public void LoadAndPlayClicked()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             GameInstance.Instance.SetLoadOnPlay(true);      //Tells GameInstance to load the saved game
             GameInstance.Instance.m_gameState = GameState.STARTGAME;    //Transitions to "Start Game" game state
         }
@@ -143,6 +173,11 @@ namespace GameBase
         /// </summary>
         public void RetryClicked()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             GameInstance.Instance.RestartFromScreen();  //Tells GameInstance to restart game, and informs GameInstance that this restart is being called from outside of gameplay
         }
 
@@ -151,6 +186,11 @@ namespace GameBase
         /// </summary>
         public void RestartClicked()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             GameInstance.Instance.RestartFromGame();    //Tells GameInstance to restart the game, and informs GameInstance that this restart is being called for from within gameplay
         }
 
@@ -160,6 +200,11 @@ namespace GameBase
         /// </summary>
         public void UseSelectedItemClicked()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             Inventory.Instance.UseSelectedItem();
         }
 
@@ -168,6 +213,11 @@ namespace GameBase
         /// </summary>
         public void EquipSelectedItem()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             Inventory.Instance.EqipSelectedItem();
         }
 
@@ -176,6 +226,11 @@ namespace GameBase
         /// </summary>
         public void RemoveSelectedItem()
         {
+            if (m_useAudio)
+            {
+                m_audioSource?.PlayOneShot(m_buttonClickSound);
+            }
+
             Inventory.Instance.RemoveSelectedItem();
         }
 
@@ -273,14 +328,6 @@ namespace GameBase
         {
             m_interactionPromptScreen.SetActive(false);
         }
-
-        ///// <summary>
-        ///// Tells EquippedWeaponBox to update it's ammo
-        ///// </summary>
-        //public void UpdateWeaponBoxAmo()
-        //{
-        //    m_weaponBox.UpdateAmmo();
-        //}
 
         #endregion HUD Updates
 

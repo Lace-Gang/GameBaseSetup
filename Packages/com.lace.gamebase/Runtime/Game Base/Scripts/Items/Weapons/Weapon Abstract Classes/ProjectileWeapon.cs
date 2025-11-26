@@ -11,8 +11,7 @@ namespace GameBase
         [Header("Ranged Weapon Details")]
         [Tooltip("What part of the weapon shoould the projectile be fired from")]
         [SerializeField] Transform m_firePoint;
-        [Tooltip("What projectile ammunition is used by this weapon. MUST have a ProjectileBase component.")]
-        [SerializeField] protected GameObject m_ammunition;
+        [Tooltip("What projectile ammunition type is used by this weapon. (included ammunition MUST have a ProjectileBase component.)")]
         [SerializeField] protected AmmunitionType m_ammunitionType;
         [Tooltip("Does the amount of ammo this weapon has go down after firing a projectile")]
         [SerializeField] protected bool m_consumesAmo = true;
@@ -22,8 +21,7 @@ namespace GameBase
         [SerializeField] protected int m_startingAmo;
 
 
-
-        public override int GetAmmoAmount() { return m_ammunitionTracker.GetAmmunitionAmount(); }
+        public override int GetAmmoAmount() { return m_ammunitionTracker.GetAmmunitionAmount(); }   //Allows other scripts to see how much ammo this weapon currently has access to
 
 
 
@@ -33,13 +31,10 @@ namespace GameBase
         /// </summary>
         private void Awake()
         {
-            Debug.Assert(m_ammunition != null, "Ranged Weapon requires a ");
-            Debug.Assert(m_ammunition.GetComponent<DamagingProjectile>() != null, "Ammunition MUST have a ProjectileBase interface!");
+            Debug.Assert(m_ammunitionType != null, "Ranged Weapon requires a ");
+            Debug.Assert(m_ammunitionType.GetAmmunition().GetComponent<DamagingProjectile>() != null, "Ammunition MUST have a ProjectileBase interface!");
 
-            //m_ammoAmount = (m_startingAmo >= 0) ? m_startingAmo : 0; //sets amount of amo at start
-
-            //m_ammunitionTracker = GameInstance.Instance.FindAmmunitionTracker(m_ammunitionType.GetName());
-            SubscribeToTracker();
+            SubscribeToTracker();   //subscribe to ammunition tracker
         }
 
         private void OnDestroy()
@@ -57,8 +52,14 @@ namespace GameBase
             //if(!m_ignoreAmmoAmount && m_ammoAmount <= 0) return;   //validates that weapon has enough ammunition to attack, returns if it does not
             if(!m_ignoreAmmoAmount && m_ammunitionTracker.GetAmmunitionAmount() <= 0) return;   //validates that weapon has enough ammunition to attack, returns if it does not
 
+            //Play attack audio
+            if(m_playAttackSound && m_attackAudio != null)
+            {
+                m_attackAudio.Play();
+            }
+
             //Spawns projectile in the world
-            GameObject projectileObject = GameInstance.Instance.SpawnObjectInWorld(m_ammunition);
+            GameObject projectileObject = GameInstance.Instance.SpawnObjectInWorld(m_ammunitionType.GetAmmunition());
 
             //Moves projectile to the correct location and rotation
             projectileObject.transform.position = m_firePoint.position;
