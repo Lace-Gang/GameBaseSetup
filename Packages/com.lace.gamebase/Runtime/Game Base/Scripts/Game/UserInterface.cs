@@ -189,6 +189,8 @@ namespace GameBase
         /// </summary>
         public void RestartClicked()
         {
+            Debug.Log("UI: " + Time.realtimeSinceStartupAsDouble);
+
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);

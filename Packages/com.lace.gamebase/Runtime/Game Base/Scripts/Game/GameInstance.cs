@@ -25,7 +25,7 @@ namespace GameBase
 
         private bool m_saveHasAlreadyLoaded = false;            //Tracks if the save file has been loaded so that it isn't loaded repeatedly
         private bool m_playerIsSpawned = false;            
-        private bool m_playerIsDespawned = false;            
+        //private bool m_playerIsDespawned = false;            
         private bool m_UIAdjusted = false;            
         private bool m_SceneDefaultsCompleted = false;            
         private bool m_SceneLoaded = false;            
@@ -212,6 +212,8 @@ namespace GameBase
                 case GameState.STARTGAME:
                     //load level and HUD, spawns player (if applicable), and optionally loads from save file
                     StartCoroutine(LoadGame());
+
+                    //Debug.Log(Time.realtimeSinceStartupAsDouble);
 
                     break;
 
@@ -940,17 +942,23 @@ namespace GameBase
                 m_UIAdjusted = true;
             }
 
-            //Restarts Game if applicable
-            if(m_restartingGame)
-            {
-                yield return StartCoroutine(UnloadScene(m_gameSceneName));
-                m_restartingGame = false;
-            }
 
             if(!m_SceneLoaded)
             {
+                //Restarts Game if applicable
+                if(m_restartingGame)
+                {
+                    Debug.Log("Before: " + Time.realtimeSinceStartupAsDouble);
+
+                    yield return StartCoroutine(UnloadScene(m_gameSceneName));
+                    //m_restartingGame = false;
+                    Debug.Log("After: " + Time.realtimeSinceStartupAsDouble);
+                }
+                Debug.Log("Before Scene load: " + Time.realtimeSinceStartupAsDouble);
+
                 //Loads Game scene
                 yield return StartCoroutine(LoadScene(m_gameSceneName));
+                Debug.Log("After Scene Load: " + Time.realtimeSinceStartupAsDouble);
 
                 //Unloads UIDisplayScene
                 StartCoroutine(UnloadScene("UIDisplayScene"));
@@ -977,7 +985,10 @@ namespace GameBase
                     m_playerScript = m_playerCharacter.GetComponentInChildren<PlayerCharacter>();   //Get reference to PlayerCharacter component
                     m_playerScript.SetRespawnHealthType(m_respawnHealthPercentage);   //Set health percentage on respawn
                     m_playerCharacter.SetActive(true);      //Activate Player
-                } 
+
+                    Debug.Log("Player: " + Time.realtimeSinceStartupAsDouble);
+
+                }
                 else
                 {
                     //Notify user if there is no spawn point. Without a spawn point, a player cannot be spawned.
@@ -1017,7 +1028,12 @@ namespace GameBase
                 Cursor.visible = false;
 
                 m_SceneDefaultsCompleted = true;
+
+                //unpause game (in the event the game was paused)
+                m_pauseMenuOpen = false;
+                UnpauseGame();
             }
+            
 
             //Load save file if applicable. If not, transition to "Play Game" game state
             if (m_loadOnPlay)
@@ -1027,20 +1043,49 @@ namespace GameBase
             }
             else if (!m_FadeInCompleted)
             {
-                //Fade In
-                yield return StartCoroutine (UserInterface.Instance.FadeIn());
+                if(m_restartingGame)
+                {
+                    Debug.Log("About to wait " + Time.realtimeSinceStartupAsDouble);
+                    yield return new WaitForSeconds(0.5f);
+                    Debug.Log("Finished waiting " + Time.realtimeSinceStartupAsDouble);
 
-                //transition to "play game" GameState
-                m_gameState = GameState.PLAYGAME;
 
-                m_FadeInCompleted = true;
+                    Debug.Log("Before Fade In: " + Time.realtimeSinceStartupAsDouble);
+
+                    //Fade In
+                    yield return StartCoroutine(UserInterface.Instance.FadeIn());
+
+
+                    Debug.Log("After Fade In: " + Time.realtimeSinceStartupAsDouble);
+
+                    //transition to "play game" GameState
+                    m_gameState = GameState.PLAYGAME;
+
+                    m_restartingGame = false;
+                    m_FadeInCompleted = true;
+                }
+                else
+                {
+                    Debug.Log("Before Fade In: " + Time.realtimeSinceStartupAsDouble);
+
+                    //Fade In
+                    yield return StartCoroutine(UserInterface.Instance.FadeIn());
+
+
+                    Debug.Log("After Fade In: " + Time.realtimeSinceStartupAsDouble);
+
+                    //transition to "play game" GameState
+                    m_gameState = GameState.PLAYGAME;
+
+                    m_FadeInCompleted = true;
+                }
+
+                
             }
 
 
-            //Indicate player is alive and unpause game (in the event the game was paused)
+            //Indicate player is alive
             m_playerAlive = true;
-            m_pauseMenuOpen = false;
-            UnpauseGame();
 
             m_FadeOutCompleted = false;
             m_SceneLoaded = false;

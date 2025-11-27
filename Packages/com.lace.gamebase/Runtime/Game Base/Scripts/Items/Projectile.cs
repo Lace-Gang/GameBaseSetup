@@ -26,6 +26,8 @@ namespace GameBase
         public float GetLifespan() { return m_lifespan; }  //Allows other scripts to see this projectile's lifespan
         public void SetLifespan(float lifespan) { m_lifespan = lifespan; }   //Allows other scripts to set this projectile's lifespan
 
+
+
         
 
         //private void OnTriggerEnter(Collider other)
