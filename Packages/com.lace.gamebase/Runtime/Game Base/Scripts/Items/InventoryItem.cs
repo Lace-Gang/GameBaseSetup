@@ -7,7 +7,7 @@ namespace GameBase
     {
         //Hidden Variables
         protected bool m_inInventory = false;   //Is this item currently in the inventory
-        protected bool m_equipped = true;       //Is this item currently equipped
+        protected bool m_equipped = false;       //Is this item currently equipped
 
         //Exposed Variables
         [Header("Inventory Item Information")]
@@ -45,7 +45,7 @@ namespace GameBase
         public bool GetConsumeAfterUse() { return m_consumeAfterUse; }          //Allows other scripts to see if instances of this item is consumed after being used
 
 
-
+        public void SetEquipped(bool equipped) { m_equipped = equipped; }
         public void SetItemName(string s) { m_name = s; }                           //Allows other scripts to see the name of this item
         public void SetStackInstances(bool b) { m_stackInstancesInInventory = b; }  //Allows other scripts to see if instances of this item should stack in the inventory
         public void SetUseFromInventory(bool b) { m_useFromInventory = b; }         //Allows other scripts to see if instances of this item can be used from the inventory

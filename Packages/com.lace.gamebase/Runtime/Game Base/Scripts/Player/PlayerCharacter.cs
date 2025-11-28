@@ -490,7 +490,7 @@ namespace GameBase{
                     m_weapon.transform.parent = socket.transform;
                     m_weapon.transform.position = socket.transform.position;
 
-                    //m_weapon.GetComponentInChildren<Renderer>().enabled = true;
+                    //m_weapon.ShowWeapon();
 
                     //Quaternion q = new Quaternion(socket.transform.rotation.x, socket.transform.rotation.y + 70, socket.transform.rotation.z - 90, socket.transform .rotation.w);
                     //Quaternion q1 = new Quaternion(-1, 0, 0, (Mathf.PI / 2));

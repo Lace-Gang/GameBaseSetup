@@ -279,13 +279,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f91485e656e0645a5c1d87f69931ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_renderer: {fileID: 3593229975792315488}
   m_weaponName: Pistol
   m_socketName: PlayerRightHandWeaponSocket
   m_playAttackSound: 1
   m_attackAudio: {fileID: 767290473172385216}
   m_attackDuration: 0.5
   m_firePoint: {fileID: 2929919443905286065}
-  m_ammunition: {fileID: 1549970614215082423, guid: f968f15cb9a065242a22f2145a97c5ac, type: 3}
   m_ammunitionType: {fileID: 5912152810476522973, guid: 45ff6cccb77a89f4087bc74ea8fddfb8, type: 3}
   m_consumesAmo: 1
   m_ignoreAmmoAmount: 0

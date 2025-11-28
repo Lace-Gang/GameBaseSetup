@@ -123,6 +123,8 @@ namespace GameBase
             
             m_numItems++;   //increment number of items stored in the box
 
+            m_item.SetEquipped(false);
+
             //Check if item is a WeaponItem
             if(m_item.GetComponent<WeaponItem>())
             {

@@ -102,6 +102,8 @@ namespace GameBase
         /// </summary>
         public void EmptyBox()
         {
+            m_item?.SetEquipped(false);
+
             m_item = null;
             m_itemName = string.Empty;
             m_numItems = 0;
@@ -138,6 +140,8 @@ namespace GameBase
             m_item = item;
             m_itemName = item.GetItemName();
             m_itemSprite = item.GetInventorySprite();
+
+            m_item.SetEquipped(true);
 
             m_numItems++;   //increment number of items stored in the box
 

@@ -53,6 +53,8 @@ MonoBehaviour:
   m_collider: {fileID: 2262511995946546033}
   m_name: Slightly Better
   m_autoPickup: 0
+  m_playAudioOnAutoPickup: 0
+  m_pickupAudio: {fileID: 0}
   m_save: 1
   m_ID: 101
   m_saveActiveInScene: 0
@@ -206,6 +208,7 @@ MonoBehaviour:
   m_Item: {fileID: 1767789569894051501}
   m_removesPromptAfterPickup: 1
   m_pickupOnlyOnce: 1
+  m_playAudioOnPickup: 0
 --- !u!33 &5243723557961885714
 MeshFilter:
   m_ObjectHideFlags: 0

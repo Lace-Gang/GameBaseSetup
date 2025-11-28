@@ -49,13 +49,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e07203c2802f154aa619f193a82c8aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_renderer: {fileID: 4468114815029679688}
+  m_renderer: {fileID: 5523974198221907488}
   m_collider: {fileID: 4998980646738195550}
   m_name: Pistol
   m_autoPickup: 1
   m_save: 1
   m_ID: 0
-  m_saveActiveInScene: 0
+  m_saveActiveInScene: 1
   m_savePosition: 0
   m_saveRotation: 0
   m_inventoryID: 0
@@ -226,6 +226,11 @@ PrefabInstance:
 --- !u!4 &489484628180515107 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8916653686745527139, guid: fd103b4ba0c62ce409ae078a428692df, type: 3}
+  m_PrefabInstance: {fileID: 9040042646685502016}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &5523974198221907488 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3593229975792315488, guid: fd103b4ba0c62ce409ae078a428692df, type: 3}
   m_PrefabInstance: {fileID: 9040042646685502016}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6517679317202527039 stripped

@@ -54,8 +54,8 @@ MonoBehaviour:
   m_renderer: {fileID: 1986633981086554998}
   m_lifespan: 5
   m_destroyOnHit: 1
-  m_playSoundOnDestroy: 1
-  m_destroySound: {fileID: 3950309800373988788, guid: de8696de896596d4488120cae3058e31, type: 3}
+  m_playAudioOnHit: 1
+  m_hitAudio: {fileID: 8300000, guid: 976c41e3e89023e42a2a213064e41417, type: 3}
 --- !u!114 &44699187483287330
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -19,7 +19,9 @@ namespace GameBase
         [Header("Projectile Base Information")]
         [Tooltip("What is the lifespan of this object in seconds")]
         [SerializeField] protected float m_lifespan = 5f;
-        //[SerializeField] protected bool m_destroyOnHit = true;
+        [SerializeField] protected bool m_destroyOnHit = true;
+        [SerializeField] protected bool m_playAudioOnHit = false;
+        [SerializeField] protected AudioClip m_hitAudio;
 
 
 
@@ -30,13 +32,18 @@ namespace GameBase
 
         
 
-        //private void OnTriggerEnter(Collider other)
-        //{
-        //    if(!other.isTrigger && m_destroyOnHit)
-        //    {
-        //        GameObject.Destroy(this.gameObject);
-        //    }
-        //}
+        private void OnTriggerEnter(Collider other)
+        {            
+            if(m_playAudioOnHit)
+            {
+                GameInstance.Instance.SpawnSoundAtLocation(m_hitAudio, transform.position);
+            }
+            if(m_destroyOnHit)
+            {
+                GameObject.Destroy(this.gameObject);
+            }
+            
+        }
 
 
         /// <summary>

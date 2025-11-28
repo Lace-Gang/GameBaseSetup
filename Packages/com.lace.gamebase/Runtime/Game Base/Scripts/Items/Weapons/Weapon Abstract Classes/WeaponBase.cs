@@ -15,10 +15,15 @@ namespace GameBase
 
 
         //Exposed Variables
+        [Header("Weapon Components")]
+        //[SerializeField] protected Renderer m_renderer;
+        [SerializeField] protected MeshRenderer m_renderer;
+
+        [Header("Base Weapon Information")]
         [Tooltip("The name of this weapon")]
-        [SerializeField] string m_weaponName;
+        [SerializeField] protected string m_weaponName;
         [Tooltip("Name of the weapon socket on which this weapon is intended to be equipped")]
-        [SerializeField] string m_socketName = "PlayerRightHandWeaponSocket";
+        [SerializeField] protected string m_socketName = "PlayerRightHandWeaponSocket";
         [Tooltip("Does a sound play when an attack using this weapon is triggered")]
         [SerializeField] protected bool m_playAttackSound = false;
         [Tooltip("Sound that plays when attacking with this weapon")]
@@ -39,6 +44,18 @@ namespace GameBase
 
         public virtual void SetWeaponOwner(GameObject owner) { m_weaponOwner = owner; }     //Allows other scripts to set the owner of this weapon
 
+
+       //public void ShowWeapon()
+       //{
+       //    m_renderer.enabled = false;
+       //}
+       //
+       //
+       //public void HideWeapon()
+       //{
+       //    m_renderer.enabled = true;
+       //}
+
         /// <summary>
         /// Does anything required by this weapon in order to attack with this weapon
         /// </summary>
@@ -56,27 +73,3 @@ namespace GameBase
     }
 }
 
-
-
-//What does a weapon need?
-
-//1.) Be able to attack
-//2.) Damage
-    //2a.) Get Damage owner
-//3.) Weapon Type
-    //3a.) One handed melee
-    //3b.) Two handed melee
-    //3c.) One handed gun/projectile
-        //3ca.) Ammunition
-    //3d.) Two handed gun/projectile
-            //3da.) Ammunition
-//4.) In inventory
-    //4a.) Weapon name
-    //4b.) NOT equippable
-    //4c.) Tracks amount of amo, not number of weapon
-    //4d.) Sprite
-//5.) Saves
-//6.) Use just means attack probably
-//7.) Notify Animator somehow
-//8.) UI Displays equipped Weapon
-//9.) Probably want weapons to be usable by both player and others.

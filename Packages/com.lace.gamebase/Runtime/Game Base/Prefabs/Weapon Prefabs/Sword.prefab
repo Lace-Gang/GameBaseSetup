@@ -192,6 +192,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f24a6e19b2458c4097e7bb1a94f8e17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_renderer: {fileID: 6347911408052259427}
   m_weaponName: Sword
   m_socketName: PlayerRightHandWeaponSocket
   m_playAttackSound: 1

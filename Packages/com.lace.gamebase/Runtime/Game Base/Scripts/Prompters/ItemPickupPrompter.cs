@@ -12,6 +12,8 @@ namespace GameBase
         [SerializeField] ItemBase m_Item;
         [SerializeField] bool m_removesPromptAfterPickup = true;
         [SerializeField] bool m_pickupOnlyOnce = true;
+        [SerializeField] protected bool m_playAudioOnPickup = false;
+        //[SerializeField] protected AudioSource m_pickupAudio;
 
 
         /// <summary>
@@ -62,6 +64,7 @@ namespace GameBase
         {
             if (m_removesPromptAfterPickup) RemovePromptFromPromptList();
             if (m_pickupOnlyOnce) m_activePrompt = false;
+            if(m_playAudioOnPickup) m_Item.PlayPickupAudio();
 
             m_Item.OnPickedUp();
         }

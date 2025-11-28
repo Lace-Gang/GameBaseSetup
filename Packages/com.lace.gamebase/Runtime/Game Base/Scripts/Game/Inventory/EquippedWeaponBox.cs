@@ -84,6 +84,8 @@ namespace GameBase
         /// </summary>
         public void EmptyBox()
         {
+            m_weaponItem?.SetEquipped(false);
+
             m_weaponItem = null;
             m_itemName = string.Empty;
             m_weaponName = string.Empty;
@@ -121,11 +123,15 @@ namespace GameBase
         /// <param name="weaponItem">Weapon Item being added</param>
         public void AddWeapon(WeaponItem weaponItem)
         {
+
             m_weaponItem = weaponItem;
             m_itemName = weaponItem.GetItemName();
             m_weaponName = weaponItem.GetWeaponName();
             m_weaponSprite = weaponItem.GetInventorySprite();
             m_ammoAmount = weaponItem.GetAmmoAmount();
+
+            m_weaponItem.SetEquipped(true);
+
 
             m_numWeapons++;   //increment number of weapons stored in the box
 

@@ -21,9 +21,9 @@ namespace GameBase
         [Tooltip("Is item picked up automatically when player enters trigger")]
         [SerializeField] protected bool m_autoPickup = true;
 
-        ////[SerializeField] protected bool m_playAudioOnPickup = false;
-        //[SerializeField] protected bool m_playAudioOnUse = false;
-        //[SerializeField] protected AudioClip m_useAudio;
+        //[SerializeField] protected bool m_playAudioOnPickup = false;
+        [SerializeField] protected bool m_playAudioOnAutoPickup = false;
+        [SerializeField] protected AudioSource m_pickupAudio = null;
         //
         //
         ///// <summary>
@@ -61,6 +61,7 @@ namespace GameBase
             if (m_autoPickup)
             {
                 OnPickedUp();           //Child class "OnPickedUp"
+                if (m_playAudioOnAutoPickup) PlayPickupAudio();
             }
         }
 
@@ -72,6 +73,14 @@ namespace GameBase
             m_activeInScene = false;            //item no longer present in the world
             m_renderer.enabled = false;     //item no longer visible
             m_collider.enabled = false;     //item no longer collidable
+        }
+
+        /// <summary>
+        /// Plays item pickup audio if indicated to do so
+        /// </summary>
+        public void PlayPickupAudio()
+        {            
+            m_pickupAudio?.Play();            
         }
 
 

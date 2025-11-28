@@ -81,6 +81,8 @@ namespace GameBase
         [Header("Object Tracking")]
         [Tooltip("List Of Ammunition Types To Track")]
         [SerializeField] List<AmmunitionTracker> m_ammunitionList = new List<AmmunitionTracker>();
+        [Tooltip("Default SpawnableSound prefab")]
+        [SerializeField] GameObject m_SpawnableSound;
 
 
 
@@ -948,17 +950,12 @@ namespace GameBase
                 //Restarts Game if applicable
                 if(m_restartingGame)
                 {
-                    Debug.Log("Before: " + Time.realtimeSinceStartupAsDouble);
-
                     yield return StartCoroutine(UnloadScene(m_gameSceneName));
                     //m_restartingGame = false;
-                    Debug.Log("After: " + Time.realtimeSinceStartupAsDouble);
                 }
-                Debug.Log("Before Scene load: " + Time.realtimeSinceStartupAsDouble);
 
                 //Loads Game scene
                 yield return StartCoroutine(LoadScene(m_gameSceneName));
-                Debug.Log("After Scene Load: " + Time.realtimeSinceStartupAsDouble);
 
                 //Unloads UIDisplayScene
                 StartCoroutine(UnloadScene("UIDisplayScene"));
@@ -985,9 +982,6 @@ namespace GameBase
                     m_playerScript = m_playerCharacter.GetComponentInChildren<PlayerCharacter>();   //Get reference to PlayerCharacter component
                     m_playerScript.SetRespawnHealthType(m_respawnHealthPercentage);   //Set health percentage on respawn
                     m_playerCharacter.SetActive(true);      //Activate Player
-
-                    Debug.Log("Player: " + Time.realtimeSinceStartupAsDouble);
-
                 }
                 else
                 {
@@ -1045,18 +1039,12 @@ namespace GameBase
             {
                 if(m_restartingGame)
                 {
-                    Debug.Log("About to wait " + Time.realtimeSinceStartupAsDouble);
                     yield return new WaitForSeconds(0.5f);
-                    Debug.Log("Finished waiting " + Time.realtimeSinceStartupAsDouble);
 
-
-                    Debug.Log("Before Fade In: " + Time.realtimeSinceStartupAsDouble);
 
                     //Fade In
                     yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
-
-                    Debug.Log("After Fade In: " + Time.realtimeSinceStartupAsDouble);
 
                     //transition to "play game" GameState
                     m_gameState = GameState.PLAYGAME;
@@ -1066,13 +1054,9 @@ namespace GameBase
                 }
                 else
                 {
-                    Debug.Log("Before Fade In: " + Time.realtimeSinceStartupAsDouble);
 
                     //Fade In
                     yield return StartCoroutine(UserInterface.Instance.FadeIn());
-
-
-                    Debug.Log("After Fade In: " + Time.realtimeSinceStartupAsDouble);
 
                     //transition to "play game" GameState
                     m_gameState = GameState.PLAYGAME;
@@ -1328,6 +1312,20 @@ namespace GameBase
 
             GameObject projectile = GameObject.Instantiate(objectPrefab, transform);
             return projectile;
+        }
+
+        public GameObject SpawnSoundAtLocation(AudioClip audioClip, Vector3 location)
+        {
+            GameObject soundObject = GameObject.Instantiate(m_SpawnableSound, transform);
+
+            SpawnableSound spawnableSound = soundObject.GetComponent<SpawnableSound>();
+            spawnableSound.SetAudio(audioClip);
+            spawnableSound.SetLifespan(audioClip.length + 1);
+            spawnableSound.PlayAudio();
+
+            spawnableSound.StartLifespanTimer();
+
+            return soundObject;
         }
 
         

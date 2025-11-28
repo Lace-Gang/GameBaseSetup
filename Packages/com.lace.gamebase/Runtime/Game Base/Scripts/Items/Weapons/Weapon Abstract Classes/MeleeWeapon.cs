@@ -35,6 +35,10 @@ namespace GameBase
             }
 
             m_hitBox.enabled = true;
+
+            Debug.Log("Showing Weapon: " + m_renderer.enabled);
+
+
             StartCoroutine(AttackTimer());
         }
 
@@ -44,7 +48,12 @@ namespace GameBase
         /// </summary>
         public override void ShowWeapon()
         {
-            GetComponentInChildren<MeshRenderer>().enabled = true;
+
+            m_renderer.enabled = true;
+
+            //Debug.Log("Showing Weapon: " + m_renderer.enabled);
+
+            //GetComponentInChildren<MeshRenderer>().enabled = true;
 
         }
 
@@ -53,7 +62,12 @@ namespace GameBase
         /// </summary>
         public override void HideWeapon()
         {
-            GetComponentInChildren<MeshRenderer>().enabled = false;
+
+            //Debug.Log("Hiding Weapon");
+
+            //GetComponentInChildren<MeshRenderer>().enabled = false;
+
+            m_renderer.enabled = false;
         }
 
 

@@ -60,7 +60,14 @@ namespace GameBase
         /// </summary>
         public void EquipWeapon()
         {
-            if(m_weapon != null) GameInstance.Instance.GetPlayerScript()?.EquipWeapon(m_weapon);
+            if (m_weapon != null)
+            {
+                GameInstance.Instance.GetPlayerScript()?.EquipWeapon(m_weapon);
+                m_equipped = true;
+                m_weapon.ShowWeapon();
+            }
+            
+
         }
 
 
@@ -78,8 +85,11 @@ namespace GameBase
         /// </summary>
         public override void OnPickedUp()
         {
-            m_weapon.HideWeapon();  //Hides weapon prefab that is displayed by this item
             base.OnPickedUp();      //Does all "OnPickedUp" opperations associated with the InventoryItem
+            Debug.Log(m_weapon.GetWeaponName() + " is equipped: " + m_equipped);
+
+            if(m_equipped) m_weapon.ShowWeapon();  //Hides weapon prefab that is displayed by this item
+            else m_weapon.HideWeapon();
         }
     }
 }
