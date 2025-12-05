@@ -19,6 +19,7 @@ namespace GameBase
         LOSESCREEN
     }
 
+    //Defines how the player respawns
     public enum RespawnType
     {
         RESPAWNINPLACE,                 //respawns player in place
@@ -27,6 +28,7 @@ namespace GameBase
         RESPAWNATSTATICLOCATION         //respawns at a set location without loading any saved data
     }
 
+    //Defines how the player restarts
     public enum RestartMode
     {
         RESTARTFROMLASTSAVE,    //after loosing, player will restart at last save point

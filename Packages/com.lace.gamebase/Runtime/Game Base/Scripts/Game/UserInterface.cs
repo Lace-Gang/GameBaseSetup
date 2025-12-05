@@ -10,6 +10,8 @@ namespace GameBase
 {
     public class UserInterface : MonoBehaviour
     {
+        #region Variables Exposed In Editor
+
         //Exposed Varaibles
 
         [Header("Screens")]
@@ -65,7 +67,7 @@ namespace GameBase
         [SerializeField] AudioSource m_audioSource;
         [SerializeField] AudioClip m_buttonClickSound;
 
-
+        #endregion Variables Exposed In Editor
 
 
 
@@ -102,6 +104,7 @@ namespace GameBase
         /// </summary>
         public void NewGameClicked()
         {
+            //Uses button click audio if indicated to do so
             if(m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
@@ -117,6 +120,7 @@ namespace GameBase
         /// </summary>
         public void UnpauseClicked()
         {
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
@@ -131,6 +135,7 @@ namespace GameBase
         /// </summary>
         public void MainMenuClicked()
         {
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
@@ -148,6 +153,7 @@ namespace GameBase
         /// </summary>
         public void SaveClicked()
         {
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
@@ -162,6 +168,7 @@ namespace GameBase
         /// </summary>
         public void LoadAndPlayClicked()
         {
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
@@ -176,6 +183,7 @@ namespace GameBase
         /// </summary>
         public void RetryClicked()
         {
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
@@ -189,8 +197,7 @@ namespace GameBase
         /// </summary>
         public void RestartClicked()
         {
-            Debug.Log("UI: " + Time.realtimeSinceStartupAsDouble);
-
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
@@ -205,12 +212,13 @@ namespace GameBase
         /// </summary>
         public void UseSelectedItemClicked()
         {
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
             }
 
-            Inventory.Instance.UseSelectedItem();
+            Inventory.Instance.UseSelectedItem();   //Tells inventory to use the selected item
         }
 
         /// <summary>
@@ -218,12 +226,13 @@ namespace GameBase
         /// </summary>
         public void EquipSelectedItem()
         {
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
             }
 
-            Inventory.Instance.EqipSelectedItem();
+            Inventory.Instance.EqipSelectedItem();  //Tells inventory to equip the selected item
         }
 
         /// <summary>
@@ -231,18 +240,20 @@ namespace GameBase
         /// </summary>
         public void RemoveSelectedItem()
         {
+            //Uses button click audio if indicated to do so
             if (m_useAudio)
             {
                 m_audioSource?.PlayOneShot(m_buttonClickSound);
             }
 
-            Inventory.Instance.RemoveSelectedItem();
+            Inventory.Instance.RemoveSelectedItem();    //tells inventory to remove the selected item
         }
 
 
         #endregion Button Clicks
 
         #region Screen Fade
+
         /// <summary>
         /// Fades screen in
         /// </summary>
@@ -322,8 +333,8 @@ namespace GameBase
         /// <param name="prompt">Prompt to display</param>
         public void DisplayPromptBox(string prompt)
         {
-            m_InteractionPromptText.text = prompt;
-            m_interactionPromptScreen.SetActive(true);
+            m_InteractionPromptText.text = prompt;      //sets proper text to prompt text box
+            m_interactionPromptScreen.SetActive(true);  //displays prompt text box
         }
 
         /// <summary>
@@ -331,13 +342,10 @@ namespace GameBase
         /// </summary>
         public void HidePromptBox()
         {
-            m_interactionPromptScreen.SetActive(false);
+            m_interactionPromptScreen.SetActive(false);     //Hides prompt text box
         }
 
         #endregion HUD Updates
-
-
-
 
 
         #region UI Layout Adjustments
@@ -386,7 +394,7 @@ namespace GameBase
                 }
             }
 
-            return itemBoxes;
+            return itemBoxes;   //returns list of boxes
         }
 
 

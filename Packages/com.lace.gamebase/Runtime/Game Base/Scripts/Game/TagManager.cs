@@ -11,6 +11,9 @@ namespace GameBase
 
         public List<string> GetList() { return m_tags; }    //Allows other scripts to see this list
 
+
+        #region TagManager Basic Functionality
+
         /// <summary>
         /// Searches list for a tag
         /// </summary>
@@ -18,12 +21,13 @@ namespace GameBase
         /// <returns>If the tag was found</returns>
         public bool SearchForTag(string tag)
         {
+            //Search list of tags for a tag that matches, returns true if a matching tag is found
             foreach(string s in m_tags)
             {
                 if(s == tag) return true;
             }
 
-            return false;
+            return false;   //returns false if no matching tags are found
         }
 
         /// <summary>
@@ -34,7 +38,7 @@ namespace GameBase
         {
             if(!m_tags.Contains(tag))   //prevent duplicate tags from being added
             {
-                m_tags.Add(tag);
+                m_tags.Add(tag);    //Adds tag
             }
         }
 
@@ -44,9 +48,13 @@ namespace GameBase
         /// <param name="tag">Tag to be removed</param>
         public void RemoveTag(string tag)
         {
-            m_tags.Remove(tag);
+            m_tags.Remove(tag); //Removes one instance of a tag
         }
 
+        #endregion TagManager Basic Functionality
+
+
+        #region Save and Load
         /// <summary>
         /// Saves this list of tags to save file
         /// </summary>
@@ -54,6 +62,7 @@ namespace GameBase
         /// <param name="ID">ID to use for this instance when saving/loading</param>
         public void SaveTags(ref GameData data, string ID)
         {
+            //Save tags
             if(data.stringListData.ContainsKey("Tag-" + ID + ".TagList"))
             {
                 data.stringListData["Tag-" + ID + ".TagList"] = m_tags;
@@ -71,10 +80,13 @@ namespace GameBase
         /// <param name="ID">ID to use for this instance when saving/loading</param>
         public void LoadTags(GameData data, string ID)
         {
+            //Load Tags
             if(data.stringListData.ContainsKey("Tag-" + ID + ".TagList"))
             {
                 m_tags = data.stringListData["Tag-" + ID + ".TagList"];
             }
         }
+
+        #endregion Save and Load
     }
 }

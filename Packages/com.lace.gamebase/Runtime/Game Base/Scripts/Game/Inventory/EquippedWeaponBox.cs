@@ -6,6 +6,8 @@ namespace GameBase
 {
     public class EquippedWeaponBox : MonoBehaviour, IDataPersistence, IAmmunitionUser
     {
+        #region Variables
+
         //Hidden Variables
         private string m_itemName = "";                     //Name of the weaponItem currently being stored in this Equipped Weapon Box
         private string m_weaponName = "";                   //Name of the weapon currently being stored in this Equipped Weapon Box
@@ -28,8 +30,8 @@ namespace GameBase
         [SerializeField] TextMeshProUGUI m_ammunitionText;
         [Tooltip("Box used to display remaining ammunitioin")]
         [SerializeField] GameObject m_ammunitionTextBox;
-        
 
+        #endregion Variables
 
 
 
@@ -44,7 +46,7 @@ namespace GameBase
         }
 
        /// <summary>
-       /// Adjusts the UI to properly indicate which key must be pressed to use the Equipped Item
+       /// Adjusts the UI to display proper ammunition amount
        /// </summary>
        private void Start()
        {
@@ -56,14 +58,15 @@ namespace GameBase
 
 
         #region Getters and Setters
-        public string GetItemName() { return m_itemName; }          //Allows other scripts to get the name of the item(s) being stored in this box
-        public string GetWeaponName() { return m_weaponName; }          //Allows other scripts to get the name of the item(s) being stored in this box
-        public WeaponItem GetItemScript() { return m_weaponItem; }     //Allows other scripts to get the script of this item being held in this box
+
+        public string GetItemName() { return m_itemName; }              //Allows other scripts to get the name of the item(s) being stored in this box
+        public string GetWeaponName() { return m_weaponName; }          //Allows other scripts to get the name of the weapon(s) being stored in this box
+        public WeaponItem GetItemScript() { return m_weaponItem; }      //Allows other scripts to get the script of this item being held in this box
         public int GetNumberOfWeapons() { return m_numWeapons; }        //Allows other scripts to get how many items this box currently contains
 
 
-        public void SetNumberOfWeapons(int numWeapons) { m_numWeapons = numWeapons; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
-        public void SetAmmoAmount(int numWeapons) { m_numWeapons = numWeapons; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
+        public void SetNumberOfWeapons(int numWeapons) { m_numWeapons = numWeapons; UpdateBox(); }     //Allows other scripts to get how many weapons this box currently contains
+        public void SetAmmoAmount(int numWeapons) { m_numWeapons = numWeapons; UpdateBox(); }          //Allows other scripts to get ammount of ammunition this box's weapon currently has
 
         /// <summary>
         /// Sets this box's image
@@ -73,19 +76,20 @@ namespace GameBase
         {
             m_image.sprite = m_weaponSprite;
         }
+        
         #endregion Getters and Setters
 
 
         #region Equipped Weapon Box Functionality
 
-
         /// <summary>
-        /// Removes all item instances from this box, and resets all values in this box
+        /// Removes all weapon and item instances from this box, and resets all values in this box
         /// </summary>
         public void EmptyBox()
         {
-            m_weaponItem?.SetEquipped(false);
+            m_weaponItem?.SetEquipped(false);   //If there is a WeaponItem equipped, tells that WeaponItem it is no longe equipped
 
+            //sets all variables to indicate there is nothing in this box
             m_weaponItem = null;
             m_itemName = string.Empty;
             m_weaponName = string.Empty;
@@ -93,29 +97,32 @@ namespace GameBase
             m_ammoAmount = -1;
             m_weaponSprite = null;
 
+            //Unsubscribes from ammunition tracker
             UnsubscribeFromTracker();
 
+            //Updates UI to correctly reflect that this EqiuppedWeaponBox is empty
             UpdateBox();
         }
 
         /// <summary>
-        /// Removes one instance of this item box's item. 
+        /// Removes one instance of this EqiuppedWeaponBox's weapon. 
         /// </summary>
         /// <returns>If this box is empty</returns>
         public bool removeInstanceOfItem()
         {
-            m_numWeapons--;
+            m_numWeapons--; //decrements number of weapons
 
+            //empties box if the number of weapons is less than or equal to zero
             if (m_numWeapons <= 0)
             {
                 EmptyBox();
                 return true;
             }
 
+            //Updates UI to display this EqiuppedWeaponBox properly
             UpdateBox();
             return false;
         }
-
 
         /// <summary>
         /// Adds weaponItem to this equipped weapon box
@@ -123,14 +130,14 @@ namespace GameBase
         /// <param name="weaponItem">Weapon Item being added</param>
         public void AddWeapon(WeaponItem weaponItem)
         {
-
+            //Set all weapon tracking info to reflect the equipped weapon
             m_weaponItem = weaponItem;
             m_itemName = weaponItem.GetItemName();
             m_weaponName = weaponItem.GetWeaponName();
             m_weaponSprite = weaponItem.GetInventorySprite();
             m_ammoAmount = weaponItem.GetAmmoAmount();
 
-            m_weaponItem.SetEquipped(true);
+            m_weaponItem.SetEquipped(true); //Tells WeaponItem it has been equipped
 
 
             m_numWeapons++;   //increment number of weapons stored in the box
@@ -138,36 +145,21 @@ namespace GameBase
             UpdateBox();    //update box to propery display weapon
 
             
-            SubscribeToTracker();
+            SubscribeToTracker();   //Subscribes to weapon's AmmunitionTracker
         }
-
-
 
         /// <summary>
         /// Updates the equipped weapon box appearance in the UI
         /// </summary>
         public void UpdateBox()
         {
-            m_ammoAmount = (m_weaponItem != null) ? m_weaponItem.CheckAmoAmount() : -1;
+            //set's ammunition amount to -1 if the WeaponItem is null to indicate no ammunition is being used
+            m_ammoAmount = (m_weaponItem != null) ? m_weaponItem.GetAmmoAmount() : -1;  
 
+            //Updates UI to properly reflect the weapon and ammunition amounts
             m_image.sprite = m_weaponSprite;
             m_nameText.text = (m_numWeapons <= 0) ? string.Empty : (m_weaponName != "" && m_weaponName != string.Empty)? m_weaponName : m_itemName;
-            m_numberText.text = (m_numWeapons > 1) ? m_numWeapons.ToString() : string.Empty;
-
-            //if (m_numItems > 0 && m_item != null && weaponScript != null)
-            //{
-            //    string weaponName = weaponScript.GetWeaponName();
-            //    m_nameText.text = (weaponName != string.Empty && weaponName != "") ? weaponName : m_itemName;
-            //
-            //
-            //    SubscribeToTracker();
-            //}
-            //else
-            //{
-            //    UnsubscribeFromTracker();
-            //    m_ammunitionText.text = string.Empty;
-            //    m_ammunitionTextBox.SetActive(false);
-            //}
+            m_numberText.text = (m_numWeapons > 1) ? m_numWeapons.ToString() : string.Empty;            
 
             if (m_weaponSprite == null)
             {
@@ -180,13 +172,6 @@ namespace GameBase
                 m_image.enabled = true;
             }
         }
-
-        public void UpdateAmmoIndicator()
-        {
-
-        }
-
-        
 
         #endregion Equipped Weapon Box Functionality
 
@@ -209,7 +194,7 @@ namespace GameBase
                 data.intData.Add("EquippedWeaponBox.NumberOfItems", m_numWeapons);
             }
 
-
+            //Saves number of weapons
             if (m_numWeapons > 0)
             {
                 //Save name of item's item script (if this Equipped Item Box currently has an item)
@@ -299,7 +284,10 @@ namespace GameBase
         /// </summary>
         public void SubscribeToTracker()
         {
+            //Gets the AmmunitionTracker
             m_ammoTracker = m_weaponItem.GetAmmunitionTracker();
+
+            //If AmmunitionTracker is not null, subscribes to AmmunitionTracker and updates UI to reflect ammunition
             if(m_ammoTracker != null)
             {
                 m_ammoTracker.AddUser(this);
@@ -308,7 +296,7 @@ namespace GameBase
                 m_ammunitionText.text = m_ammoAmount.ToString();
                 m_ammunitionTextBox.SetActive(true);
             }
-            else
+            else //Updates UI to reflect lack of ammunition
             {
                 m_ammunitionText.text = string.Empty;
                 m_ammunitionTextBox.SetActive(false);
@@ -320,7 +308,7 @@ namespace GameBase
         /// </summary>
         public void UnsubscribeFromTracker()
         {
-            if(m_ammoTracker != null)
+            if(m_ammoTracker != null)   //if AmmunitionTracker is not null, unsubscribes and updates UI to reflect lack of AmmunitionTracker
             {
                 m_ammoTracker.RemoveUser(this);
                 m_ammoAmount = -1;
@@ -336,9 +324,9 @@ namespace GameBase
         /// <param name="ammount">Current ammunition amount</param>
         public void OnAmmunitionChange(int ammount)
         {
-            m_ammoAmount = m_ammoTracker.GetAmmunitionAmount();
+            m_ammoAmount = ammount; //tracks new ammunition amount
 
-            m_ammunitionText.text = m_ammoAmount.ToString();
+            m_ammunitionText.text = m_ammoAmount.ToString();    //updates UI to reflect new ammunition amount
         }
 
 

@@ -76,6 +76,7 @@ namespace GameBase
 
 
         #region Getters and Setters
+
         public string GetItemName() { return m_itemName; }          //Allows other scripts to get the name of the item(s) being stored in this box
         public InventoryItem GetItemScript() { return m_item; }     //Allows other scripts to get the script of this item being held in this box
         public int GetNumberOfItems() { return m_numItems; }        //Allows other scripts to get how many items this box currently contains
@@ -91,6 +92,7 @@ namespace GameBase
         {
             m_image.sprite = m_itemSprite;
         }
+
         #endregion Getters and Setters
 
 
@@ -102,13 +104,15 @@ namespace GameBase
         /// </summary>
         public void EmptyBox()
         {
-            m_item?.SetEquipped(false);
+            m_item?.SetEquipped(false);   //If there is an Item equipped, tells that Item it is no longe equipped
 
+            //sets all variables to indicate there is nothing in this box
             m_item = null;
             m_itemName = string.Empty;
             m_numItems = 0;
             m_itemSprite = null;
 
+            //Updates UI to correctly reflect that this EqiuppedItemBox is empty
             UpdateBox();
         }
 
@@ -118,14 +122,16 @@ namespace GameBase
         /// <returns>If this box is empty</returns>
         public bool removeInstanceOfItem()
         {
-            m_numItems--;
+            m_numItems--;   //decrements number of items
 
+            //empties box if the number of items is less than or equal to zero
             if (m_numItems <= 0)
             {
                 EmptyBox();
                 return true;
             }
 
+            //Updates UI to display this EqiuppedItemBox properly
             UpdateBox();
             return false;
         }
@@ -137,11 +143,12 @@ namespace GameBase
         /// <param name="item">Item being added</param>
         public void AddItem(InventoryItem item)
         {
+            //Set all item tracking info to reflect the equipped item
             m_item = item;
             m_itemName = item.GetItemName();
             m_itemSprite = item.GetInventorySprite();
 
-            m_item.SetEquipped(true);
+            m_item.SetEquipped(true);   //Tells Item it has been equipped
 
             m_numItems++;   //increment number of items stored in the box
 
@@ -155,6 +162,7 @@ namespace GameBase
         /// </summary>
         public void UpdateBox()
         {
+            //Displays current item sprite, name and amount
             m_image.sprite = m_itemSprite;
             m_nameText.text = (m_numItems > 0) ? m_itemName : string.Empty;
             m_numberText.text = (m_numItems > 1) ? m_numItems.ToString() : string.Empty;
@@ -192,7 +200,7 @@ namespace GameBase
                 data.intData.Add("EquippedItemBox.NumberOfItems", m_numItems);
             }
 
-
+            
             if (m_numItems > 0)
             {
                 //Save name of item's item script (if this Equipped Item Box currently has an item)
@@ -265,6 +273,7 @@ namespace GameBase
                 }                     
             }
         }
+
         #endregion Save and Load
 
     }

@@ -13,6 +13,8 @@ namespace GameBase
     [RequireComponent(typeof(PlayerCharacter))]
     public class PlayerController : MonoBehaviour
     {
+        #region Hidden Variables
+
         ////Hidden Variables
         //Required Components/References
         private PlayerCharacter m_playerCharacter;      //Player character component
@@ -37,6 +39,9 @@ namespace GameBase
         Vector2 m_movementInput = Vector2.zero;         //Current movement input vector (which direction is the player supposed to move)
         Vector3 m_velocity = Vector3.zero;              //Current player velocity
 
+        #endregion Hidden Variables
+
+        #region Variables Exposed In Editor
 
         ////Exposed Variables
         [Tooltip("Camera being used to follow the player and provide steering")]
@@ -88,6 +93,8 @@ namespace GameBase
         [Tooltip("Multiplier for scaling fall damage with time")]
         [SerializeField] float m_fallDamageScaler = 4;
 
+        #endregion Variables Exposed In Editor
+
 
         /// <summary>
         /// Sets the weapon held by the player
@@ -122,17 +129,24 @@ namespace GameBase
 
 
         }    
+  
+        
+        /// <summary>
+        /// Enables the AudioListener attached to the camera
+        /// </summary>
+        public void EnableAudioListener()
+        {
+            m_camera.GetComponent<AudioListener>().enabled = true;
+        }
 
-
+        /// <summary>
+        /// Disables the AudioListener attached to the camera
+        /// </summary>
         public void DisableAudioListener()
         {
             m_camera.GetComponent<AudioListener>().enabled = false;
         }
 
-        public void EnableAudioListener()
-        {
-            m_camera.GetComponent<AudioListener>().enabled = true;
-        }
 
 
         #region Awake, Enable, Disable, Start, Update
@@ -364,9 +378,9 @@ namespace GameBase
                 m_animator.SetTrigger("Jump");
 
                 //Set up variables to track double jump if applicable
-                if(m_enableDoubleJump)                                      ////////////// These may want to be moved out of the if statement in case 
-                {                                                           //////They can be used elsewhere (ie calculating fall damage)
-                    m_hasJumped = true;                                     //////If move, remember to add && m_enableDoubleJump to the else if conditions
+                if(m_enableDoubleJump)                                      
+                {                                                           
+                    m_hasJumped = true;                                     
                     m_timeSinceLastJump = 0;
                 }
             } else if (m_hasJumped && (m_timeSinceLastJump <= m_doubleJumpTimer))
@@ -391,7 +405,7 @@ namespace GameBase
         }
 
         /// <summary>
-        /// Performs player attack action. Not yet implemented.
+        /// Performs player attack action
         /// </summary>
         /// <param name="ctx">>The CallbackContext from the InputAction (this is handled by the engine)</param>
         /// <exception cref="NotImplementedException">Class has not been implemented yet and should not yet be used</exception>

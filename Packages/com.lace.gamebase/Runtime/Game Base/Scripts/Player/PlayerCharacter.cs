@@ -13,6 +13,8 @@ namespace GameBase{
     [RequireComponent (typeof(AudioSource))]
     public class PlayerCharacter : MonoBehaviour, IDataPersistence, IDamagableInterface
     {
+        #region Hidden Variables
+
         //Hidden Values
         private bool m_alive = true;                //Is the player alive
         private float m_invincibleTime = 0f;        //How long the player will be invincible for (player is invincible as long as timer is greater than 0)
@@ -25,14 +27,17 @@ namespace GameBase{
 
 
         //Hidden Lists
-        //private List<Socket> m_sockets = new List<Socket>();
-        private Socket[] m_sockets;
+        private Socket[] m_sockets;             //Tracks all Sockets on the player character model
 
         //Hidden Components
         PlayerController m_playerController;    //player controller component
         Rigidbody m_rigidbody;                  //rigidbody component
         Health m_playerHealth;                  //health component
-        AudioSource m_audioSource;
+        AudioSource m_audioSource;              //AudioSource component
+
+        #endregion Hidden Variables
+
+        #region Variables Exposed In Editor
 
         //Player Info
         [Header("General Player Information")]
@@ -47,10 +52,15 @@ namespace GameBase{
 
         [Header("Player Save Informition")]
         [SerializeField] protected bool m_saves = false;
+        [Tooltip("Is current transform position saved")]
         [SerializeField] protected bool m_savePosition = false;
+        [Tooltip("Is current transform rotation saved")]
         [SerializeField] protected bool m_saveRotation = false;
+        [Tooltip("Is current number of lives saved")]
         [SerializeField] protected bool m_saveLives = false;
+        [Tooltip("Is current health saved")]
         [SerializeField] protected bool m_saveCurrentHealth = false;
+        [Tooltip("Is max health saved")]
         [SerializeField] protected bool m_saveMaxHealth = false;
 
 
@@ -64,7 +74,7 @@ namespace GameBase{
         [Tooltip("Sound to play when player dies")]
         [SerializeField] protected AudioClip m_deathSound;
 
-
+        #endregion Variables Exposed In Editor
 
 
 
@@ -78,9 +88,6 @@ namespace GameBase{
         {
             return m_lives;
         }
-
-
-        //public WeaponBase GetWeapon() { return m_weapon; }  //Allows other scripts to get the character's current weapon
 
         /// <summary>
         /// Sets respawn health percentage
@@ -142,14 +149,12 @@ namespace GameBase{
             //Set Other Values
             m_lives = m_baseLives;
 
+            //Creates array of all sockets on the player model
             m_sockets = GetComponentsInChildren<Socket>();
-
-
 
             //Set HUD values
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());    //Sets health bar
             GameInstance.Instance.UpdatePlayerLives(m_lives);       //Sets player lives
-
         }
 
 
@@ -160,8 +165,6 @@ namespace GameBase{
         {
             //Notifies Game Manager of current health state
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
-
-            //m_sockets = GetComponentsInChildren<Socket>();
         }
 
 
@@ -192,8 +195,6 @@ namespace GameBase{
 
         /// <summary>
         /// Updates the persistent data values in the GameData (save file) in order to save the Player Character.
-        /// IMPORTANT: Any user defined variables that the user would like to save must be added to GameData.cs AND must be
-        /// updated here!
         /// </summary>
         /// <param name="data">Takes in a reference to the GameData object</param>
         public void SaveData(ref GameData data)
@@ -280,8 +281,6 @@ namespace GameBase{
 
         /// <summary>
         /// Loads the Player Character from the persistent data stored in the GameData object.
-        /// IMPORTANT: Any user defined variables that the user would like to save must be added to GameData.cs AND must be
-        /// updated here!
         /// </summary>
         /// <param name="data">Takes in the GameData object</param>
         public void LoadData(GameData data)
@@ -291,6 +290,7 @@ namespace GameBase{
             Vector3 position = m_transform.position;
             Quaternion rotation = m_transform.rotation;
             
+            //Load position (if indicated to do so)
             if(m_savePosition)
             {
                 if(data.vector3Data.ContainsKey(m_ID + ".Position"))
@@ -299,6 +299,7 @@ namespace GameBase{
                 }
             }
             
+            //Load rotation (if indicated to do so)
             if(m_saveRotation)
             {
                 if(data.quaternionData.ContainsKey(m_ID + ".Rotation"))
@@ -358,7 +359,6 @@ namespace GameBase{
         /// <param name="owner">Owning object of the damage being taken</param>
         public void TakeDamage(float damage, GameObject owner)
         {
-            //if(!m_isDamagable || !m_alive || m_invincibleTime > 0 || owner.name == "Player") return; //only execute damage if the player is set to damagable, is alive, is not currently invincible, and is not the damage owner
             if(!m_isDamagable || !m_alive || m_invincibleTime > 0) return; //only execute damage if the player is set to damagable, is alive, is not currently invincible, and is not the damage owner
 
             //Passes damage to health component
@@ -458,14 +458,17 @@ namespace GameBase{
 
         #endregion Upgrades and Powerups
 
-
+        /// <summary>
+        /// Sets timer to track when audio is no longer playing
+        /// </summary>
+        /// <param name="timer">How long should the timer wait</param>
+        /// <returns>Yield return for Coroutine</returns>
         private IEnumerator AudioTimer(float timer)
         {
-            yield return new WaitForSeconds(timer);
+            yield return new WaitForSeconds(timer); //waits for indicated duration
 
-            m_playingSound = false;
+            m_playingSound = false; //indicate audio is no longer playing
         }
-
 
 
         /// <summary>
@@ -479,34 +482,19 @@ namespace GameBase{
             //looks for a socket on the player to connect the item to
             foreach(Socket socket in m_sockets)
             {
-                if(socket.GetSocketID() == weapon.GetSocketName())
+                if(socket.GetSocketID() == weapon.GetSocketName())  //After finding the proper socket...
                 {
-                    m_weapon?.HideWeapon();
-
-
+                    m_weapon?.HideWeapon(); //hides previously equipped weapon if such a weapon exists
 
                     //if a socket it found, sets weapon transform based on the socket transform
                     m_weapon = weapon;
                     m_weapon.transform.parent = socket.transform;
                     m_weapon.transform.position = socket.transform.position;
 
-                    //m_weapon.ShowWeapon();
-
-                    //Quaternion q = new Quaternion(socket.transform.rotation.x, socket.transform.rotation.y + 70, socket.transform.rotation.z - 90, socket.transform .rotation.w);
-                    //Quaternion q1 = new Quaternion(-1, 0, 0, (Mathf.PI / 2));
                     Quaternion q1 = new Quaternion(-1, 0, 0, 1);
-                    //m_weapon.transform.rotation = socket.transform.rotation * q1;
-
-
-                    //Quaternion q2 = new Quaternion(0, 0, 1, (Mathf.PI / 2));
                     Quaternion q2 = new Quaternion(0, 0, 1, 1);
                     m_weapon.transform.rotation = socket.transform.rotation * q1 * q2;
-                    //Quaternion q = new Quaternion(socket.transform.rotation.w * (Mathf.PI/2) + socket.transform.rotation.z,
-                    //    socket.transform.rotation.x * (Mathf.PI/2) - socket.transform.rotation.y,
-                    //    socket.transform.rotation.y * (Mathf.PI/2) + socket.transform.rotation.x,
-                    //    socket.transform.rotation.z * (Mathf.PI/2) - socket.transform.rotation.w);
-                    //
-
+                                      
                     m_weapon.ShowWeapon();  //makes weapon visible
                     m_weapon.SetWeaponOwner(gameObject);    //tells weapon who it is equipped to
 

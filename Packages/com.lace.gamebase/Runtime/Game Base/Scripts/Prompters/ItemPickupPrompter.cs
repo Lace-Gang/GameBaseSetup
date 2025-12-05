@@ -9,12 +9,14 @@ namespace GameBase
 
         //Exposed Variables
         [Header("Pickup Prompt Details")]
+        [Tooltip("The item that this prompter is being used for")]
         [SerializeField] ItemBase m_Item;
+        [Tooltip("Should prompt be removed when item is picked up")]
         [SerializeField] bool m_removesPromptAfterPickup = true;
+        [Tooltip("Should item only be able to be picked up once")]
         [SerializeField] bool m_pickupOnlyOnce = true;
+        [Tooltip("Should audio be played when this prompt is executed by the player (aka when this prompter's item is picked up)")]
         [SerializeField] protected bool m_playAudioOnPickup = false;
-        //[SerializeField] protected AudioSource m_pickupAudio;
-
 
         /// <summary>
         /// Sets if this prompter is active or not
@@ -33,6 +35,7 @@ namespace GameBase
         /// <param name="other">Collider that entered this trigger (handled by game engine)</param>
         private void OnTriggerEnter(Collider other)
         {
+            //if prompt is active and collider that entered trigger belongs to player, adds this prompt to the prompt list
             if (m_activePrompt)
             {
                 if(other.gameObject.GetComponent<PlayerCharacter>() != null)
@@ -48,7 +51,10 @@ namespace GameBase
         /// <param name="other">Collider that exited this trigger (handled by game engine)</param>
         private void OnTriggerExit(Collider other)
         {
-            if(m_activePrompt || m_pickupOnlyOnce)
+            //if prompt is active or item can only be picked up once,
+            //and if the collider that left the trigger belongs to the player character,
+            //removes this prompt from active prompt list
+            if (m_activePrompt || m_pickupOnlyOnce)
             {
                 if(other.gameObject.GetComponent<PlayerCharacter>() != null)
                 {
@@ -62,11 +68,11 @@ namespace GameBase
         /// </summary>
         public override void ExecutePrompt()
         {
-            if (m_removesPromptAfterPickup) RemovePromptFromPromptList();
-            if (m_pickupOnlyOnce) m_activePrompt = false;
-            if(m_playAudioOnPickup) m_Item.PlayPickupAudio();
+            if (m_removesPromptAfterPickup) RemovePromptFromPromptList();   //removes prompt if indicated to do so
+            if (m_pickupOnlyOnce) m_activePrompt = false;                   //Deactivates prompt if indicated to do so
+            if(m_playAudioOnPickup) m_Item.PlayPickupAudio();               //Plays pickup audio if indicated to do so
 
-            m_Item.OnPickedUp();
+            m_Item.OnPickedUp();    //Tells item it has been picked up
         }
     }
 }

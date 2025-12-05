@@ -17,17 +17,15 @@ namespace GameBase
         [Tooltip("Should the rotation of this object be saved and loaded")]
         [SerializeField] protected bool m_saveRotation = false;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        /// <summary>
+        /// Validates that item has had a valid ID set unless the item is being created in response to the game being loaded
+        /// </summary>
         void Start()
         {
             //only checks when not saving because objects instantiated during loading phase will not have an ID on start (but it's okay)
             if(this is InventoryItem && (GameInstance.Instance.m_gameState == GameState.LOADSAVE || GameInstance.Instance.m_gameState == GameState.LOADTITLE)) return;
-            //if(GameInstance.Instance.m_gameState != GameState.LOADSAVE && GameInstance.Instance.m_gameState != GameState.LOADTITLE)
-            ////{
                 //An individual ID MUST be assigned to each savable item
-                Debug.Assert (m_ID != 0, "Item (" + m_name + ") does not have a valid ID");
-            
-            //}
+                Debug.Assert (m_ID != 0, "Item (" + m_name + ") does not have a valid ID");        
         }
 
         public int GetID() { return m_ID; } //Allows other scripts to get this item's ID

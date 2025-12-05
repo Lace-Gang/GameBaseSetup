@@ -7,38 +7,33 @@ namespace GameBase
 {
     public class DataPersistenceManager : MonoBehaviour
     {
+        //Hidden Variables
+        private GameData m_gameData;                                //stores all persistent (save) data
+        private List<IDataPersistence> m_dataPersistenceObjects;    //all objects with data to save/load
+        private FileDataHandler m_dataHandler;                      //used to read/write files as well as serialize/deserialize and encrypt/decrypt data
+
         //Exposed Variables
-
-
         [Header("File Storage Config")]
+        [Tooltip("What should the save file be named")]
         [SerializeField] private string m_fileName;                                 //name of the file that persistent (save) data will be stored in
+        [Tooltip("Should the save file be encrypted")]
         [SerializeField] private bool m_useEncryption;                              //indicates whether persistent (save) data should be encrypted
+        [Tooltip("String used for the encryption process")]
         [SerializeField] private string m_encryptionCodeWord = "DefaultCodeWord";   //codeword used for encryption/decryption
 
-        [Header("Save and Load Conditions")]
-        
-        [Tooltip("NOTE: Not all available save and load conditions can be found here! Only those activated by the DataPersistenceManager!\n" +
-            "AT MINIMUM one save condition AND one load condition must be enabled in order for the Save System to work, but those save " +
-            "and load conditions DO NOT have to be among the options listed on this component!")]
-        [SerializeField] private bool m_loadOnStart = true;    //indicates whether saved data should be loaded when the game starts
+        [Header("Save and Load Conditions")]                
         [Tooltip("NOTE: Not all available save and load conditions can be found here! Only those activated by the DataPersistenceManager!\n" +
             "AT MINIMUM one save condition AND one load condition must be enabled in order for the Save System to work, but those save " +
             "and load conditions DO NOT have to be among the options listed on this component!")]
         [SerializeField] private bool m_saveOnQuit = false;     //indicates whether data should be saved when the game quits
 
-        private GameData m_gameData;                                //stores all persistent (save) data
-        private List<IDataPersistence> m_dataPersistenceObjects;    //all objects with data to save/load
-        private FileDataHandler m_dataHandler;                      //used to read/write files as well as serialize/deserialize and encrypt/decrypt data
-
         public static DataPersistenceManager Instance { get; private set; }     //Singleton instance of the DataPersistenceManager
-
 
         /// <summary>
         /// Allows other scripts to see the current game data
         /// </summary>
         /// <returns>Current GameData object</returns>
         public GameData GetData() { return m_gameData; }
-
 
 
         #region Awake, Start, and ApplicationQuit
@@ -58,7 +53,7 @@ namespace GameBase
         }
 
         /// <summary>
-        /// Creates FileDataHandler and obtains list of objects with data that needs to persist. Optionally, loads the game.
+        /// Creates FileDataHandler and obtains list of objects with data that needs to persist, and loads the game.
         /// </summary>
         private void Start()
         {
@@ -69,8 +64,8 @@ namespace GameBase
             //Find all objects that save through the DataPersistenceManager
             m_dataPersistenceObjects = FindAllDataPersistenceObjects();
             
-            //if user has indicated to load data when game starts, loads data
-            if(m_loadOnStart) LoadGame();
+            //Loads data, this must happen at the start of the game
+            LoadGame();
         }
 
         /// <summary>
@@ -86,6 +81,9 @@ namespace GameBase
 
         #region Save File Management
 
+        /// <summary>
+        /// Creates empty save file
+        /// </summary>
         public void Reset()
         {
             m_dataHandler.Save(new GameData());
@@ -163,7 +161,6 @@ namespace GameBase
         /// <returns>A list of all Monobehavior objects with the IDataPersitence Interface</returns>
         private List<IDataPersistence> FindAllDataPersistenceObjects()
         {
-            //IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IDataPersistence>();
             IEnumerable<IDataPersistence> dataPersistenceObjects = FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Include, FindObjectsSortMode.None).OfType<IDataPersistence>();
             return new List<IDataPersistence>(dataPersistenceObjects);
         }

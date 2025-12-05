@@ -62,7 +62,7 @@ namespace GameBase
 
         /// <summary>
         /// Ensures that Inventory Item is correctly configured
-        /// </summary>
+        /// </summary>    
         private void Awake()
         {
             //warn user if this inventory item was not given a name
@@ -144,14 +144,24 @@ namespace GameBase
 
 
         /// <summary>
-        /// Executes the base .Equals operator
+        /// Executes the base "Equals" operator
         /// </summary>
         /// <param name="obj">The object being compaired</param>
-        /// <returns>If they are the same object</returns>
+        /// <returns>results of base "Equals" operator</returns>
         public override bool Equals(System.Object obj)
         {
-            //return results of base .Equals opperator
+            //return results of base "Equals" operator
             return base.Equals(obj);
+        }
+
+        /// <summary>
+        /// Executes the base "GetHashCode" operator
+        /// </summary>
+        /// <returns>Reslts of base "GetHashCode" operator</returns>
+        public override int GetHashCode() 
+        { 
+            //return results of base "GetHashCode" operator
+            return base.GetHashCode(); 
         }
 
         #endregion Overloaded Operators

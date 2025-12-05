@@ -345,7 +345,6 @@ MonoBehaviour:
   m_loadHotKey: 108
   m_saveScore: 1
   m_playsMusic: 1
-  m_maintainMusic: 0
   m_musicPlayer: {fileID: 13246022}
   m_titleScreenMusic: {fileID: 8300000, guid: 1664b5a1fdda6eb40b83eddfd808c2e1, type: 3}
   m_mainMenuScreenMusic: {fileID: 8300000, guid: 7a582e0d6cebdaa4ca73130bb13af332, type: 3}
@@ -8421,6 +8420,10 @@ PrefabInstance:
     - target: {fileID: 2490660188392127216, guid: 13f840c3d2406f14f84cad0d22e24665, type: 3}
       propertyPath: m_Name
       value: DataPersistenceManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 4006631884029857793, guid: 13f840c3d2406f14f84cad0d22e24665, type: 3}
+      propertyPath: m_loadOnStart
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4006631884029857793, guid: 13f840c3d2406f14f84cad0d22e24665, type: 3}
       propertyPath: m_useEncryption
