@@ -9,11 +9,11 @@ namespace GameBase
 {
     public class GameInstance : MonoBehaviour, IDataPersistence
     {
-        string x = "0";
+        #region Hidden variables
 
-        //Hidden Variables
-        private int m_ID = 0;                                   //GameManager ID - Used for the Save System
+        ////Hidden Variables
         
+        //Used for tracking various states and other important info
         private bool m_paused = false;                          //Is the game paused
         private bool m_pauseMenuOpen = false;                   //Is the pause menu open
         private bool m_usesInventory = false;                   //Is the inventory system being used in this game
@@ -23,30 +23,33 @@ namespace GameBase
         private bool m_loadOnPlay = false;                      //Should save file load when game loads
         private bool m_restartingGame = false;                  //Has player indicated from pause menu to restart since the last update
 
-        private bool m_saveHasAlreadyLoaded = false;            //Tracks if the save file has been loaded so that it isn't loaded repeatedly
-        private bool m_playerIsSpawned = false;            
-        //private bool m_playerIsDespawned = false;            
-        private bool m_UIAdjusted = false;            
-        private bool m_SceneDefaultsCompleted = false;            
-        private bool m_SceneLoaded = false;            
-        private bool m_FadeOutCompleted = false;            
-        private bool m_FadeInCompleted = false;            
-        //private bool m_ = false;            
+        //completion checks for scene transition coroutines
+        private bool m_saveHasAlreadyLoaded = false;            //Tracks if the save file has been loaded in the current scene transition so that it isn't loaded repeatedly
+        private bool m_playerIsSpawned = false;                 //Tracks if player character has been spawned in the current scene transition so it is not spawned repeatedly
+        private bool m_UIAdjusted = false;                      //Tracks if UI has been adjusted in the current scene transition so that is is not adjusted repeatedly
+        private bool m_SceneDefaultsCompleted = false;          //Tracks if the scene defaults have been set in the current scene transition so that they are not set repeatedly
+        private bool m_SceneLoaded = false;                     //Tracks if the scenes have been loaded in the current scene transition so that they are not loaded repeatedly
+        private bool m_FadeOutCompleted = false;                //Tracks if the fade out has been completed in the current scene transition so that the screen does not attempt to fade out repeatedly
+        private bool m_FadeInCompleted = false;                 //Tracks if the fade in has been completed in the current scene transition so that the screen does not attempt to fade out repeatedly
 
+        //Tracks player
         private GameObject m_playerCharacter;                   //Reference to the Player Character
         private PlayerCharacter m_playerScript;                 //Reference to the Player Character Script
+
+        //Tracks other data
         private float m_score;                                  //Current score
 
-        private List<IPrompter> m_activePrompters = new List<IPrompter>();
-        private IPrompter m_currentDisplayPrompter;
+        //Tracking Lists
+        private List<IPrompter> m_activePrompters = new List<IPrompter>();  //List of all currently active prompts (messages that display on the screen through the UI)
 
-        private List<GameObject> m_projectiles = new List<GameObject>();
-
-
-        
+        #endregion Hidden variables
 
 
-        //Exposed Variables
+
+
+        #region Exposed In Editor Variables
+
+        ////Exposed Variables
         [Header("Critical Information and References")]
         [Tooltip("What Game State the game will be in when the game is first opened")]
         [SerializeField] public  GameState m_gameState = GameState.LOADTITLE;     //What State is the game in
@@ -60,10 +63,11 @@ namespace GameBase
         [SerializeField] RestartMode m_restartMode = RestartMode.RESTARTFROMBEGINNING;
         [Tooltip("Does the game have a pause menu")]
         [SerializeField] bool m_gameHasPauseMenu = true;
-        [Tooltip("Which key on the keyboard can be used to open the pause menu")]
+        [Tooltip("Which key on the keyboard will be used to open the pause menu")]
         [SerializeField] KeyCode m_pauseMenuToggleKey = KeyCode.X;
-
+        [Tooltip("Should opening the inventory pause the game")]
         [SerializeField] bool m_inventoryPausesGame = true;
+        [Tooltip("Which key on the keyboard will be used to open/close the inventory")]
         [SerializeField] KeyCode m_toggleInventoryKey = KeyCode.B;
 
         [Header("General Player Info")]
@@ -106,16 +110,22 @@ namespace GameBase
 
 
         [Header("Audio Information")]
-        [Tooltip("Does the GameInstance play audio (ie background music)")]
+        [Tooltip("Does the GameInstance play background music")]
         [SerializeField] bool m_playsMusic = false;
-        [SerializeField] bool m_maintainMusic = false;
+        [Tooltip("Reference to the AudioSource that will be dedicated to playing background music")]
         [SerializeField] AudioSource m_musicPlayer;
+        [Tooltip("Background music to play on the title screen")]
         [SerializeField] AudioClip m_titleScreenMusic;
+        [Tooltip("Background music to play in the main menu")]
         [SerializeField] AudioClip m_mainMenuScreenMusic;
+        [Tooltip("Background music to play during gameplay")]
         [SerializeField] AudioClip m_gameBackgroundMusic;
+        [Tooltip("Background music to play in the win screen")]
         [SerializeField] AudioClip m_winScreenMusic;
+        [Tooltip("Background music to play in the loose screen")]
         [SerializeField] AudioClip m_looseScreenMusic;
 
+        #endregion Exposed In Editor Variables
 
 
         #region Getters and Setters
@@ -347,13 +357,13 @@ namespace GameBase
             if (m_saveScore)
             {
                 //Check floatData for key. If key exists, change value to current value, else add key with current value
-                if (data.floatData.ContainsKey(m_ID + ".Score"))
+                if (data.floatData.ContainsKey("GameInstance.Score"))
                 {
-                    data.floatData[m_ID + ".Score"] = m_score;
+                    data.floatData["GameInstance.Score"] = m_score;
                 }
                 else
                 {
-                    data.floatData.Add(m_ID + ".Score", m_score);
+                    data.floatData.Add("GameInstance.Score", m_score);
                 }
             }
         }
@@ -375,9 +385,9 @@ namespace GameBase
                 if(m_saveScore)
                 {
                     //Check if key exists in floatData, if so load score, if not then do nothing
-                    if(data.floatData.ContainsKey(m_ID + ".Score"))
+                    if(data.floatData.ContainsKey("GameInstance.Score"))
                     {
-                        m_score = data.floatData[m_ID + ".Score"];
+                        m_score = data.floatData["GameInstance.Score"];
 
 
                         //update UI
@@ -748,6 +758,7 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadTitle()
         {
+            //Check for UI adjustment completion so that code does not execute more than once
             if(!m_UIAdjusted)
             {
                 //turn on title screen
@@ -760,9 +771,10 @@ namespace GameBase
                 UserInterface.Instance.m_loseScreen.SetActive(false);
                 UserInterface.Instance.m_pauseScreen.SetActive(false);
 
-                m_UIAdjusted = true;
+                m_UIAdjusted = true;    //indicate UI has bee adjusted
             }
 
+            //Check for scene load completion so that code does not execute more than once
             if(!m_SceneLoaded)
             {
                 //loads UIDisplayScene
@@ -771,10 +783,10 @@ namespace GameBase
                 //unloads game screen
                 StartCoroutine(UnloadScene(m_gameSceneName));
 
-                m_SceneLoaded = true;
+                m_SceneLoaded = true;   //indicate scenes have been loaded
             }
 
-
+            //Check for scene defaults completion so that code does not execute more than once
             if(!m_SceneDefaultsCompleted)
             {
                 m_musicPlayer?.Stop();
@@ -785,16 +797,17 @@ namespace GameBase
                     m_musicPlayer?.PlayOneShot(m_titleScreenMusic);
                 }
 
-                m_SceneDefaultsCompleted = true;
+                m_SceneDefaultsCompleted = true;    //indicate scene defaults have been completed
             }
 
+            //Check for fade in completion so that code does not execute more than once
             if(!m_FadeInCompleted)
             {
                 //Fade Screen In
                 //m_userInterface.FadeScreen();
                 yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
-                m_FadeInCompleted = true;
+                m_FadeInCompleted = true;   //indicate fade in has been completed
             }
 
 
@@ -802,7 +815,7 @@ namespace GameBase
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-
+            //Set completion checks back to false
             m_UIAdjusted = false;
             m_SceneLoaded = false;
             m_SceneDefaultsCompleted = false;
@@ -815,18 +828,19 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadMainMenu()
         {
+            //change game state to Main Menu Screen to prevent LoadMainMenu from being called repeatedly
             m_gameState = GameState.MAINMENUSCREEN;
 
-            if (!m_FadeOutCompleted)
+            //Check for fade out completed so that code does not execute more than once
+            if(!m_FadeOutCompleted)
             {
-
                 //Fade Screen Out
                 yield return StartCoroutine(UserInterface.Instance.FadeOut());
 
-                m_FadeOutCompleted = true;
+                m_FadeOutCompleted = true;  //indicate fade out has been completed
             }
 
-
+            //Check for UI Adjustment completion so that code does not execute more than once
             if(!m_UIAdjusted)
             {
                 //turn on main menu screen
@@ -856,9 +870,10 @@ namespace GameBase
                     m_playerScript.GetComponent<PlayerController>().DisableAudioListener();
                 }
 
-                m_UIAdjusted = true;
+                m_UIAdjusted = true;    //indicate UI has beed adjusted
             }
 
+            //Check for Scene Loading completion so that code does not execute more than once
             if(!m_SceneLoaded)
             {
                 //loads UIDisplayScene
@@ -867,9 +882,10 @@ namespace GameBase
                 //unloads game screen
                 StartCoroutine(UnloadScene(m_gameSceneName));
 
-                m_SceneLoaded = true;
+                m_SceneLoaded = true;   //indicated scenes have been loaded
             }
 
+            //Check for scene default completion so that code does not execute more than once
             if(!m_SceneDefaultsCompleted)
             {
                 //update audio
@@ -885,18 +901,16 @@ namespace GameBase
                     m_musicPlayer?.PlayOneShot(m_mainMenuScreenMusic);
                 }
                 
-                m_SceneDefaultsCompleted = true;
+                m_SceneDefaultsCompleted = true;    //indicate that scene defaults have been completed
             }
 
-
+            //Check for fade in completion so that code does not execute more than once
             if(!m_FadeInCompleted)
             {
-
-
                 //m_userInterface.FadeScreen();
                 yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
-                m_FadeInCompleted = true;
+                m_FadeInCompleted = true;   //indicate that scene fade in has completed
             }
 
 
@@ -904,7 +918,7 @@ namespace GameBase
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-
+            //Set completion checks back to false
             m_FadeOutCompleted = false;
             m_UIAdjusted = false;
             m_SceneLoaded = false;
@@ -918,18 +932,20 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadGame()
         {
+            //transition to LoadGame game state to prevent LoadGame from being called repeatedly
             m_gameState = GameState.LOADGAME;
 
+            //Check for fade out completion so that code does not execute more than once
             if(!m_FadeOutCompleted)
             {
                 //Fade Out
                 yield return StartCoroutine(UserInterface.Instance.FadeOut());
 
-                m_FadeOutCompleted = true;
+                m_FadeOutCompleted = true;  //Indicate fade out has completed
             }
 
-
-            if (!m_UIAdjusted)
+            //Check for UI Adjustment completed so that code does not execute more than once
+            if(!m_UIAdjusted)
             {
                 //turns off User Interface screens
                 UserInterface.Instance.m_titleScreen.SetActive(false);
@@ -941,10 +957,10 @@ namespace GameBase
                 //Turns on HUD
                 UserInterface.Instance.m_HUD.SetActive(true);
 
-                m_UIAdjusted = true;
+                m_UIAdjusted = true;    //Indicate UI Adjustment has completed
             }
 
-
+            //Check for scene loading completed so that code does not execute more than once
             if(!m_SceneLoaded)
             {
                 //Restarts Game if applicable
@@ -960,12 +976,10 @@ namespace GameBase
                 //Unloads UIDisplayScene
                 StartCoroutine(UnloadScene("UIDisplayScene"));
 
-                m_SceneLoaded = true;
+                m_SceneLoaded = true;   //indicate that scene loading has been completed
             }
 
-
-            //yield return StartCoroutine(SpawnPlayer());
-
+            //check for player spawning completed so that code does not execute more than once
             if(!m_playerIsSpawned)
             {
                 //Spawns player character
@@ -973,7 +987,7 @@ namespace GameBase
                 if(spawnPoint != null)
                 {
                     //Destroy previous Player if such a Player exists
-                    if (m_playerCharacter != null)
+                    if(m_playerCharacter != null)
                     {
                         GameObject.Destroy(m_playerCharacter);
                         m_playerScript = null;
@@ -990,10 +1004,10 @@ namespace GameBase
                 }
 
 
-                m_playerIsSpawned = true;
+                m_playerIsSpawned = true;   //indicated player spawning completed
             }
 
-
+            //Check for scene defaults completed so that code does not execute more than once
             if(!m_SceneDefaultsCompleted)
             {
                 //Clear inventory to prepare for loading the save file
@@ -1012,7 +1026,7 @@ namespace GameBase
                 //update audio
                 m_musicPlayer?.Stop();
 
-                if (m_playsMusic && m_gameBackgroundMusic  != null)
+                if(m_playsMusic && m_gameBackgroundMusic  != null)
                 {
                     m_musicPlayer?.PlayOneShot(m_gameBackgroundMusic);
                 }
@@ -1020,26 +1034,26 @@ namespace GameBase
                 //Lock Cursor and make cursor invisible
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
-
-                m_SceneDefaultsCompleted = true;
-
+                
                 //unpause game (in the event the game was paused)
                 m_pauseMenuOpen = false;
                 UnpauseGame();
+
+                m_SceneDefaultsCompleted = true;    //indicate scene defaults completed
             }
             
 
             //Load save file if applicable. If not, transition to "Play Game" game state
-            if (m_loadOnPlay)
+            if(m_loadOnPlay)
             {
                 m_gameState = GameState.LOADSAVE;
                 StartCoroutine(LoadSaveTransition());
             }
-            else if (!m_FadeInCompleted)
+            else if(!m_FadeInCompleted)    //check for fade in completed so that code does not execute more than once
             {
                 if(m_restartingGame)
                 {
-                    yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.5f);  //Wait breifly before fade in to prevent camera glitch
 
 
                     //Fade In
@@ -1049,8 +1063,8 @@ namespace GameBase
                     //transition to "play game" GameState
                     m_gameState = GameState.PLAYGAME;
 
-                    m_restartingGame = false;
-                    m_FadeInCompleted = true;
+                    m_restartingGame = false;   //indicate restarting game completed and game is no longer set for a restart
+                    m_FadeInCompleted = true;   //indicate fade in completed
                 }
                 else
                 {
@@ -1061,16 +1075,17 @@ namespace GameBase
                     //transition to "play game" GameState
                     m_gameState = GameState.PLAYGAME;
 
-                    m_FadeInCompleted = true;
+                    m_FadeInCompleted = true;   //indicate that fade in has completed
                 }
 
+                //Indicate player is alive 
+                m_playerAlive = true;
                 
             }
 
 
-            //Indicate player is alive
-            m_playerAlive = true;
 
+            //Set completion checks back to false
             m_FadeOutCompleted = false;
             m_SceneLoaded = false;
             m_playerIsSpawned = false;
@@ -1113,12 +1128,13 @@ namespace GameBase
                 m_saveHasAlreadyLoaded = true;  //prevents this code from executing more than once while the coroutine executes
             }
 
+            //Check for fade in completed
             if(!m_FadeInCompleted)
             {
                 //Fade in
                 yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
-                m_FadeInCompleted = true;
+                m_FadeInCompleted = true;   //indicate fade in has completed
             }
 
 
@@ -1138,14 +1154,16 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadWinScreen()
         {
+            //Check for fade out completed so that code does not execute more than once
             if(!m_FadeOutCompleted)
             {
                 //Fade Out
                 yield return StartCoroutine(UserInterface.Instance.FadeOut());
 
-                m_FadeOutCompleted = true;
+                m_FadeOutCompleted = true;  //indicate that fade out has completed
             }
 
+            //Check for UI Adjustment completed so that code does not execute more than once
             if(!m_UIAdjusted)
             {
                 //turns off other UI screens and HUD
@@ -1162,11 +1180,11 @@ namespace GameBase
                 //disable Player Audio listener to avoid issues
                 m_playerScript.GetComponent<PlayerController>().DisableAudioListener();
            
-                m_UIAdjusted = true;
+                m_UIAdjusted = true;    //indicate UI Adjustment has completed
             }
 
 
-
+            //Check for scene loading completed so that code does not execute more than once
             if(!m_SceneLoaded)
             {
                 //loads UIDisplayScene
@@ -1175,9 +1193,10 @@ namespace GameBase
                 //unloads Game screen
                 StartCoroutine(UnloadScene(m_gameSceneName));
 
-                m_SceneLoaded = true;
+                m_SceneLoaded = true;   //indicated scene loading completed
             }
 
+            //Check for scene defaults completed so that code does not execute more than once
             if(!m_SceneDefaultsCompleted)
             {
                 //update audio
@@ -1192,22 +1211,22 @@ namespace GameBase
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
 
-                m_SceneDefaultsCompleted = true;
+                m_SceneDefaultsCompleted = true;    //indicate scene defaults completed
             }
 
+            //Check for fade in completed so that code does not execute more than once
             if(!m_FadeInCompleted)
             {
                 //Fade In
                 yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
-                m_FadeInCompleted = true;
+                m_FadeInCompleted = true;   //indicate fade in completed
             }
 
 
-
+            //Set completion checks back to false
             m_FadeOutCompleted = false;
             m_UIAdjusted = false;
-            //m_playerIsDespawned = false;
             m_SceneLoaded = false;
             m_SceneDefaultsCompleted = false;
             m_FadeInCompleted = false;           
@@ -1219,15 +1238,16 @@ namespace GameBase
         /// <returns>Yield return for a Coroutine</returns>
         private IEnumerator LoadLooseScreen()
         {
+            //Check fade out completed so that code does not execute more than once
             if(!m_FadeOutCompleted)
             {
                 //Fade Out
                 yield return StartCoroutine(UserInterface.Instance.FadeOut());
 
-                m_FadeOutCompleted = true;
+                m_FadeOutCompleted = true;  //indicate fade out completed
             }
 
-
+            //Check UI adjustment completed so that code does not execute more than once
             if(!m_UIAdjusted)
             {
                 //turns off other UI screens and HUD
@@ -1243,9 +1263,10 @@ namespace GameBase
                 //disable Player Audio listener to avoid issues
                 m_playerScript.GetComponent<PlayerController>().DisableAudioListener();
 
-                m_UIAdjusted = true;
+                m_UIAdjusted = true;    //indicate UI adjustment completed
             }
 
+            //Check scene loading completed so that code does not execute more than once
             if(!m_SceneLoaded)
             {
                 //loads UIDisplayScene
@@ -1254,9 +1275,10 @@ namespace GameBase
                 //unloads Game screen
                 StartCoroutine(UnloadScene(m_gameSceneName));
 
-                m_SceneLoaded = true;
+                m_SceneLoaded = true;   //indicate scene loading completed
             }
 
+            //Check scene defaults completed so that code does not execute more than once
             if(!m_SceneDefaultsCompleted)
             {
                 //update audio
@@ -1271,30 +1293,26 @@ namespace GameBase
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
 
-                m_SceneDefaultsCompleted = true;
+                m_SceneDefaultsCompleted = true;    //indicate scene defaults completed
             }
 
+            //Check fade in completed so that code does not execute more than once
             if(!m_FadeInCompleted)
             {
                 //Fade In
                 yield return StartCoroutine(UserInterface.Instance.FadeIn());
 
-                m_FadeInCompleted = true;
+                m_FadeInCompleted = true;   //indicate fade in completed
             }
 
-
+            //set completion checks back to false
             m_FadeOutCompleted = false;
             m_UIAdjusted = false;
             m_SceneLoaded = false;
             m_SceneDefaultsCompleted = false;
             m_FadeInCompleted = false;
         }
-
-
-        
-
-
-
+    
         #endregion State Transitioning
 
 
@@ -1305,44 +1323,68 @@ namespace GameBase
         /// Spawns an object using the GameInstance as the parent
         /// </summary>
         /// <param name="objectPrefab">Prefab of the object being spawned</param>
-        /// <returns>Reference to the object being spawned</returns>
+        /// <returns>The object being spawned</returns>
         public GameObject SpawnObjectInWorld(GameObject objectPrefab)
         {
-            if (objectPrefab == null || objectPrefab.GetComponent<Projectile>() == null) return null;
+            //if a null object prefab was provided, return a null object
+            if (objectPrefab == null) return null;
 
-            GameObject projectile = GameObject.Instantiate(objectPrefab, transform);
-            return projectile;
+            //create/spawn object using the game manager's transform as the parent transform
+            GameObject gameObject = GameObject.Instantiate(objectPrefab, transform);
+
+            //return the spawned game object
+            return gameObject;
         }
 
+        /// <summary>
+        /// Plays a sound at a specific location
+        /// </summary>
+        /// <param name="audioClip">AudioClip of the sound to be played</param>
+        /// <param name="location">Vector3 of the location to play sound at</param>
+        /// <returns>The SpawnableSound object playing the sound</returns>
         public GameObject SpawnSoundAtLocation(AudioClip audioClip, Vector3 location)
         {
+            //if audio clip provided is null, returns a null game object
+            if(audioClip == null) return null;
+
+            //Creates a SpawnableSound at the desired location
             GameObject soundObject = GameObject.Instantiate(m_SpawnableSound, transform);
 
+            //Sets up and starts the SpawnableSound
             SpawnableSound spawnableSound = soundObject.GetComponent<SpawnableSound>();
             spawnableSound.SetAudio(audioClip);
             spawnableSound.SetLifespan(audioClip.length + 1);
             spawnableSound.PlayAudio();
 
+            //Starts the lifespan timer of the SpawnableSound so that it will despawn when the sound has finished playing
             spawnableSound.StartLifespanTimer();
 
+            //returns SpawnableSound that is now playing the specified sound at the specified location
             return soundObject;
         }
 
-        
+        /// <summary>
+        /// Finds an AmmunitionTracker that has ammunition of a specified name
+        /// </summary>
+        /// <param name="ammunitionName">Name of the ammunition whose tracker is being searched for</param>
+        /// <returns>The first AmmunitionTracker tracker with the proper name that is found, or null if no such tracker is found</returns>
         public AmmunitionTracker FindAmmunitionTracker(string ammunitionName)
         {
+            //Create a null AmmunitionTracker
             AmmunitionTracker tracker = null;
 
+            //Search through list of all AmmunitionTrackers
             foreach(AmmunitionTracker aT in m_ammunitionList)
             {
+                //Check if AmmunitionTracker is the correct one
                 if(aT.GetAmmunition().GetName() == ammunitionName)
                 {
-                    tracker = aT;
-                    break;
+                    tracker = aT;   //Keep reference to tracker
+                    break;  //leave loop now that a proper tracker has been found
                 }
             }
 
-            return tracker;
+            return tracker; //return the tracker that was found, or null if none were found
         }
 
         #endregion Spawn and Manage Objects

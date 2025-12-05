@@ -7,7 +7,9 @@ namespace GameBase
     {
         //Hidden Variables
         protected bool m_inInventory = false;   //Is this item currently in the inventory
-        protected bool m_equipped = false;       //Is this item currently equipped
+        protected bool m_equipped = false;      //Is this item currently equipped
+
+        #region Exposed In Editor Variables
 
         //Exposed Variables
         [Header("Inventory Item Information")]
@@ -32,12 +34,15 @@ namespace GameBase
         [Tooltip("Should the inventory stack instances of this item in the same box")]
         [SerializeField] protected bool m_stackInstancesInInventory = true;
 
+        #endregion Exposed In Editor Variables
+
+
         #region Getters and Setters
 
         public bool GetInInventory() { return m_inInventory; }                  //Allows other scripts to see if this item is in the inventory
         public Sprite GetInventorySprite() { return m_inventorySprite; }        //Allows other scripts to get this item's sprite
         public string GetItemName() { return m_name; }                          //Allows other scripts to see the name of this item
-        public int GetInventoryID() { return m_inventoryID; }                          //Allows other scripts to see the name of this item
+        public int GetInventoryID() { return m_inventoryID; }                   //Allows other scripts to see the inventoryID of this item
         public bool GetStackInstances() { return m_stackInstancesInInventory; } //Allows other scripts to see if instances of this item should stack in the inventory
         public bool GetUseFromInventory() { return m_useFromInventory; }        //Allows other scripts to see if instances of this item can be used from the inventory
         public bool GetEquippable() { return m_equippable; }                    //Allows other scripts to see if instances of this item can be equipped
@@ -45,13 +50,13 @@ namespace GameBase
         public bool GetConsumeAfterUse() { return m_consumeAfterUse; }          //Allows other scripts to see if instances of this item is consumed after being used
 
 
-        public void SetEquipped(bool equipped) { m_equipped = equipped; }
-        public void SetItemName(string s) { m_name = s; }                           //Allows other scripts to see the name of this item
-        public void SetStackInstances(bool b) { m_stackInstancesInInventory = b; }  //Allows other scripts to see if instances of this item should stack in the inventory
-        public void SetUseFromInventory(bool b) { m_useFromInventory = b; }         //Allows other scripts to see if instances of this item can be used from the inventory
-        public void SetEquippable(bool b) { m_equippable = b; }                     //Allows other scripts to see if instances of this item can be equipped
-        public void SetRemovable(bool b) { m_removable = b; }                       //Allows other scripts to see if instances of this item can be removed from the inventory
-        public void SetConsumeAfterUse(bool b) { m_consumeAfterUse = b; }           //Allows other scripts to see if instances of this item is consumed after being used
+        public void SetEquipped(bool equipped) { m_equipped = equipped; }           //Allows other scripts to set if this item has been equipped
+        public void SetItemName(string s) { m_name = s; }                           //Allows other scripts to set the name of this item
+        public void SetStackInstances(bool b) { m_stackInstancesInInventory = b; }  //Allows other scripts to set if instances of this item should stack in the inventory
+        public void SetUseFromInventory(bool b) { m_useFromInventory = b; }         //Allows other scripts to set if instances of this item can be used from the inventory
+        public void SetEquippable(bool b) { m_equippable = b; }                     //Allows other scripts to set if instances of this item can be equipped
+        public void SetRemovable(bool b) { m_removable = b; }                       //Allows other scripts to set if instances of this item can be removed from the inventory
+        public void SetConsumeAfterUse(bool b) { m_consumeAfterUse = b; }           //Allows other scripts to set if instances of this item is consumed after being used
 
         #endregion Getters and Setters
 
@@ -60,11 +65,14 @@ namespace GameBase
         /// </summary>
         private void Awake()
         {
+            //warn user if this inventory item was not given a name
             if(m_name == null || m_name == "")
             {
                 Debug.LogError("Inventory Item has no name! Item may behave incorrectly!");
             }
         }
+
+        #region InventoryItem Basic Functionality
 
         /// <summary>
         /// Item adds self to inventory and hides self in scene if space is available in inventory
@@ -79,14 +87,33 @@ namespace GameBase
             }
             else
             {
-                //if item is not added succesfully (ie the inventory was full) prompter needs to be reactivated
+                //if item is not added succesfully (ie if the inventory was full) check if this item has an ItemPickupPrompter component
                 ItemPickupPrompter prompter = GetComponentInChildren<ItemPickupPrompter>();
                 if (prompter != null)
                 {
-                    prompter.SetPromptActive(true);
+                    prompter.SetPromptActive(true); //reactivates ItemPickupPrompter if one was found
                 }
             }
         }
+
+        /// <summary>
+        /// Item attempts to add self to inventory
+        /// </summary>
+        public override void OnPickedUp()
+        {
+            //If inventory is being used, attempts to add self to inventory
+            if(Inventory.Instance.GetUseInventory())
+            {
+                AddToInventory();
+            }
+            else    //Otherwise, uses this item and then hides it in the scene
+            {
+                Use();
+                HideItemInScene();
+            }
+        }
+
+        #endregion InventoryItem Basic Functionality
 
 
         #region Overloaded Operators
@@ -116,20 +143,23 @@ namespace GameBase
         }
 
 
-        //public static bool operator InventoryItem.Equals(InventoryItem a)
+        /// <summary>
+        /// Executes the base .Equals operator
+        /// </summary>
+        /// <param name="obj">The object being compaired</param>
+        /// <returns>If they are the same object</returns>
         public override bool Equals(System.Object obj)
         {
-            //return Equals(obj as InventoryItem);
+            //return results of base .Equals opperator
             return base.Equals(obj);
         }
-
-
 
         #endregion Overloaded Operators
 
 
 
         #region Save and Load
+
         /// <summary>
         /// Saves the inventory related data for the specific Inventory Item Box that this item is in
         /// </summary>
@@ -260,32 +290,17 @@ namespace GameBase
             }
 
 
-            HideItemInScene();  //Hide item in scene (because it has already been picked up)
-            
+            HideItemInScene();  //Hide item in scene (because it has already been picked up)           
         }
        
        
        #endregion Save and Load
 
 
+
         /// <summary>
-        /// Item attempts to add self to inventory
+        /// Uses this InventoryItem
         /// </summary>
-        public override void OnPickedUp()
-        {
-            //If inventory is being used, attempts to add self to inventory
-            if(Inventory.Instance.GetUseInventory())
-            {
-                AddToInventory();
-            }
-            else    //Otherwise, uses this item and then hides it in the scene
-            {
-                Use();
-                HideItemInScene();
-            }
-        }
-
-
         public abstract override void Use();
     }
 }

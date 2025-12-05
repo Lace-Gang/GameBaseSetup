@@ -86,7 +86,6 @@ namespace GameBase
         public override void OnPickedUp()
         {
             base.OnPickedUp();      //Does all "OnPickedUp" opperations associated with the InventoryItem
-            Debug.Log(m_weapon.GetWeaponName() + " is equipped: " + m_equipped);
 
             if(m_equipped) m_weapon.ShowWeapon();  //Hides weapon prefab that is displayed by this item
             else m_weapon.HideWeapon();
