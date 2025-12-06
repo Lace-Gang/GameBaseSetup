@@ -151,37 +151,51 @@ NOTE: Do NOT add a User Interface to any scene directly. There is already a User
 ### Editing User Interface Frontend
 1.) Go to the User Interface Object: Open "Base Scene", in the hierarchy, the "User Interface" object is located under the "Game Manager" object.
 <br>
-<img width="239" height="80" alt="image" src="https://github.com/user-attachments/assets/fc486c0c-1dbd-4ae1-9f21-c8f49490e974" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="239" height="80" alt="image" src="https://github.com/user-attachments/assets/fc486c0c-1dbd-4ae1-9f21-c8f49490e974" />
+<br>
 <br>
 2.) In order to view the current appearance of the User Interface:
 <br>
-  2a.) Ensure view is in "Game" mode and not in "Scene" mode or any other views (ie the animator)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2a.) Ensure view is in "Game" mode and not in "Scene" mode or any other views (ie the animator)
 <br>
-<img width="256" height="100" alt="image" src="https://github.com/user-attachments/assets/0d79cb99-c5aa-4a66-9dc1-e7a5d4a7ed4d" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="256" height="100" alt="image" src="https://github.com/user-attachments/assets/0d79cb99-c5aa-4a66-9dc1-e7a5d4a7ed4d" />
 <br>
-  2b.) Set the "Test Camera" to active in the Inspector
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2b.) Set the "Test Camera" to active in the Inspector
 <br>
-<img width="455" height="143" alt="image" src="https://github.com/user-attachments/assets/156d7be6-1a42-4dbc-b119-7bb54f8e018c" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="455" height="143" alt="image" src="https://github.com/user-attachments/assets/156d7be6-1a42-4dbc-b119-7bb54f8e018c" />
+<br>
 <br>
 3.) To see specific UI screens, those screens will have to be set to active in the inspector, and the "Fade Screen" will have to be set to inactive.
 <br>
-<img width="383" height="242" alt="image" src="https://github.com/user-attachments/assets/be0a4779-9135-4ef0-9c3e-dcbb20e28501" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="383" height="242" alt="image" src="https://github.com/user-attachments/assets/be0a4779-9135-4ef0-9c3e-dcbb20e28501" />
+<br>
 <br>
 4.) It is advised to look through each screen in the UI to ensure that all text, images, arrangements, and other aspects of the display are to your liking.
 <br>
-IMPORTANT: It is highly inadvised to delete the components: 
+<br>
+IMPORTANT: It is highly inadvised to delete the following components: 
 * "HealthBar" (HUD)
 * "LivesText" (HUD)
+* "ScoreText" (HUD)
+* "EquippedBox" (HUD)
+* "EquippedWeaponBox" (HUD)
 * "SaveButton" (PauseScreen)
 * "LoadButton" (MainMenu)
+* "Final Score Text" (WinScreen & LooseScreen)
+* "InteractionPromptBox" (InteractionPrompt)
+* "InventoryBox" (InventoryScreen)
+* "MenuBox" (InventoryMenuScreen)
+* "UseButton" (InventoryMenuScreen)
+* "EquipButton" (InventoryMenuScreen)
+* "DiscardButton" (InventoryMenuScreen)
 
-Deleting any of these components will cause Errors across multiple scripts, including the GameInstance script, UserInterface script, and PlayerCharacter script. If you do not need
+Deleting any of these components will cause Errors across one or more scripts, including the GameInstance script, UserInterface script, Inventory script, and PlayerCharacter script. If you do not need
 or want these components, it is avised to either set them to inactive in the Inspector, or be prepared to make edits to the GameBase scripts. 
 <br>
 <br>
 5.) When you have finished editing the appearance and arrangement of the User Interface, it is highly advised to set the "Fade Screen" to active, all other screens to inactive, and the "Test Camera" to inactive.
 <br>
-<img width="626" height="311" alt="image" src="https://github.com/user-attachments/assets/903aa565-9078-40a9-a852-fea44beefe36" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="626" height="311" alt="image" src="https://github.com/user-attachments/assets/903aa565-9078-40a9-a852-fea44beefe36" />
 
 <br>
 
