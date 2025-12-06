@@ -265,7 +265,7 @@ to spawn in the correct location when loading a previous save file. The "Game In
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="548" height="162" alt="image" src="https://github.com/user-attachments/assets/3bd31330-710d-4e26-acf9-4bb55f0260f5" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2e.) Repeat step 2d, adding "LeftArmMask" to "DefaultLeftArmLayer" and adding "UpperBodyMask" to "PistolLayer". Do not add an &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AvatarMask to "MovementLayer". 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2e.) Repeat step 2d, adding "LeftArmMask" to "DefaultLeftArmLayer" and adding "UpperBodyMask" to "PistolLayer". Do not add an AvatarMask to "MovementLayer". 
 <br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2f.) When you are finished, the layers should look like this (it is recommended to validate that other settings match as well)
@@ -321,21 +321,21 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 <br>
 
 ### Player Avatar And Animations
-NOTE: If you intend to use an avatar that is NOT humanoid, you will need to rework the animations
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE: If you intend to use an avatar that is NOT humanoid, you will need to rework the animations
 #### To Change Player Avatar:
-1.) Configure Avatar to be Humanoid in "Rig"
+1.) Configure Avatar's Animation Type to be Humanoid in "Rig"
 <br>
-<img width="298" height="198" alt="image" src="https://github.com/user-attachments/assets/1dca4904-9807-44cd-88ab-e7eccd8fd8a7" />
+<img width="443" height="290" alt="image" src="https://github.com/user-attachments/assets/3e7bb1ec-1f08-475b-9971-53553b50c0f1" />
 <br>
-2.) Drag new Model into "Player Character" in the "Player" prefab.
+2.) Drag new Model into "Player Character" in the "Player" prefab. (You may need to adjust the Model's position to ensure the model's feet touch the ground)
 <br>
-<img width="212" height="65" alt="image" src="https://github.com/user-attachments/assets/2bf58f21-6f93-47d3-911e-ccdcf2174f8f" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="212" height="65" alt="image" src="https://github.com/user-attachments/assets/2bf58f21-6f93-47d3-911e-ccdcf2174f8f" />
 <br>
 3.) For each Animation, set "source" to be the avatar of the new model.
 <br>
-<img width="288" height="199" alt="image" src="https://github.com/user-attachments/assets/3505d3cf-5e7f-43c3-a40a-c1c08cc8b26b" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="288" height="199" alt="image" src="https://github.com/user-attachments/assets/3505d3cf-5e7f-43c3-a40a-c1c08cc8b26b" />
 <br>
-You MUST set the new avatar in: "Y Bot@Death", "Y Bot@Idle", "Y Bot@JumpForward", "Y Bot@JumpUp", "Y Bot@StandardRun", and "Y Bot@Walking"
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IMPORTANT: You MUST set the new avatar in: "Y Bot@Death", "Y Bot@Idle", "Y Bot@JumpForward", "Y Bot@JumpUp", "Y Bot@PistolAim", "Y Bot@PistolWalk", "Y Bot@Stable Sword Outward Slash", "Y Bot@StandardRun", "Y Bot@Sword And Shield Walk", and "Y Bot@Walking"
 
 #### To Change Existing Player Animation(s)
 (to add an animation that there is no default for, follow steps 1 and 2 and then add the new animation wherever necessary)
