@@ -14,6 +14,7 @@ Game Base is a flexible framework designed to assist and expedite the Game Devel
 * [Save System](#save-system)
 * [Items](#items)
 * [Inventory System](#inventory-system)
+* [Sound](#sound)
 * [Miscellaneous](#miscellaneous)
 
 ## Installation and Setup Instructions
@@ -120,25 +121,61 @@ loads the "Base Scene" scene additively when the project opens.
 2.) Go to the "Game Instance" script in the Inspector, and change the "Game Scene Name" to the name of the scene that your game plays from
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="361" height="156" alt="image" src="https://github.com/user-attachments/assets/4c0722c2-6737-4ab0-8b21-270df8fe4228" />
+<br>
+<br>
+3.) ANY type of ammunition you plan to use during the game MUST have an AmmunitionTracker added to the Ammunition List in the editor.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="326" height="73" alt="image" src="https://github.com/user-attachments/assets/742ce188-4969-402a-ae70-d69db2c6f58c" />
+<br>
+<br>
+4.) Please ensure that "Spawnable Sound" is set in the editor. It should be already, but if it is not, it will cause complications. Find more information on Spawnable Sound [here](#spawnable-sound).
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="611" height="132" alt="image" src="https://github.com/user-attachments/assets/bde8a234-7c54-4bb9-ae3d-bbe56115784c" />
+
+<br>
+<br>
+
+### Game Instance Audio
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="329" height="290" alt="image" src="https://github.com/user-attachments/assets/77d71e77-b5e0-4078-bca8-e993728cf1a8" />
+<br>
+* Background music is currently played through the GameInstance.
+* Background music will only play if "Plays Music" is checked to true in the editor
+* "Music Player" must have an audio source set in the editor in order to play background music. (this should already be set prior to you downloading GameBase)
+* This Audio Source does not need to have an Audio Resource set, but it should have "Loop" checked to true
+* Different music can be set for different scenes.
+
+
+
 
 <br>
 <br>
 
 ### Game Instance Additional Information
-1.) "Game State" referes to the state that the game will start in. It is highly advised to only change this to: "Load Title", "Load Main Menu", or "Start Game"
+1.) "Game State" referes to the state that the game will start in. 
+<br>
 <br>
 2.) If the "Respawn Type" is set to "Respawn at Static Location", then there must be a Static Spawn Point present in the main gameplay scene that is configured for the 
 player. Place the "Player Static Spawn Point prefab somewhere in the main gameplay scene. Alternatively, create an object in the scene, add the "Static Spawn Point" script
 onto the object, and set "Player" as the static spawn tag.
 <br>
-<img width="301" height="117" alt="image" src="https://github.com/user-attachments/assets/b5a2801c-bc02-42d4-b24c-4f0cb5fe5ad8" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="301" height="117" alt="image" src="https://github.com/user-attachments/assets/b5a2801c-bc02-42d4-b24c-4f0cb5fe5ad8" />
 <br>
-<img width="321" height="233" alt="image" src="https://github.com/user-attachments/assets/a3df05c5-d244-4f05-ab9e-5438d7741136" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="321" height="233" alt="image" src="https://github.com/user-attachments/assets/a3df05c5-d244-4f05-ab9e-5438d7741136" />
 <br>
-<img width="309" height="65" alt="image" src="https://github.com/user-attachments/assets/ac6323b2-1c70-4157-b2b9-39ad7e2a8088" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="309" height="65" alt="image" src="https://github.com/user-attachments/assets/ac6323b2-1c70-4157-b2b9-39ad7e2a8088" />
+<br>
+<br>
+3.) The "Death Transition Timer" is the length of time after the Player Character dies that the GameInstance will wait before either respawning the player or transitioning to the LooseScreen. 
+This is intended to allow the Player's death animation to play before transitioning scenes.
+
 
 <br>
 <br>
+
+
+
+
+
 
 ## User Interface
 * [Set Up](#setting-up-the-user-interface)
@@ -690,11 +727,21 @@ For an item to be saved once it has been added to the inventory certain steps MU
 
 
 
+## Sound
+* [Background Music](#background-music)
 
+<br>
+
+### Background Music
+[Information on Background Music can be found here](#game-instance-audio)
+
+<br>
+<br>
 
 
 ## Miscellaneous
 * [Sockets](#sockets)
+* [Spawnable Sound](#spawnable-sound)
 ### Sockets
 A socket only includes an ID, and was developed with the intention of being used as a way for other objects to know where to "be". 
 <br>
@@ -707,6 +754,26 @@ As an example, this could be very useful for having a player or npc "hold" thing
 Objects can be assigned to sockets at runtime, and the ID can allow objects to ensure they are being assigned to the correct socket.
 <br>
 Currently, sockets are only being used to enable equipping of weapons, but please feel free to be as creative as you'd like!
+
+<br>
+<br>
+
+### Spawnable Sound
+A spawnable sound is an object intended to be spawned in a specific location in order to play a specific sound.
+<br>
+This can be helpful when, for example, you want an object to play a sound when it is destroyed. 
+<br>
+If the object itself were to play the sound, the sound would never actually play because the object playing it would be destroyed at the same time.
+<br>
+Spawning the sound as a seperate object circumvents this issue.
+<br>
+A sound can most easily be spawned using the "SpawnSoundAtLocation" method built into the GameInstance, using the syntax:
+<br>
+<br>
+GameInstance.Instance.SpawnSoundAtLocation(audio clip, location);
+<br>
+<br>
+This function will also return the spawnable sound object if you need a reference to it for any reason.
 
 
 # Art Credits:
