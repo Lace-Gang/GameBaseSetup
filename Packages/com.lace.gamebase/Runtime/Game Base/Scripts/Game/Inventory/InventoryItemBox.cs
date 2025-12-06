@@ -14,7 +14,6 @@ namespace GameBase
 
         //Hidden Variables
         private string m_boxID = "ItemBox";                 //Unique ID of this Inventory Item Box
-
         private InventoryItem m_item = null;                //Script of the item currently being stored in this Inventory Item Box
         private string m_itemName = "";                     //Name of the item currently being stored in this Inventory Item Box
         private int m_numItems = 0;                         //Number of items currently being stored in this Inventory Item Box
@@ -22,8 +21,8 @@ namespace GameBase
         private bool m_itemIsWeapon = false;                //Is the current item contained in this box a WeaponItem
         private AmmunitionTracker m_ammoTracker = null;     //Tracks the current AmmunitionTracker when applicable
 
-
-        [Header("Important Components")]
+        //Exposed Variables
+        [Header("InventoryItemBox Components")]
         [Tooltip("Image component to display item sprite")]
         [SerializeField] UnityEngine.UI.Image m_image;
         [Tooltip("Rect transform component of this Inventory Item Box")]
@@ -47,7 +46,6 @@ namespace GameBase
         public InventoryItem GetItemScript() { return m_item; }     //Allows other scripts to get the script of this item being held in this box
         public int GetNumberOfItems() { return m_numItems; }        //Allows other scripts to get how many items this box currently contains
         public bool GetItemIsWeapon() {  return m_itemIsWeapon; }   //Allows other scripts to see if this box's item is a weapon
-
 
         public void SetNumberOfItems(int numItems) { m_numItems = numItems; UpdateBox(); }          //Allows other scripts to set how many items this box currently contains
         public void SetBoxID(string boxID) { m_boxID = boxID; }                                     //Allows other scripts to set the ID of this box
@@ -119,7 +117,6 @@ namespace GameBase
             return false;
         }
 
-
         /// <summary>
         /// Adds item to this item box
         /// </summary>
@@ -145,7 +142,6 @@ namespace GameBase
 
             UpdateBox();    //update box to propery display item
         }
-
 
         /// <summary>
         /// Updates the inventory item box appearance in the UI
@@ -190,7 +186,6 @@ namespace GameBase
                 m_image.enabled = true;
             }
         }
-
 
         /// <summary>
         /// Notifies Inventory that this inventory item box has been selected
@@ -309,6 +304,7 @@ namespace GameBase
         }
 
         #endregion Save and Load
+
 
         #region AmmunitionTracker
 

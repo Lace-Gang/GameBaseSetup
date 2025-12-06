@@ -5,18 +5,19 @@ namespace GameBase
     public class ItemPickupPrompter : PrompterBase
     {
         //Hidden Variables
-        private bool m_activePrompt = true;
+        protected bool m_activePrompt = true;     //Is this prompt currently active
 
         //Exposed Variables
-        [Header("Pickup Prompt Details")]
+        [Header("Item Pickup Prompt Details")]
         [Tooltip("The item that this prompter is being used for")]
-        [SerializeField] ItemBase m_Item;
+        [SerializeField] protected ItemBase m_Item;
         [Tooltip("Should prompt be removed when item is picked up")]
-        [SerializeField] bool m_removesPromptAfterPickup = true;
+        [SerializeField] protected bool m_removesPromptAfterPickup = true;
         [Tooltip("Should item only be able to be picked up once")]
-        [SerializeField] bool m_pickupOnlyOnce = true;
+        [SerializeField] protected bool m_pickupOnlyOnce = true;
         [Tooltip("Should audio be played when this prompt is executed by the player (aka when this prompter's item is picked up)")]
         [SerializeField] protected bool m_playAudioOnPickup = false;
+
 
         /// <summary>
         /// Sets if this prompter is active or not
@@ -26,8 +27,6 @@ namespace GameBase
         {
             m_activePrompt = promptActive;
         }
-
-        
 
         /// <summary>
         /// When player enters prompt trigger, prompt is added to active prompt list

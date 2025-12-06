@@ -5,36 +5,31 @@ namespace GameBase
 {
     public abstract class InventoryItem : SavableItem, IDataPersistence
     {
+        #region Variables
+
         //Hidden Variables
         protected bool m_inInventory = false;   //Is this item currently in the inventory
         protected bool m_equipped = false;      //Is this item currently equipped
 
-        #region Exposed In Editor Variables
-
         //Exposed Variables
-        [Header("Inventory Item Information")]
+        [Header("Inventory Item Basic Info")]
         [Tooltip("Used to tell appart different configurations of the same item script in the inventory. Please set an InventoryID for each distinct configuration. And please use the same InventoryID" +
             " for all instances of objects that share a distinct configuration.")]
         [SerializeField] protected int m_inventoryID = 0;
-
-
         [Tooltip("The image that will be displayed for this item in the inventory screen (and HUD when equipped)")]
         [SerializeField] protected Sprite m_inventorySprite;
-
         [Tooltip("Can this item be used from the inventory")]
         [SerializeField] protected bool m_useFromInventory = false;
         [Tooltip("Can this item be equipped from inventory")]
         [SerializeField] protected bool m_equippable = true;
-
-        [Tooltip("Can thiprotected s item be removed from inventory")]
+        [Tooltip("Can this item be removed from inventory")]
         [SerializeField] protected bool m_removable = true;
-        [Tooltip("Can thiprotected s item be used from the inventory")]
+        [Tooltip("Can this item be used from the inventory")]
         [SerializeField] protected bool m_consumeAfterUse = false;
-
         [Tooltip("Should the inventory stack instances of this item in the same box")]
         [SerializeField] protected bool m_stackInstancesInInventory = true;
 
-        #endregion Exposed In Editor Variables
+        #endregion Variables
 
 
         #region Getters and Setters
@@ -49,7 +44,6 @@ namespace GameBase
         public bool GetRemovable() { return m_removable; }                      //Allows other scripts to see if instances of this item can be removed from the inventory
         public bool GetConsumeAfterUse() { return m_consumeAfterUse; }          //Allows other scripts to see if instances of this item is consumed after being used
 
-
         public void SetEquipped(bool equipped) { m_equipped = equipped; }           //Allows other scripts to set if this item has been equipped
         public void SetItemName(string s) { m_name = s; }                           //Allows other scripts to set the name of this item
         public void SetStackInstances(bool b) { m_stackInstancesInInventory = b; }  //Allows other scripts to set if instances of this item should stack in the inventory
@@ -59,6 +53,7 @@ namespace GameBase
         public void SetConsumeAfterUse(bool b) { m_consumeAfterUse = b; }           //Allows other scripts to set if instances of this item is consumed after being used
 
         #endregion Getters and Setters
+
 
         /// <summary>
         /// Ensures that Inventory Item is correctly configured
@@ -72,6 +67,7 @@ namespace GameBase
             }
         }
 
+
         #region InventoryItem Basic Functionality
 
         /// <summary>
@@ -83,7 +79,7 @@ namespace GameBase
             {
                 //If item successfully added to inventory, hides item in scene and tracks that item is in inventory
                 m_inInventory = true;   //tracks item is in inventory
-                HideItemInScene();  //hides item in scene
+                HideItemInScene();      //hides item in scene
             }
             else
             {
@@ -142,7 +138,6 @@ namespace GameBase
                 && a?.m_equippable == b?.m_equippable && a?.m_consumeAfterUse == b?.m_consumeAfterUse);
         }
 
-
         /// <summary>
         /// Executes the base "Equals" operator
         /// </summary>
@@ -165,7 +160,6 @@ namespace GameBase
         }
 
         #endregion Overloaded Operators
-
 
 
         #region Save and Load
@@ -303,9 +297,7 @@ namespace GameBase
             HideItemInScene();  //Hide item in scene (because it has already been picked up)           
         }
        
-       
        #endregion Save and Load
-
 
 
         /// <summary>

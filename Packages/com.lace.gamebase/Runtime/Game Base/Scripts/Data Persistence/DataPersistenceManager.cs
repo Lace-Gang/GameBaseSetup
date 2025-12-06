@@ -7,6 +7,7 @@ namespace GameBase
 {
     public class DataPersistenceManager : MonoBehaviour
     {
+        #region Variables
         //Hidden Variables
         private GameData m_gameData;                                //stores all persistent (save) data
         private List<IDataPersistence> m_dataPersistenceObjects;    //all objects with data to save/load
@@ -26,6 +27,9 @@ namespace GameBase
             "AT MINIMUM one save condition AND one load condition must be enabled in order for the Save System to work, but those save " +
             "and load conditions DO NOT have to be among the options listed on this component!")]
         [SerializeField] private bool m_saveOnQuit = false;     //indicates whether data should be saved when the game quits
+
+        #endregion Variables
+
 
         public static DataPersistenceManager Instance { get; private set; }     //Singleton instance of the DataPersistenceManager
 
@@ -78,6 +82,7 @@ namespace GameBase
         }
 
         #endregion Awake, Start, and ApplicationQuit
+
 
         #region Save File Management
 

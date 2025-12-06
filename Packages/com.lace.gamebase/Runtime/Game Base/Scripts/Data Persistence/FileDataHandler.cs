@@ -6,6 +6,7 @@ namespace GameBase
 {
     public class FileDataHandler
     {
+        //Hidden Variables
         private string m_dataDirPath;                   //directory path
         private string m_dataFileName;                  //name of the file we want to save to 
         private bool m_useEncryption = false;           //indicates whether encryption/decryption should be used
@@ -25,7 +26,6 @@ namespace GameBase
             m_useEncryption = useEncryption;
             m_encryptionCodeWord = codeWord;
         }
-
 
         /// <summary>
         /// Serializes the data in a GameData object and writes/saves it to a file. Optionally encrypts the data.
@@ -64,8 +64,6 @@ namespace GameBase
                 Debug.LogError("Error occured when trying to save data to file: " + fullPath + "\n" + e.Message);
             }
         }
-
-
 
         /// <summary>
         /// Reads/loads data from a file and deserializes it into a GameData object. Optionally decrypts the data.
@@ -109,8 +107,6 @@ namespace GameBase
             return loadedData;
         }
 
-        
-
         /// <summary>
         /// Encrypts/decrypts data using XOR encryption via the encryptionCodeWord. This function handles both encryption and decryption.
         /// </summary>
@@ -119,6 +115,8 @@ namespace GameBase
         private string EncryptDecrypt(string data)
         {
             string modifiedData = "";
+
+            //uses the excryptionCode and XOR encryption to encrypt/decrypt data
             for(int i = 0; i < data.Length; i++)
             {
                 modifiedData += (char)(data[i] ^ m_encryptionCodeWord[i % m_encryptionCodeWord.Length]);

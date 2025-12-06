@@ -10,6 +10,7 @@ namespace GameBase
         protected Coroutine m_lifespanCoroutine;    //Holds reference to lifespan coroutine so it can be stopped if need be
 
         //Exposed Variables
+        [Header("SpawnableSound Basic Info")]
         [Tooltip("Audiosource component used to play sound")]
         [SerializeField] protected AudioSource m_audio;
         [Tooltip("How long is lifespan (once StartLifespanTimer is called)")]
@@ -26,7 +27,6 @@ namespace GameBase
         {
             m_audio.PlayOneShot(m_audioClip);   //plays audio
         }
-
 
         /// <summary>
         /// Starts the lifespan timer coroutine. This spawnable sound will be destroyed once the lifespan has elapsed.

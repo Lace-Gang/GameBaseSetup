@@ -5,9 +5,11 @@ namespace GameBase
     public class AmmunitionRefillItem : InventoryItem
     {
         //Exposed Variables
-        [SerializeField] AmmunitionType m_ammunition;
-        [SerializeField] int m_ammunitionAmount = 0;
-
+        [Header("Ammunition Refill Basic Info")]
+        [Tooltip("Reference to the AmmunitionType that this item is refilling")]
+        [SerializeField] protected AmmunitionType m_ammunition;
+        [Tooltip("Amount of ammunition that this item refills")]
+        [SerializeField] protected int m_ammunitionAmount = 0;
 
 
         public AmmunitionType GetAmmunitionType() { return m_ammunition; }  //Allows other scripts to get the ammunition

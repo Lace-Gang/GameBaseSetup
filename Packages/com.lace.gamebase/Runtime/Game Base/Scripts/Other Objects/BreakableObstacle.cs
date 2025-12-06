@@ -9,6 +9,8 @@ namespace GameBase
     [RequireComponent(typeof(Rigidbody))]
     public class BreakableObstacle : MonoBehaviour, IDamagableInterface, IDataPersistence
     {
+        #region Variables
+
         //Hidden Variables
         protected bool m_isDestroyed = false;   //Whether this Obsticle has been destroyed yet or not
 
@@ -33,6 +35,8 @@ namespace GameBase
         [Tooltip("Should this Obsticle save its rotation")]
         [SerializeField] protected bool m_saveRotation = false;
 
+        #endregion Variables
+
 
         /// <summary>
         /// Verifies important object information
@@ -55,7 +59,7 @@ namespace GameBase
         /// <param name="amount">Amount of damage being healed</param>
         public void HealDamage(float amount)
         {
-            if(m_isDestroyed) return;
+            if(m_isDestroyed) return;   //does not heal if this obstacle is already destroyed
 
             m_health.AddToHealth(amount);
         }
@@ -67,9 +71,10 @@ namespace GameBase
         /// <param name="owner">What caused the damage</param>
         public void TakeDamage(float damage, GameObject owner)
         {
-            if (m_isDestroyed) return;
+            if (m_isDestroyed) return;  //Does not take damage if this obstacle is already destroyed
 
-            if(m_health.AddToHealth(-damage))
+            //Deals damage and if that damage reduces this obstacle to zero health or less, the OnDeath function is called
+            if (m_health.AddToHealth(-damage))
             {
                 OnDeath();
             }
@@ -156,7 +161,6 @@ namespace GameBase
                 }
             }
         }
-
 
         /// <summary>
         /// Loads saved data to this obstacle

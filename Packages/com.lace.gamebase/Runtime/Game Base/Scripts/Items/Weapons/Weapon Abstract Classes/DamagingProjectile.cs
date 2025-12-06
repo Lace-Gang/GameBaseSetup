@@ -8,7 +8,7 @@ namespace GameBase
     public class DamagingProjectile : Projectile
     {
         //Hidden Variables
-        Rigidbody m_rb;
+        protected Rigidbody m_rb;
 
 
         /// <summary>
@@ -19,7 +19,6 @@ namespace GameBase
             m_rb = GetComponent<Rigidbody>();
         }
 
-
         /// <summary>
         /// Sets the owner of this projectile's damage
         /// </summary>
@@ -28,7 +27,6 @@ namespace GameBase
         {
             GetComponent<DamageSource>().SetDamageOwner(owner);
         }
-
 
         /// <summary>
         /// Sets the trajectory of this projectile through it's rigidbody

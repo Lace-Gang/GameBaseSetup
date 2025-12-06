@@ -4,19 +4,12 @@ namespace GameBase
 {
     public class TestItem1 : InventoryItem
     {
-
-        //public override void OnPickedUp()
-        //{
-        //    ////ItemBaseOnPickedUp();
-        //    //
-        //    //Debug.Log(this.prefa)
-        //    //
-        //    //HideItemInScene();
-        //}
-
+        /// <summary>
+        /// Used for item testing and item component testing purposes
+        /// </summary>
         public override void Use()
         {
-            Debug.Log("Something very helpful!");
+            Debug.Log("TestItem1 has been used and done something very helpful!");
         }
     }
 }

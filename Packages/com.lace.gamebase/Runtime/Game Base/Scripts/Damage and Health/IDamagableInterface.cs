@@ -7,20 +7,20 @@ namespace GameBase
     public interface IDamagableInterface
     {
         /// <summary>
-        /// Takes Damage from a damage source
+        /// Intended to receive damage from a damage source
         /// </summary>
         /// <param name="damage">Amount of damage to take</param>
         /// <param name="owner">Owning object of the damage being taken</param>
         public void TakeDamage(float damage, GameObject owner);
 
         /// <summary>
-        /// Heal damage from a healing source
+        /// Intended to heal damage from a healing source
         /// </summary>
         /// <param name="amount">Amount of damage being healed</param>
         public void HealDamage(float amount);
 
         /// <summary>
-        /// What the object should do when it runs out of health
+        /// Intended to execute necessary processes when this damagable object runs out of health
         /// </summary>
         void OnDeath();
     }

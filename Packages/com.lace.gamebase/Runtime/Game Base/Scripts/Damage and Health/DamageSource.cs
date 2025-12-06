@@ -2,42 +2,37 @@ using UnityEngine;
 
 namespace GameBase
 {
-    //Use to specify when the damage will take place
-    public enum DamageDuration
-    {
-        INSTANTANIOUS,      //Damage happens once when object enters hit box
-        INCREMENT,          //Damage happens one or more times on a timer
-        CONSTANT            //Set amount of damage happens gradually over a set amount of time
-    }
-
-
     public class DamageSource : MonoBehaviour
     {
-        //Hidden Variables
-        private float m_incrementTimer;                         //Timer for increment damage
-        private bool m_incrementTimerActive = false;            //Shows if increment damage is active
-        private int m_numObjectsTakingIncrementDamage = 0;      //How many objects are currently taking increment damage from this object
+        #region Variables
 
-        //Editor Variables
+        //Hidden Variables
+        protected float m_incrementTimer;                         //Timer for increment damage
+        protected bool m_incrementTimerActive = false;            //Shows if increment damage is active
+        protected int m_numObjectsTakingIncrementDamage = 0;      //How many objects are currently taking increment damage from this object
+
+        //Exposed Variables
         [Header("Universal Damage Information")]
         [Tooltip("Does not have to be this object this script is attatched to. Can also be set through the script.")]
-        [SerializeField] GameObject m_damageOwner;
+        [SerializeField] protected GameObject m_damageOwner;
         [Tooltip("The duration in which the damage takes place. Can also be set through the script.")]
-        [SerializeField] DamageDuration m_damageDuration = DamageDuration.INSTANTANIOUS;
+        [SerializeField] protected DamageDuration m_damageDuration = DamageDuration.INSTANTANIOUS;
         [Tooltip("Damage amount per hit. For Constant Damage, this means Damage Per Second. For Increment Damage, this means damage each increment.")]
-        [SerializeField] float m_baseDamage;
+        [SerializeField] protected float m_baseDamage;
         [Tooltip("Can the owner of this damage be damaged by this damage. (ie an enemy taking damage from their own explosive)")]
-        [SerializeField] bool m_canDamageOwner = false;
+        [SerializeField] protected bool m_canDamageOwner = false;
 
         [Header("Instant Damage Information")]
         [Tooltip("Does this damaging object destroy itself after causing its damage. Only applies to Instant Damage")]
-        [SerializeField] bool m_destroyOnDamageDealt = false;
+        [SerializeField] protected bool m_destroyOnDamageDealt = false;
 
         [Header("Increment Damage Information")]
         [Tooltip("How often should an instance of damage be applied. Measured in seconds.")]
-        [SerializeField] float m_increment = 1f;
+        [SerializeField] protected float m_increment = 1f;
         [Tooltip("True if the first instance of damage should happen when the object enters the hit box. False if the first instance should happen after the first increment lapse.")]
-        [SerializeField] bool m_dealDamageOnEnter = true;
+        [SerializeField] protected bool m_dealDamageOnEnter = true;
+
+        #endregion Variables
 
 
         /// <summary>
@@ -51,7 +46,6 @@ namespace GameBase
         /// </summary>
         /// <param name="duration">When damage should be applied</param>
         public void SetDamageDuration(DamageDuration duration) { m_damageDuration = duration; }
-
 
         /// <summary>
         /// Updates timer for the incremented damage type
@@ -118,7 +112,6 @@ namespace GameBase
 
             }
         }
-
 
         /// <summary>
         /// Deals damage at intervals when a damagable object is within the hit box. Behavior varies depending on DamageDuration. Optionally 

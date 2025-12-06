@@ -25,7 +25,6 @@ namespace GameBase{
         private WeaponBase m_weapon;            //Current equipped weapon
         protected bool m_playingSound = false;  //Is the Player Character currently playing any audio
 
-
         //Hidden Lists
         private Socket[] m_sockets;             //Tracks all Sockets on the player character model
 
@@ -36,6 +35,7 @@ namespace GameBase{
         AudioSource m_audioSource;              //AudioSource component
 
         #endregion Hidden Variables
+
 
         #region Variables Exposed In Editor
 
@@ -63,7 +63,6 @@ namespace GameBase{
         [Tooltip("Is max health saved")]
         [SerializeField] protected bool m_saveMaxHealth = false;
 
-
         [Header("Player Audio Information")]
         [Tooltip("Play sound when player is damaged")]
         [SerializeField] protected bool m_playDamageSound = false;
@@ -75,7 +74,6 @@ namespace GameBase{
         [SerializeField] protected AudioClip m_deathSound;
 
         #endregion Variables Exposed In Editor
-
 
 
         #region Getters and Setters
@@ -157,7 +155,6 @@ namespace GameBase{
             GameInstance.Instance.UpdatePlayerLives(m_lives);       //Sets player lives
         }
 
-
         /// <summary>
         /// Updates important values on Start, such as current health
         /// </summary>
@@ -166,7 +163,6 @@ namespace GameBase{
             //Notifies Game Manager of current health state
             GameInstance.Instance.UpdatePlayerHealth(m_playerHealth.GetHealth(), m_playerHealth.GetMaxHealth());
         }
-
 
         /// <summary>
         ///  Updates timers and other frame by frame checks and data
@@ -278,7 +274,6 @@ namespace GameBase{
             }
         }
 
-
         /// <summary>
         /// Loads the Player Character from the persistent data stored in the GameData object.
         /// </summary>
@@ -348,6 +343,7 @@ namespace GameBase{
         }
 
         #endregion Save and Load
+
 
         #region Health, Damage, Death, and Respawning
 
@@ -455,8 +451,8 @@ namespace GameBase{
             if(healToFull) m_playerHealth.SetHealth(m_playerHealth.GetMaxHealth());
         }
 
-
         #endregion Upgrades and Powerups
+
 
         /// <summary>
         /// Sets timer to track when audio is no longer playing
@@ -469,7 +465,6 @@ namespace GameBase{
 
             m_playingSound = false; //indicate audio is no longer playing
         }
-
 
         /// <summary>
         /// Equips a weapon
@@ -507,6 +502,5 @@ namespace GameBase{
 
             return false;   //returns false if the weapon was not successfully equipped (liktely means there is no socket with an ID matching the specified name
         }
-
     }
 }

@@ -7,11 +7,12 @@ namespace GameBase
         //Exposed Variables
         [Header("Health Upgrade Info")]
         [Tooltip("How much to add to the players Max Health")]
-        [SerializeField] float m_upgradeAmount = 10f;
+        [SerializeField] protected float m_upgradeAmount = 10f;
         [Tooltip("True if player should be healed to new max health after obtaining this upgrade")]
-        [SerializeField] bool m_healToFull = false;
+        [SerializeField] protected bool m_healToFull = false;
         [Tooltip("If not healing to full, the amount that the player should be healed after obtaining this upgrade")]
-        [SerializeField] float m_healingAmount = 0f;
+        [SerializeField] protected float m_healingAmount = 0f;
+
 
         /// <summary>
         /// Uses this item and then hides it and marks it "Inactive in Scene"
@@ -28,10 +29,11 @@ namespace GameBase
         /// </summary>
         public override void Use()
         {
+            //Get reference to the player
             PlayerCharacter player = GameInstance.Instance.GetPlayerScript();
 
-            player.UpgradeHealth(m_upgradeAmount, m_healToFull);
-            player.HealDamage(m_healingAmount);
+            player.UpgradeHealth(m_upgradeAmount, m_healToFull);    //upgrades player health, and fully heals player if indicated to do so
+            player.HealDamage(m_healingAmount);                     //heals player by specified amount
         }
     }
 }

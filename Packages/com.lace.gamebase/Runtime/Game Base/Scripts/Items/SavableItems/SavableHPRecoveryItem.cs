@@ -7,7 +7,7 @@ namespace GameBase
         //Exposed Variables
         [Header("HP Recovery Information")]
         [Tooltip("How much will the player be healed by this item")]
-        [SerializeField] float m_healAmount;
+        [SerializeField] protected float m_healAmount;
 
 
         /// <summary>
@@ -15,7 +15,7 @@ namespace GameBase
         /// </summary>
         public override void OnPickedUp()
         {
-            Use();
+            Use();  //uses item
 
             HideItemInScene();   //Hides item in the scene
         }

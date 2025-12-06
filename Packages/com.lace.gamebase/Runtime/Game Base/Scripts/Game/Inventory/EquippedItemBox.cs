@@ -6,13 +6,16 @@ namespace GameBase
 {
     public class EquippedItemBox : MonoBehaviour, IDataPersistence
     {
+        #region Variables
+
         //Hidden Variables
         private string m_itemName = "";         //Script of the item currently being stored in this Equipped Item Box
         private int m_numItems = 0;             //Name of the item currently being stored in this Equipped Item Box
         private InventoryItem m_item = null;    //Number of items currently being stored in this Equipped Item Box
         private Sprite m_itemSprite;            //The sprite of the item burrently being stored in this Equipped Item Box
 
-        [Header("Important Components")]
+        //Exposed Variables
+        [Header("EquippedItemBox Components")]
         [Tooltip("Image component to display item sprite")]
         [SerializeField] Image m_image;
         [Tooltip("Rect transform component of this Equipped Item Box")]
@@ -26,7 +29,7 @@ namespace GameBase
         [Tooltip("What key activates/uses the item")]
         [SerializeField] KeyCode m_useKey = KeyCode.E;
 
-
+        #endregion Variables
 
 
         #region Awake Start and Update
@@ -74,13 +77,11 @@ namespace GameBase
         #endregion Awake Start and Update
 
 
-
         #region Getters and Setters
 
         public string GetItemName() { return m_itemName; }          //Allows other scripts to get the name of the item(s) being stored in this box
         public InventoryItem GetItemScript() { return m_item; }     //Allows other scripts to get the script of this item being held in this box
         public int GetNumberOfItems() { return m_numItems; }        //Allows other scripts to get how many items this box currently contains
-
 
         public void SetNumberOfItems(int numItems) { m_numItems = numItems; UpdateBox(); }          //Allows other scripts to get how many items this box currently contains
 
@@ -97,7 +98,6 @@ namespace GameBase
 
 
         #region Equipped Item Box Functionality
-
 
         /// <summary>
         /// Removes all item instances from this box, and resets all values in this box
@@ -136,7 +136,6 @@ namespace GameBase
             return false;
         }
 
-
         /// <summary>
         /// Adds item to this item box
         /// </summary>
@@ -154,8 +153,6 @@ namespace GameBase
 
             UpdateBox();    //update box to propery display item
         }
-
-
 
         /// <summary>
         /// Updates the equipped item box appearance in the UI
@@ -275,6 +272,5 @@ namespace GameBase
         }
 
         #endregion Save and Load
-
     }
 }

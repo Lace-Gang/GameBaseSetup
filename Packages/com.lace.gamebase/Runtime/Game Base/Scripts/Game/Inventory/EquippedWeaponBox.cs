@@ -17,7 +17,7 @@ namespace GameBase
         private Sprite m_weaponSprite;                      //The sprite of the item burrently being stored in this Equipped Weapon Box
         private AmmunitionTracker m_ammoTracker = null;     //Ammunition tracker of the current equipped weapon
 
-        [Header("Important Components")]
+        [Header("EquippedWeaponBox Components")]
         [Tooltip("Image component to display item sprite")]
         [SerializeField] Image m_image;
         [Tooltip("Rect transform component of this Equipped Weapon Box")]
@@ -32,7 +32,6 @@ namespace GameBase
         [SerializeField] GameObject m_ammunitionTextBox;
 
         #endregion Variables
-
 
 
         #region Awake Start
@@ -56,14 +55,12 @@ namespace GameBase
         #endregion Awake Start
 
 
-
         #region Getters and Setters
 
         public string GetItemName() { return m_itemName; }              //Allows other scripts to get the name of the item(s) being stored in this box
         public string GetWeaponName() { return m_weaponName; }          //Allows other scripts to get the name of the weapon(s) being stored in this box
         public WeaponItem GetItemScript() { return m_weaponItem; }      //Allows other scripts to get the script of this item being held in this box
         public int GetNumberOfWeapons() { return m_numWeapons; }        //Allows other scripts to get how many items this box currently contains
-
 
         public void SetNumberOfWeapons(int numWeapons) { m_numWeapons = numWeapons; UpdateBox(); }     //Allows other scripts to get how many weapons this box currently contains
         public void SetAmmoAmount(int numWeapons) { m_numWeapons = numWeapons; UpdateBox(); }          //Allows other scripts to get ammount of ammunition this box's weapon currently has
@@ -329,8 +326,6 @@ namespace GameBase
             m_ammunitionText.text = m_ammoAmount.ToString();    //updates UI to reflect new ammunition amount
         }
 
-
         #endregion Ammunition Tracker
-
     }
 }

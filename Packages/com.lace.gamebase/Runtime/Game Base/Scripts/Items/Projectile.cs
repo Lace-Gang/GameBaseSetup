@@ -5,9 +5,10 @@ namespace GameBase
 {
     public abstract class Projectile : MonoBehaviour
     {
-        //Hidden Variables
-        Coroutine m_lifeTimer = null;       //keeps reference DestroyAfterLifetime Coroutine
+        #region Varialbes
 
+        //Hidden Variables
+        protected Coroutine m_lifeTimer = null;       //keeps reference DestroyAfterLifetime Coroutine
 
         //Exposed Variables
         [Header("Projectile Base Components")]
@@ -15,7 +16,6 @@ namespace GameBase
         [SerializeField] protected Collider m_collider;
         [Tooltip("Reference to this projectile's mesh renderer")]
         [SerializeField] protected Renderer m_renderer;
-
 
         [Header("Projectile Base Information")]
         [Tooltip("What is the lifespan of this object in seconds")]
@@ -27,14 +27,13 @@ namespace GameBase
         [Tooltip("What audio should be played when this projectile hits something")]
         [SerializeField] protected AudioClip m_hitAudio;
 
+        #endregion Varialbes
 
 
         public float GetLifespan() { return m_lifespan; }  //Allows other scripts to see this projectile's lifespan
+
         public void SetLifespan(float lifespan) { m_lifespan = lifespan; }   //Allows other scripts to set this projectile's lifespan
-
-
-
-        
+                                                                             //
         /// <summary>
         /// After hitting another collider, plays audio (if indicated to do so), and destroys this projectile (if indicated to do so)
         /// </summary>
@@ -56,6 +55,7 @@ namespace GameBase
         }
 
 
+        #region Projectile Basic Functionality
 
         /// <summary>
         /// Starts the lifetime timer. The projectile will be destroyed after its lifespan lapses
@@ -88,6 +88,7 @@ namespace GameBase
             GameObject.Destroy(gameObject);     //destroys this game object
         }
 
+        #endregion Projectile Basic Functionality
 
 
         /// <summary>

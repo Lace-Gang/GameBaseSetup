@@ -8,6 +8,8 @@ namespace GameBase
 {
     public class Inventory : MonoBehaviour
     {
+        #region Variables
+
         //Hidden Variables
         InventoryItem m_selectedItem;               //What item is currently selected in the inventory screen (if any)
         InventoryItemBox m_selectedItemBox = null;  //What item box is currently selected in the inventory screen (if any)
@@ -16,7 +18,6 @@ namespace GameBase
 
         //Hidden Variable Lists
         private List<InventoryItemBox> m_inventoryItemBoxes = new List<InventoryItemBox>();     //stores item boxes in the inventory
-
 
         //Exposed Variables
         [Header("General Inventory Configuration")]
@@ -36,6 +37,7 @@ namespace GameBase
             " item Configurations using the same script only need the script to be present once as a whole, not once each UNLESS they have different item sprites!")]
         [SerializeField] List<InventoryItem> m_savableInventoryItems = new List<InventoryItem>();
 
+        #endregion Variables
 
 
         public static Inventory Instance { get; private set; }  //Allows other scripts to get the singleton instance of the Inventory
@@ -44,6 +46,7 @@ namespace GameBase
 
         public void SetEquippedItem(InventoryItem equippedItem) { m_equippedItem = equippedItem; }  //Allows other scripts to set an equipped item
         public void SetEquippedWeapon(InventoryItem equippedWeapon) { m_equippedWeapon = equippedWeapon; }  //Allows other scripts to set an equipped item
+
 
         #region Awake and Start
 
@@ -66,10 +69,11 @@ namespace GameBase
         /// </summary>
         void Start()
         {
-            //if inventory is not being used, hides Equipped Item Box
+            //if inventory is not being used, hides equipped item box and equipped weapon box
             if(!m_useInventory)
             {
                 m_equippedItemBox.gameObject.SetActive(false);
+                m_equippedWeaponBox.gameObject.SetActive(false);
                 return;
             }
 
@@ -105,7 +109,6 @@ namespace GameBase
             return null;    //If no prefab was found that fit the requirements, returns null
         }
 
-
         /// <summary>
         /// Adds item to inventory
         /// </summary>
@@ -124,7 +127,7 @@ namespace GameBase
                 item.GetComponent<WeaponItem>().EquipWeapon();
                 itemAdded = true;
             }
-            else if(item.GetComponent<AmmunitionRefillItem>() != null)
+            else if(item.GetComponent<AmmunitionRefillItem>() != null)  //Notifies relevent AmmunitionTracker if item is an AmmunitionRefillItem (and adds refill to ammunition)
             {
                 AmmunitionRefillItem refill = item.GetComponent<AmmunitionRefillItem>();
                 GameInstance.Instance.FindAmmunitionTracker(refill.GetAmmunitionType().GetName()).AddAmmunition(refill.GetAmmunitionAmount());
@@ -167,7 +170,6 @@ namespace GameBase
             return itemAdded;   //indicate if item was able to be added
         }
 
-
         /// <summary>
         /// Sets equipped item tracker to null
         /// </summary>
@@ -181,12 +183,14 @@ namespace GameBase
         /// </summary>
         public void ClearInventory()
         {
-            m_equippedItemBox.EmptyBox();
-            m_equippedWeaponBox.EmptyBox();
+            m_equippedItemBox.EmptyBox();   //notify equipped item box that it needs to empty itself
+            m_equippedWeaponBox.EmptyBox(); //notidies equipped weapon box that it needs to empty itself
 
+            //Set equipped item and weapon trackers to null
             m_equippedItem = null;
             m_equippedWeapon = null;
 
+            //notify all inventory item boxes that they need to empty themselves
             foreach(InventoryItemBox box in m_inventoryItemBoxes)
             {
                 box.EmptyBox();
@@ -194,7 +198,6 @@ namespace GameBase
         }
 
         #endregion Inventory Functionality
-
 
 
         #region Select and Deselect Item In Inventory
@@ -277,14 +280,16 @@ namespace GameBase
         /// </summary>
         public void EqipSelectedItem()
         {
+            //Check if selected item is a weapon
             if(m_selectedItemBox.GetItemIsWeapon())
             {
+                //Uses alternative function if item is a weapon
                 EqipSelectedWeapon();
                 return;
             }
 
-            //check if anything is equipped
-            if (m_equippedItemBox.GetNumberOfItems() > 0)   //if so, swaps the inventory item with the selected item
+            //check if an item is already equipped
+            if (m_equippedItemBox.GetNumberOfItems() > 0)   //if so, swaps the equipped item with the selected item
             {
                 //store previous equipped item number
                 int numSwapItem = m_equippedItemBox.GetNumberOfItems();
@@ -324,23 +329,22 @@ namespace GameBase
             }
         }
 
-
-
         /// <summary>
         /// Equips selected weapon, and if a weapon is already equipped, returns that weapon to the inventory
         /// </summary>
         public void EqipSelectedWeapon()
         {
+            //convert selected item to WeaponItem
             WeaponItem selectedWeapon = m_selectedItem as WeaponItem;
 
-            //check if anything is equipped
-            if (selectedWeapon != null && m_equippedWeaponBox.GetNumberOfWeapons() > 0)   //if so, swaps the inventory item with the selected item
+            //check if a weapon is already equipped
+            if (selectedWeapon != null && m_equippedWeaponBox.GetNumberOfWeapons() > 0)   //if so, swaps the equipped weapon with the selected weapon
             {
-                //store previous equipped item number
+                //store previous equipped weapon number
                 int numSwapWeapon = m_equippedWeaponBox.GetNumberOfWeapons();
 
 
-                //move selected item to equipped item box
+                //move selected weapon to equipped weapon box
                 m_equippedWeaponBox.EmptyBox();
                 m_equippedWeaponBox.AddWeapon(selectedWeapon);
                 m_equippedWeaponBox.SetNumberOfWeapons(m_selectedItemBox.GetNumberOfItems());
@@ -350,18 +354,18 @@ namespace GameBase
                 m_selectedItemBox.AddItem(m_equippedWeapon);
                 m_selectedItemBox.SetNumberOfItems(numSwapWeapon);
 
-                //track new equippd item
-                InventoryItem swapWeapon = m_equippedWeapon;    //store equipped item
+                //track new equippd weapon
+                InventoryItem swapWeapon = m_equippedWeapon;    //store equipped weapon
                 m_equippedWeapon = m_selectedItem;
                 m_selectedItem = swapWeapon;
             }
-            else    //if not, moves selected item to equipped item, and empties selected item box
+            else    //if not, moves selected weapon to equipped weapon, and empties selected item box
             {
                 //move selected item to equipped item box
                 m_equippedWeaponBox.AddWeapon(selectedWeapon);
                 m_equippedWeaponBox.SetNumberOfWeapons(m_selectedItemBox.GetNumberOfItems());
 
-                //track new equippd item
+                //track new equippd weapon
                 m_equippedWeapon = selectedWeapon;
 
                 UserInterface.Instance.m_inventoryMenuScreen.SetActive(false);  //hides inventory menu
@@ -373,14 +377,8 @@ namespace GameBase
                 m_selectedItemBox = null;
             }
 
-            m_equippedWeapon.GetComponent<WeaponItem>().EquipWeapon();
-
-            //equi.GetComponent<WeaponItem>().EquipWeapon();
-
+            m_equippedWeapon.GetComponent<WeaponItem>().EquipWeapon();  //notifies WeaponItem that it has been equipped
         }
-
-
-
 
         /// <summary>
         /// Removes the selected item from inventory
@@ -399,6 +397,5 @@ namespace GameBase
         }
 
         #endregion Item Menu Functions
-
     }
 }

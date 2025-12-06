@@ -5,17 +5,17 @@ namespace GameBase
     public interface IAmmunitionUser
     {
         /// <summary>
-        /// Add self to ammunition tracker
+        /// Intended to add self to ammunition tracker
         /// </summary>
         public void SubscribeToTracker();
 
         /// <summary>
-        /// Remove self from ammunition tracker
+        /// Intended to remove self from ammunition tracker
         /// </summary>
         public void UnsubscribeFromTracker();
 
         /// <summary>
-        /// Executes code when ammunition being tracked changes
+        /// Intended to execute code when ammunition being tracked changes to react to that change
         /// </summary>
         /// <param name="ammount">New ammunition amount</param>
         public void OnAmmunitionChange(int ammount);

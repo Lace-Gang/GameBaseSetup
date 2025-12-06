@@ -5,14 +5,16 @@ namespace GameBase
 {
     public abstract class ItemBase : MonoBehaviour
     {
+        #region Variables
+
         //Hidden Variables
         protected bool m_activeInScene = true;  //Is the object currently present in the world
-        //protected AudioSource m_audioSource;    //AudioSource of this item (if applicable)
-
 
         //Exposed Variables
         [Header("Basic Item Components")]
+        [Tooltip("Reference to this item's mesh renderer")]
         [SerializeField] protected MeshRenderer m_renderer;
+        [Tooltip("Reference to this item's collider (whichever collider would need to be disabled when the item is picked up")]
         [SerializeField] protected Collider m_collider;
 
         [Header("Basic Item Information")]
@@ -20,22 +22,12 @@ namespace GameBase
         [SerializeField] protected string m_name;
         [Tooltip("Is item picked up automatically when player enters trigger")]
         [SerializeField] protected bool m_autoPickup = true;
-
-        //[SerializeField] protected bool m_playAudioOnPickup = false;
+        [Tooltip("Should this item play audio when it is picked up")]
         [SerializeField] protected bool m_playAudioOnAutoPickup = false;
+        [Tooltip("AudioClip that should be played when this item is picked up")]
         [SerializeField] protected AudioSource m_pickupAudio = null;
-        //
-        //
-        ///// <summary>
-        ///// Creates audio source if one will be necessary
-        ///// </summary>
-        //private void Awake()
-        //{
-        //    if(m_playAudioOnUse)
-        //    {
-        //        m_audioSource = new AudioSource();
-        //    }
-        //}
+
+        #endregion Variables
 
 
         /// <summary>
@@ -44,12 +36,11 @@ namespace GameBase
         /// <param name="other">Collider that entered the trigger (handled by game engine)</param>
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<PlayerCharacter>() != null)
+            if (other.GetComponent<PlayerCharacter>() != null)  //Checks that collider belongs to a player character
             {
                 ItemBaseTriggerEnter();
             }
         }
-
 
         /// <summary>
         /// Evaluates if the object triggering is the player. If so, and if the item is to be automatically picked up, executes all necessary code for 
@@ -61,7 +52,7 @@ namespace GameBase
             if (m_autoPickup)
             {
                 OnPickedUp();           //Child class "OnPickedUp"
-                if (m_playAudioOnAutoPickup) PlayPickupAudio();
+                if (m_playAudioOnAutoPickup) PlayPickupAudio();     //plays audio if indicated to do so
             }
         }
 
@@ -70,7 +61,7 @@ namespace GameBase
         /// </summary>
         protected void HideItemInScene()
         {
-            m_activeInScene = false;            //item no longer present in the world
+            m_activeInScene = false;        //item no longer present in the world
             m_renderer.enabled = false;     //item no longer visible
             m_collider.enabled = false;     //item no longer collidable
         }
@@ -80,9 +71,8 @@ namespace GameBase
         /// </summary>
         public void PlayPickupAudio()
         {            
-            m_pickupAudio?.Play();            
+            m_pickupAudio?.Play();    //plays audio for item picked up if such an audio exists        
         }
-
 
         /// <summary>
         /// Individual code for each item when picked up

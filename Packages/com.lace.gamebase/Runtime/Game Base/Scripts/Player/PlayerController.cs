@@ -41,9 +41,11 @@ namespace GameBase
 
         #endregion Hidden Variables
 
+
         #region Variables Exposed In Editor
 
         ////Exposed Variables
+        [Header("Camera")]
         [Tooltip("Camera being used to follow the player and provide steering")]
         [SerializeField] MainCamera m_camera;
 
@@ -130,7 +132,6 @@ namespace GameBase
 
         }    
   
-        
         /// <summary>
         /// Enables the AudioListener attached to the camera
         /// </summary>
@@ -146,7 +147,6 @@ namespace GameBase
         {
             m_camera.GetComponent<AudioListener>().enabled = false;
         }
-
 
 
         #region Awake, Enable, Disable, Start, Update
@@ -194,7 +194,6 @@ namespace GameBase
             sprintAction.Disable();
             attackAction.Disable();
         }
-
 
         /// <summary>
         /// Updates player states, updates and executes player movement, and updates other frame by frame data such as timers. Also checks for and applies fall damage.
@@ -247,6 +246,7 @@ namespace GameBase
         }
 
         #endregion Awake, Enable, Disable, Start, Update
+
 
         #region Evaluation and Execution
 
@@ -316,7 +316,6 @@ namespace GameBase
             m_controller.Move(m_velocity * Time.deltaTime);
         }
 
-
         /// <summary>
         /// Evaluates conditions for fall damage. If conditions are met, calculates and applies fall damage.
         /// </summary>
@@ -349,6 +348,7 @@ namespace GameBase
         }
 
         #endregion Evaluation and Execution
+
 
         #region Input Action Functions
 
@@ -436,8 +436,8 @@ namespace GameBase
             m_isAttacking = false;  //updates that player is no longer attacking
         }
 
-
         #endregion Input Action Functions
+
 
         #region Player States
 
@@ -491,6 +491,5 @@ namespace GameBase
         }
 
         #endregion Player States
-
     }
 }

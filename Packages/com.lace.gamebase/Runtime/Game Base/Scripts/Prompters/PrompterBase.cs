@@ -4,33 +4,18 @@ namespace GameBase
 {
     public abstract class PrompterBase : MonoBehaviour, IPrompter
     {
-        //Hidden Variables
-
-
-
         //Exposed Variables
-
         [Header("Basic Prompter Info")]
-        [SerializeField] string m_prompt;
-        [SerializeField] int m_priority;
-        [SerializeField] KeyCode m_promptInteractionKey = KeyCode.F;
+        [Tooltip("Prompt Message")]
+        [SerializeField] protected string m_prompt;
+        [Tooltip("Prompt Priority (higher numbers indicate higher priority)")]
+        [SerializeField] protected int m_priority;
+        [Tooltip("What key on the keyboard will be used to execute/interact with this prompt")]
+        [SerializeField] protected KeyCode m_promptInteractionKey = KeyCode.F;
 
-       /// <summary>
-       /// Tells GameInstance to add this prompt to the list of active prompts
-       /// </summary>
-       public void AddPromptToPromptList()
-       {
-           GameInstance.Instance.AddToActivePrompts(this);
-       }
-       
-       /// <summary>
-       /// Tells GameInstance to remove this prompt from the list of active prompts
-       /// </summary>
-       public void RemovePromptFromPromptList()
-       {
-           GameInstance.Instance.RemoveFromActivePrompts(this);
-       }
-        
+
+        #region Getters and Setters
+
         /// <summary>
         /// Allows other scripts to get this prompter's prompts
         /// </summary>
@@ -57,6 +42,32 @@ namespace GameBase
         {
             return m_promptInteractionKey;
         }
+
+        #endregion Getters and Setters
+
+
+        #region PrompterBase Basic Functionality
+
+        /// <summary>
+        /// Adds this prompt to the list of active prompts
+        /// </summary>
+        public void AddPromptToPromptList()
+       {
+            //Tells GameInstance to add this prompt to the list of active prompts
+            GameInstance.Instance.AddToActivePrompts(this);
+       }
+       
+       /// <summary>
+       /// Removes this prompt from the list of active prompts
+       /// </summary>
+       public void RemovePromptFromPromptList()
+       {
+            //Tells GameInstance to remove this prompt from the list of active prompts
+            GameInstance.Instance.RemoveFromActivePrompts(this);
+       }
+
+        #endregion PrompterBase Basic Functionality
+
 
         /// <summary>
         /// What the prompt does when when interacted with

@@ -6,16 +6,10 @@ using UnityEngine.InputSystem.HID;
 
 namespace GameBase
 {
-    //All pre-established camera types
-    //Any new types made by the user should go here.
-    public enum CameraType
-    {
-        FIRSTPERSON,
-        THIRDPERSON
-    }
-
     public class MainCamera : MonoBehaviour
     {
+        #region Variables
+
         //Hidden Variables
         private float m_orbitRadius = 5f;   //Radius from the camera to the target
         private float m_mouseX = 0f;        //Mouse X position
@@ -24,28 +18,29 @@ namespace GameBase
         private float m_pitch = 0f;         //Tracks accumulative Camera Pitch (Rotaion about the X-axis)
 
         //Exposed Variables
-        [Header("Universal Camera Settings")]
+        [Header("Universal Main Camera Settings")]
         [Tooltip("The transform of the object you want the camera to target")]
-        [SerializeField] private Transform m_target;
+        [SerializeField] protected Transform m_target;
         [Tooltip("Which camera is being used")]
-        [SerializeField] private CameraType m_cameraType = CameraType.FIRSTPERSON;
+        [SerializeField] protected CameraType m_cameraType = CameraType.FIRSTPERSON;
         [Tooltip("How sensitive the camera is to mouse inputs")]
-        [SerializeField] private float m_mouseSensitivity = 2f;
+        [SerializeField] protected float m_mouseSensitivity = 2f;
         [Tooltip("(In Degrees)")] 
-        [SerializeField] private float m_minPitch = -45f;
+        [SerializeField] protected float m_minPitch = -45f;
         [Tooltip("(In Degrees)")] 
-        [SerializeField] private float m_maxPitch = 80f;
+        [SerializeField] protected float m_maxPitch = 80f;
 
         [Header("First Person Camera Settings")]
         [Tooltip("This property ONLY applies to the First Person Camera Type")]
-        [SerializeField] private float m_heightOffset = 0.6f;
+        [SerializeField] protected float m_heightOffset = 0.6f;
 
         [Header("Third Person Camera Settings")]
         [Tooltip("This property ONLY applies to the Third Person Camera Type")]
-        [SerializeField] private float m_maxTransformDistance = 10f;
+        [SerializeField] protected float m_maxTransformDistance = 10f;
         [Tooltip("This property ONLY applies to the Third Person Camera Type")]
-        [SerializeField] private float m_minTransformDistance = 2f;
+        [SerializeField] protected float m_minTransformDistance = 2f;
 
+        #endregion Variables
 
 
         /// <summary>

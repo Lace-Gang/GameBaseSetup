@@ -6,8 +6,10 @@ namespace GameBase
 {
     public class TagManager : MonoBehaviour
     {
+        [Header("Tag Manager Basic Information")]
         [Tooltip("List of tags present in this manager at start")]
         [SerializeField] protected List<string> m_tags = new List<string>();
+
 
         public List<string> GetList() { return m_tags; }    //Allows other scripts to see this list
 
@@ -55,6 +57,7 @@ namespace GameBase
 
 
         #region Save and Load
+
         /// <summary>
         /// Saves this list of tags to save file
         /// </summary>

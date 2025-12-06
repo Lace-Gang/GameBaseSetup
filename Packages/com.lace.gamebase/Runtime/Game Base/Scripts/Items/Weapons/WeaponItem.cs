@@ -9,14 +9,12 @@ namespace GameBase
         protected GameObject m_weaponMesh;                     //The mesh of the weapon being held in this weapon item
         protected AmmunitionTracker m_ammoTracker = null;      //The AmmunitionTracker for the ammunition that this weapon item's weapon uses (if applicable)
 
-
         //Exposed Variables
         [Header("Weapon Pikcup Item Details")]
         [Tooltip("The weapon being stored in this item")]
-        [SerializeField] WeaponBase m_weapon;
+        [SerializeField] protected WeaponBase m_weapon;
 
         
-
         /// <summary>
         /// If this WeaponItem has a weapon, gets the AmmunitionTracker of that weapon
         /// </summary>
@@ -45,7 +43,6 @@ namespace GameBase
         }
 
         #endregion Getters and Setters
-
 
 
         #region WeaponItem Basic Functionality

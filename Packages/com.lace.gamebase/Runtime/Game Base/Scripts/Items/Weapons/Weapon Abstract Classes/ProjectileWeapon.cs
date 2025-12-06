@@ -4,13 +4,12 @@ namespace GameBase
 {
     public abstract class ProjectileWeapon : WeaponBase, IAmmunitionUser
     {
-        //Hidden Variables
-        //protected AmmunitionTracker m_ammunitionTracker;
+        #region Variables
 
         //Exposed Variables
         [Header("Ranged Weapon Details")]
         [Tooltip("What part of the weapon shoould the projectile be fired from")]
-        [SerializeField] Transform m_firePoint;
+        [SerializeField] protected Transform m_firePoint;
         [Tooltip("What projectile ammunition type is used by this weapon. (included ammunition MUST have a ProjectileBase component.)")]
         [SerializeField] protected AmmunitionType m_ammunitionType;
         [Tooltip("Does the amount of ammo this weapon has go down after firing a projectile")]
@@ -20,29 +19,38 @@ namespace GameBase
         [Tooltip("How much ammunition does this ranged weapon start with")]
         [SerializeField] protected int m_startingAmo;
 
+        #endregion Variables
+
 
         public override int GetAmmoAmount() { return m_ammunitionTracker.GetAmmunitionAmount(); }   //Allows other scripts to see how much ammo this weapon currently has access to
 
 
-
+        #region Awake and OnDestroy
 
         /// <summary>
         /// Validates important weapon info
         /// </summary>
         private void Awake()
         {
-            Debug.Assert(m_ammunitionType != null, "Ranged Weapon requires a ");
+            //Warns user if AmmunitionType is null or invalid
+            Debug.Assert(m_ammunitionType != null, "Ranged Weapon requires an AmmunitionType!");
             Debug.Assert(m_ammunitionType.GetAmmunition().GetComponent<DamagingProjectile>() != null, "Ammunition MUST have a ProjectileBase interface!");
 
             SubscribeToTracker();   //subscribe to ammunition tracker
         }
 
+        /// <summary>
+        /// Unsubscribes from AmmunitionTracker to prevent AmmunitionTracker from calling a destroyed script
+        /// </summary>
         private void OnDestroy()
         {
             UnsubscribeFromTracker();
         }
 
+        #endregion Awake and OnDestroy
 
+
+        #region ProjectileWeapon Basic Functionality
 
         /// <summary>
         /// Spawns and fires projectile
@@ -75,9 +83,7 @@ namespace GameBase
             //decrements amount of amo if applicable
             if(m_consumesAmo)
             {
-                //m_ammoAmount--;
                 m_ammunitionTracker.DecrementAmmunition();
-                //UserInterface.Instance.UpdateWeaponBoxAmo();
             }
         }
 
@@ -97,24 +103,37 @@ namespace GameBase
             GetComponentInChildren<MeshRenderer>().enabled = false;
         }
 
+        #endregion ProjectileWeapon Basic Functionality
+
+
         #region Ammunition User
 
+        /// <summary>
+        /// Finds the AmmunitionTracker that matches this weapon's ammunition type, and subscribes to it
+        /// </summary>
         public void SubscribeToTracker()
         {
-            m_ammunitionTracker = GameInstance.Instance.FindAmmunitionTracker(m_ammunitionType.GetName());
-            m_ammunitionTracker.AddUser(this);
-            m_ammoAmount = m_ammunitionTracker.GetAmmunitionAmount();
+            m_ammunitionTracker = GameInstance.Instance.FindAmmunitionTracker(m_ammunitionType.GetName());  //Find correct AmmunitionTracker
+            m_ammunitionTracker.AddUser(this);  //Subscribe to AmmunitionTracker
+            m_ammoAmount = m_ammunitionTracker.GetAmmunitionAmount();   //Track currect amount of ammunition
         }
 
+        /// <summary>
+        /// Unsubscribes from AmmunitionTracker
+        /// </summary>
         public void UnsubscribeFromTracker()
         {
-            if(m_ammunitionTracker != null) m_ammunitionTracker.RemoveUser(this);
-            m_ammoAmount = -1;
+            if(m_ammunitionTracker != null) m_ammunitionTracker.RemoveUser(this);   //Unsubscribes from Ammunition Tracker (if this weapon was subscribed to a tracker)
+            m_ammoAmount = -1;  //Sets ammunition amount to -1 to indicate that ammunition is no longer being used
         }
 
+        /// <summary>
+        /// Tracks new amount of ammunition
+        /// </summary>
+        /// <param name="ammount">Amount of ammunition after the change</param>
         public void OnAmmunitionChange(int ammount)
         {
-            m_ammoAmount = ammount;
+            m_ammoAmount = ammount; //Updates ammunition amount
         }
 
         #endregion Ammunition User

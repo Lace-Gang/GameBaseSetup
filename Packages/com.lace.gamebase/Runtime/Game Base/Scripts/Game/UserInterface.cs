@@ -13,7 +13,6 @@ namespace GameBase
         #region Variables Exposed In Editor
 
         //Exposed Varaibles
-
         [Header("Screens")]
         [SerializeField] public GameObject m_titleScreen;
         [SerializeField] public GameObject m_mainMenuScreen;
@@ -48,15 +47,12 @@ namespace GameBase
         [SerializeField] public UnityEngine.UI.Button m_useButton;
         [SerializeField] public UnityEngine.UI.Button m_equipButton;
         [SerializeField] public UnityEngine.UI.Button m_discardButton;
-
         [SerializeField] int m_imageBoxWidth = 100;
         [SerializeField] int m_imageBoxHeight = 100;
-
         [SerializeField] int m_rows = 4;
         [SerializeField] int m_columns = 5;
         [SerializeField] float m_margin = 20f;
         [SerializeField] float m_padding = 30f;
-
 
         [Header("Other Componenets")]
         [Tooltip("'Save Game button' Object. Only visible if 'Save From Pause Menu' is set to true in the Game Instance")]
@@ -68,7 +64,6 @@ namespace GameBase
         [SerializeField] AudioClip m_buttonClickSound;
 
         #endregion Variables Exposed In Editor
-
 
 
         public static UserInterface Instance { get; private set; }  //Allows other scripts to get the singleton instance of the UserInterface
@@ -98,7 +93,6 @@ namespace GameBase
             Debug.Log("Application has been Quit"); //line exists to validate that application has been quit (because Application.Quit only executes in a .exe application)
         }
 
-
         /// <summary>
         /// Loads game level and begins new game
         /// </summary>
@@ -114,7 +108,6 @@ namespace GameBase
             GameInstance.Instance.m_gameState = GameState.STARTGAME;    //Transitions to "Start Game" game state
         }
 
-
         /// <summary>
         /// Unpauses game
         /// </summary>
@@ -128,7 +121,6 @@ namespace GameBase
 
             GameInstance.Instance.TogglePauseMenu();    //Tells pause menu to close (if it is open)
         }
-
 
         /// <summary>
         /// Returns to main menu
@@ -147,7 +139,6 @@ namespace GameBase
             }
         }
 
-
         /// <summary>
         /// Saves Game
         /// </summary>
@@ -161,7 +152,6 @@ namespace GameBase
 
             DataPersistenceManager.Instance.SaveGame(); //Tells DataPersistenceManager to save the game
         }
-
 
         /// <summary>
         /// Loads game level, then loads save file, then begins saved game
@@ -206,7 +196,6 @@ namespace GameBase
             GameInstance.Instance.RestartFromGame();    //Tells GameInstance to restart the game, and informs GameInstance that this restart is being called for from within gameplay
         }
 
-
         /// <summary>
         /// Tells Inventory to use the selected inventory item
         /// </summary>
@@ -249,8 +238,8 @@ namespace GameBase
             Inventory.Instance.RemoveSelectedItem();    //tells inventory to remove the selected item
         }
 
-
         #endregion Button Clicks
+
 
         #region Screen Fade
 
@@ -290,7 +279,9 @@ namespace GameBase
             }
 
         }
+
         #endregion Screen Fade
+
 
         #region HUD Updates
 
@@ -304,7 +295,6 @@ namespace GameBase
             m_healthBar.maxValue = maxHealth;   //Tells health bar what its max value should be
             m_healthBar.value = currentHealth;  //Tells health bar what its value should be
         }
-
 
         /// <summary>
         /// Updates Player Lives text
@@ -325,7 +315,6 @@ namespace GameBase
             m_winScreenScoreText.text = "Final Score: " + score;    //updates score text for win screen
             m_looseScreenScoreText.text = "Final Score: " + score;    //updates score text for loose screen
         }
-
 
         /// <summary>
         /// Makes interaction prompt visible and sets text
@@ -397,9 +386,6 @@ namespace GameBase
             return itemBoxes;   //returns list of boxes
         }
 
-
         #endregion UI Layout Adjustments
-
-
     }
 }

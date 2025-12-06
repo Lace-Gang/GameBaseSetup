@@ -45,8 +45,6 @@ namespace GameBase
         #endregion Hidden variables
 
 
-
-
         #region Exposed In Editor Variables
 
         ////Exposed Variables
@@ -128,13 +126,12 @@ namespace GameBase
         #endregion Exposed In Editor Variables
 
 
-        #region Getters and Setters
-
         public static GameInstance Instance { get; private set; }  //Allows other scripts to get the singleton instance of the GameInstance
 
+
+        #region Getters and Setters
         public bool getPaused() {  return m_paused; }   //Allows other scripts to know if the game is currently paused
         public bool getPlayerAlive() {  return m_playerAlive; }   //Allows other scripts to know if the player is alive
-
         public PlayerCharacter GetPlayerScript() { return m_playerScript; }  //Allows other scripts to access the current player character script
 
         /// <summary>
@@ -160,7 +157,6 @@ namespace GameBase
         #endregion Getters and Setters
 
 
-
         #region Awake, Start, and Update
 
         /// <summary>
@@ -184,7 +180,6 @@ namespace GameBase
         {
             m_usesInventory = Inventory.Instance.GetUseInventory(); //Track if Inventory is being used
         }
-
 
         /// <summary>
         /// Executes Game Cycle
@@ -299,7 +294,6 @@ namespace GameBase
         #endregion Awake, Start, and Update
 
 
-
         #region Load and Unload Scenes
 
         /// <summary>
@@ -331,8 +325,8 @@ namespace GameBase
                 yield return SceneManager.UnloadSceneAsync(sceneName);
             }
         }
-        #endregion Load and Unload Scenes
 
+        #endregion Load and Unload Scenes
 
 
         #region Save and Load Data
@@ -396,8 +390,8 @@ namespace GameBase
                 }
             }
         }
-        #endregion Save and Load Data
 
+        #endregion Save and Load Data
 
 
         #region Pause, Unpause and Inventory
@@ -511,9 +505,7 @@ namespace GameBase
             Cursor.visible = false;
         }
 
-
         #endregion Pause, Unpause and Inventory
-
 
 
         #region UI Updates
@@ -537,7 +529,6 @@ namespace GameBase
             UserInterface.Instance.UpdatePlayerLives(lives);
         }
 
-
         /// <summary>
         /// Adds an prompter to the list of active prompters
         /// </summary>
@@ -555,7 +546,6 @@ namespace GameBase
         {
             m_activePrompters.Remove(prompter);
         }
-
 
         /// <summary>
         /// Displays highest priority prompt to the screen and checks if the prompt has been interacted with
@@ -583,12 +573,10 @@ namespace GameBase
             if(Input.GetKeyDown(highestPriority.GetPromptInteractionKey())) highestPriority.ExecutePrompt();
         }
 
-
         #endregion UI Updates
 
 
         #region Score
-
 
         /// <summary>
         /// Changes the score. Positive inputs will add to the score, negative inputs will detract from it.
@@ -605,7 +593,6 @@ namespace GameBase
         }
 
         #endregion Score
-
 
 
         #region Player Death, Respawn and Restart
@@ -707,7 +694,6 @@ namespace GameBase
             m_playerScript.AddOrReduceLives(-1);    //Reduce player lives by one (executed here so that the "load last save" respawn type will still evaluate number of lives left correctly
         }
 
-
         /// <summary>
         /// Restarts game. Intended for use from the LoseScreen of the UI
         /// </summary>
@@ -745,9 +731,7 @@ namespace GameBase
             m_gameState = GameState.STARTGAME;
         }
 
-
         #endregion Player Death, Respawn and Restart
-
 
 
         #region State Transitioning
@@ -1314,7 +1298,6 @@ namespace GameBase
         }
     
         #endregion State Transitioning
-
 
 
         #region Spawn and Manage Objects

@@ -4,6 +4,8 @@ namespace GameBase
 {
     public class AmmunitionType : MonoBehaviour
     {
+        //Exposed Variables
+        [Header("AmmunitionType Basic Info")]
         [Tooltip("Name of this Ammunition Type")]
         [SerializeField] protected string m_name;
         [Tooltip("Reference to a prefab of the Ammunition this AmmunitionType represents")]

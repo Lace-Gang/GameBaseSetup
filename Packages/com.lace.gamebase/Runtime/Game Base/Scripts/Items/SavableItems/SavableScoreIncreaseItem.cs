@@ -7,7 +7,7 @@ namespace GameBase
         //Exposed Variables
         [Header("Score Increase Information")]
         [Tooltip("How much does this increase the player's score")]
-        [SerializeField] float m_scoreIncrease;
+        [SerializeField] protected float m_scoreIncrease;
 
 
         /// <summary>
@@ -15,7 +15,7 @@ namespace GameBase
         /// </summary>
         public override void OnPickedUp()
         {
-            Use();
+            Use();  //Uses item
 
             HideItemInScene();   //Hides item in the scene
         }
@@ -25,6 +25,7 @@ namespace GameBase
         /// </summary>
         public override void Use()
         {
+            //Tells GameInstance to add to the score
             GameInstance.Instance.AddOrRemoveScore(m_scoreIncrease);
         }
     }

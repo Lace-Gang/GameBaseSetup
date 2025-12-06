@@ -19,6 +19,7 @@ namespace GameBase
         LOSESCREEN
     }
 
+
     //Defines how the player respawns
     public enum RespawnType
     {
@@ -28,6 +29,7 @@ namespace GameBase
         RESPAWNATSTATICLOCATION         //respawns at a set location without loading any saved data
     }
 
+
     //Defines how the player restarts
     public enum RestartMode
     {
@@ -35,4 +37,21 @@ namespace GameBase
         RESTARTFROMBEGINNING      //after loosing, player must restart from the beginning
     }
 
+
+    //All pre-established camera types
+    //Any new types made by the user should go here.
+    public enum CameraType
+    {
+        FIRSTPERSON,
+        THIRDPERSON
+    }
+
+
+    //Use to specify when the damage will take place
+    public enum DamageDuration
+    {
+        INSTANTANIOUS,      //Damage happens once when object enters hit box
+        INCREMENT,          //Damage happens one or more times on a timer
+        CONSTANT            //Set amount of damage happens gradually over a set amount of time
+    }
 }

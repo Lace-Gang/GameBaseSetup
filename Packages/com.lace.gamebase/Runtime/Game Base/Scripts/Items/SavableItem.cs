@@ -5,7 +5,8 @@ namespace GameBase
 {
     public abstract class SavableItem : ItemBase, IDataPersistence
     {
-        [Header ("Save Information")]
+        //Exposed Variables
+        [Header ("SavableItem Basic Information")]
         [Tooltip("Should this instance be saved and loaded")]
         [SerializeField] protected bool m_save = true;
         [Tooltip("This field is absolutely REQUIRED if 'save' is checked to true, and should be unique between each instance of an object. (Zero if an invalid ID)")]
@@ -16,6 +17,7 @@ namespace GameBase
         [SerializeField] protected bool m_savePosition = false;
         [Tooltip("Should the rotation of this object be saved and loaded")]
         [SerializeField] protected bool m_saveRotation = false;
+
 
         /// <summary>
         /// Validates that item has had a valid ID set unless the item is being created in response to the game being loaded
@@ -31,9 +33,7 @@ namespace GameBase
         public int GetID() { return m_ID; } //Allows other scripts to get this item's ID
 
 
-
         #region Save and Load
-
 
         /// <summary>
         /// If this instance of this item is indicated to save, saves all data that is indicated to be saved
@@ -85,7 +85,6 @@ namespace GameBase
                 }
             }
         }
-
 
         /// <summary>
         /// If this instance of this item is indicated to load, loads all data that is indicated to be loaded
@@ -141,7 +140,5 @@ namespace GameBase
         }
 
         #endregion Save and Load
-
-
     }
 }

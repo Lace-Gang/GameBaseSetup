@@ -11,6 +11,7 @@ namespace GameBase
         /// <param name="data">Copy of GameData object</param>
         public void LoadData(GameData data)
         {
+            //Loads the players saved position so that the player can be spawned through this PlayerSpawnPoint
             if(data.vector3Data.ContainsKey("Player.Position"))
             {
                 transform.position = data.vector3Data["Player.Position"];
@@ -30,6 +31,5 @@ namespace GameBase
         {
             //No Necessary Save Data
         }
-
     }
 }
