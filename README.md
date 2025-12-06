@@ -83,31 +83,35 @@ loads the "Base Scene" scene additively when the project opens.
 #### Step One: Adding Required Scenes
 In order to use the Game Manager, the "Base" scene should be added
 <br>
-1.) Open the "Base" Scene from Packages -> Game Base -> Runtime -> Game Base -> Scenes
+1.) Open the "Base" Scene from Packages -> Game Base -> Runtime -> Game Base -> Scenes -> "BaseScene" (double click)
 <br>
-<img width="179" height="227" alt="image" src="https://github.com/user-attachments/assets/594d2919-f5c6-40fa-ae23-c25c16ca3928" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="179" height="227" alt="image" src="https://github.com/user-attachments/assets/594d2919-f5c6-40fa-ae23-c25c16ca3928" />
+<br>
 <br>
 2.) With the "Base" scene open, go to File -> Build Profiles -> Scene List
 <br>
-<img width="211" height="227" alt="image" src="https://github.com/user-attachments/assets/b8237c91-4502-4286-9f85-0ac7068e8570" />
-<img width="271" height="132" alt="image" src="https://github.com/user-attachments/assets/73659741-29ae-40fe-9f59-253da72cbfda" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="211" height="227" alt="image" src="https://github.com/user-attachments/assets/b8237c91-4502-4286-9f85-0ac7068e8570" />
+<img width="401" height="191" alt="image" src="https://github.com/user-attachments/assets/16343a1f-4e80-493c-8b82-989ee51e0d9d" />
+<br>
 <br>
 3.) Click "Add Open Scenes"
 <br>
 The Base scene should be added to the project Scene List. Ensure that the box beside the scene is checked.
 <br>
-<img width="368" height="159" alt="image" src="https://github.com/user-attachments/assets/40f30187-0272-42e7-b55f-2a41e6b7be88" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="549" height="241" alt="image" src="https://github.com/user-attachments/assets/65989697-799e-4caf-aef8-44be6ebadb9b" />
+<br>
 <br>
 4.) Repeat Steps 1, 2, and 3, for the Scenes: "UIDisplayScene", and for the scene that you intend for the main gameplay to take place in
 
 #### Step Two: Game Instance Configuration
 1.) In the "Base" Scene, click on the Game Instance Object in the Hierarchy
 <br>
-<img width="247" height="121" alt="image" src="https://github.com/user-attachments/assets/a754c0dd-61e4-4977-8617-230d1578689b" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="247" height="121" alt="image" src="https://github.com/user-attachments/assets/a754c0dd-61e4-4977-8617-230d1578689b" />
+<br>
 <br>
 2.) Go to the "Game Instance" script in the Inspector, and change the "Game Scene Name" to the name of the scene that your game plays from
 <br>
-<img width="361" height="156" alt="image" src="https://github.com/user-attachments/assets/4c0722c2-6737-4ab0-8b21-270df8fe4228" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="361" height="156" alt="image" src="https://github.com/user-attachments/assets/4c0722c2-6737-4ab0-8b21-270df8fe4228" />
 
 <br>
 
