@@ -20,35 +20,35 @@ This is where I will be creating my capstone and running some of my testing for 
 ### Install From Disk
 1.) Click the "Code" dropdown, and then click "Download ZIP"
 <br>
-<img width="371" height="323" alt="image" src="https://github.com/user-attachments/assets/67a1f73c-a74f-45fc-92fe-d75c3dd8e494" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="371" height="323" alt="image" src="https://github.com/user-attachments/assets/67a1f73c-a74f-45fc-92fe-d75c3dd8e494" />
 
 2.) Find the downloaded zip file in File Explore. Right click the zip file and then click "Extract All"
 <br>
-<img width="388" height="202" alt="image" src="https://github.com/user-attachments/assets/c4266c10-99fb-4300-9618-0a13b4adcb2c" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="388" height="202" alt="image" src="https://github.com/user-attachments/assets/c4266c10-99fb-4300-9618-0a13b4adcb2c" />
 
 3.) Choose the location to save the files to and then click "Extract"
 <br>
-<img width="436" height="360" alt="image" src="https://github.com/user-attachments/assets/03712191-f04f-44d1-98a0-0822bf48734e" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="436" height="360" alt="image" src="https://github.com/user-attachments/assets/03712191-f04f-44d1-98a0-0822bf48734e" />
 
 4.) In your Unity Project: Go to "Windows" and "Package Manager"
 <br>
-<img width="223" height="444" alt="image" src="https://github.com/user-attachments/assets/af9aeb52-dc90-4bd0-8a37-f7258bf97148" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="223" height="444" alt="image" src="https://github.com/user-attachments/assets/af9aeb52-dc90-4bd0-8a37-f7258bf97148" />
 
 5.) Click the "+" Dropdown and then select "Install package from disk"
 <br>
-<img width="224" height="156" alt="image" src="https://github.com/user-attachments/assets/78f3deb4-3854-4b24-8cfd-5889bfbb616a" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="224" height="156" alt="image" src="https://github.com/user-attachments/assets/78f3deb4-3854-4b24-8cfd-5889bfbb616a" />
 
-6.) Navigate to the extracted file, then navigate to: GameBaseSetup-main>Packages>com.lace.gamebase and select "package.json", then click "Open"
+6.) Navigate to the extracted file, then navigate to: GameBaseSetup-main>Packages>com.lace.gamebase and select "package.json", then click &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Open"
 <br>
-<img width="484" height="380" alt="image" src="https://github.com/user-attachments/assets/e614fcdc-c1bf-4880-a8ad-f258bec99e15" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="484" height="380" alt="image" src="https://github.com/user-attachments/assets/e614fcdc-c1bf-4880-a8ad-f258bec99e15" />
 
 7.) Game Base should now be visible in your Package Manager
 <br>
-<img width="452" height="169" alt="image" src="https://github.com/user-attachments/assets/626de6c3-4f98-46ca-b4c5-71edf1cfee17" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="452" height="169" alt="image" src="https://github.com/user-attachments/assets/626de6c3-4f98-46ca-b4c5-71edf1cfee17" />
 
-8.) A Game Base file will appear under "Packages" in your project window. Scripts and Prefab objects can be accessed from here in the "runtime" folder
+8.) A Game Base file will appear under "Packages" in your project window. Scripts and Prefab objects can be accessed from here in the &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"runtime" folder
 <br>
-<img width="323" height="320" alt="image" src="https://github.com/user-attachments/assets/1bf40035-0f76-4899-9237-275b81f77db3" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="323" height="320" alt="image" src="https://github.com/user-attachments/assets/1bf40035-0f76-4899-9237-275b81f77db3" />
 
 <br>
 
@@ -81,7 +81,8 @@ loads the "Base Scene" scene additively when the project opens.
 
 ### Game Instance Set Up
 #### Step One: Adding Required Scenes
-In order to use the Game Manager, the "Base" scene should be added
+In order to use the Game Manager, the "Base" scene should be added:
+<br>
 <br>
 1.) Open the "Base" Scene from Packages -> Game Base -> Runtime -> Game Base -> Scenes -> "BaseScene" (double click)
 <br>
@@ -96,12 +97,13 @@ In order to use the Game Manager, the "Base" scene should be added
 <br>
 3.) Click "Add Open Scenes"
 <br>
-The Base scene should be added to the project Scene List. Ensure that the box beside the scene is checked.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note: The Base scene should be added to the project Scene List. Ensure that the box beside the scene is checked.
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="549" height="241" alt="image" src="https://github.com/user-attachments/assets/65989697-799e-4caf-aef8-44be6ebadb9b" />
 <br>
 <br>
 4.) Repeat Steps 1, 2, and 3, for the Scenes: "UIDisplayScene", and for the scene that you intend for the main gameplay to take place in
+<br>
 
 #### Step Two: Game Instance Configuration
 1.) In the "Base" Scene, click on the Game Instance Object in the Hierarchy
@@ -113,6 +115,7 @@ The Base scene should be added to the project Scene List. Ensure that the box be
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="361" height="156" alt="image" src="https://github.com/user-attachments/assets/4c0722c2-6737-4ab0-8b21-270df8fe4228" />
 
+<br>
 <br>
 
 ### Game Instance Additional Information
@@ -227,37 +230,38 @@ to spawn in the correct location when loading a previous save file. The "Game In
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2a.) Locate Avatar Masks in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Masks
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="245" height="267" alt="image" src="https://github.com/user-attachments/assets/07dac400-3e8b-4f96-a6f5-117d5d17aeae" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="245" height="267" alt="image" src="https://github.com/user-attachments/assets/07dac400-3e8b-4f96-a6f5-117d5d17aeae" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2b.) Drag "LeftArmMask" and "UpperBodyMask" (or a duplicated copy of each) into your "Assets". Dragging the Masks folder (or a duplicate &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy of it) will also work.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2b.) Drag "LeftArmMask" and "UpperBodyMask" (or a duplicated copy of each) into your "Assets". Dragging the Masks folder (or a duplicate &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy of it) will also work.
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="264" height="119" alt="image" src="https://github.com/user-attachments/assets/a4b5d4a1-da4d-4cf6-b885-e3612fce9a15" />
-<br>
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2c.) Open up the "PlayerCharacter" Animator Controller in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Animations &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> PlayerCharacter (double click the AnimatorController to open the Animator) 
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="243" height="89" alt="image" src="https://github.com/user-attachments/assets/1bf09b45-6b2d-4e88-9001-4714f790c5b4" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="264" height="119" alt="image" src="https://github.com/user-attachments/assets/a4b5d4a1-da4d-4cf6-b885-e3612fce9a15" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2d.) Add "UpperBodyMask" to "OneHandedMeleeLayer": 1 - Click the gear icon next to "OneHandedMeleeLayer" in the Anamator. 2 - Click &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the dot next to "Mask". 3 - In the pop-up, select the "UpperBodyMask". 4 - Exit the pop-up.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2c.) Open up the "PlayerCharacter" Animator Controller in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Animations &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> PlayerCharacter (double click the AnimatorController to open the Animator) 
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="420" height="212" alt="image" src="https://github.com/user-attachments/assets/74448e58-a7b0-46a8-8f46-c4b4f808dee0" />
-<img width="548" height="162" alt="image" src="https://github.com/user-attachments/assets/3bd31330-710d-4e26-acf9-4bb55f0260f5" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="243" height="89" alt="image" src="https://github.com/user-attachments/assets/1bf09b45-6b2d-4e88-9001-4714f790c5b4" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2e.) Repeat step 2d, adding "LeftArmMask" to "DefaultLeftArmLayer" and adding "UpperBodyMask" to "PistolLayer". Do not add an &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AvatarMask to "MovementLayer". 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2d.) Add "UpperBodyMask" to "OneHandedMeleeLayer": 1 - Click the gear icon next to "OneHandedMeleeLayer" in the Anamator. 2 - Click &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the dot next to "Mask". 3 - In the pop-up, select the "UpperBodyMask". 4 - Exit the pop-up.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="420" height="212" alt="image" src="https://github.com/user-attachments/assets/74448e58-a7b0-46a8-8f46-c4b4f808dee0" />
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="548" height="162" alt="image" src="https://github.com/user-attachments/assets/3bd31330-710d-4e26-acf9-4bb55f0260f5" />
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2e.) Repeat step 2d, adding "LeftArmMask" to "DefaultLeftArmLayer" and adding "UpperBodyMask" to "PistolLayer". Do not add an &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AvatarMask to "MovementLayer". 
 <br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2f.) When you are finished, the layers should look like this (it is recommended to validate that other settings match as well)
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="440" height="164" alt="image" src="https://github.com/user-attachments/assets/afde96fd-2fe1-4e5e-b461-6f2211182404" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="440" height="164" alt="image" src="https://github.com/user-attachments/assets/afde96fd-2fe1-4e5e-b461-6f2211182404" />
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="437" height="126" alt="image" src="https://github.com/user-attachments/assets/4ffbcde5-6dfe-48a0-99fa-c9098675a5d6" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="437" height="126" alt="image" src="https://github.com/user-attachments/assets/4ffbcde5-6dfe-48a0-99fa-c9098675a5d6" />
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="437" height="131" alt="image" src="https://github.com/user-attachments/assets/8c3c6d2e-4b20-40de-aeb5-ce0287528139" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="437" height="131" alt="image" src="https://github.com/user-attachments/assets/8c3c6d2e-4b20-40de-aeb5-ce0287528139" />
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="439" height="115" alt="image" src="https://github.com/user-attachments/assets/c6f4dca8-e075-4e49-8912-436204796727" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="439" height="115" alt="image" src="https://github.com/user-attachments/assets/c6f4dca8-e075-4e49-8912-436204796727" />
 
 
 
