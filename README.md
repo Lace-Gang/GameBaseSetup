@@ -241,34 +241,36 @@ to spawn in the correct location when loading a previous save file. The "Game In
 <img width="347" height="290" alt="image" src="https://github.com/user-attachments/assets/96f7830e-4f48-45f6-ae0c-a1cdfcd8eb1d" />
 <img width="260" height="224" alt="image" src="https://github.com/user-attachments/assets/732997f9-78ca-44bb-bf66-8c0fb37a5c79" />
 <br>
-2.) Add Avatar Masks to the Animator component:
+2.) If you ever plan to have the player holding weapons or items, please see the details listed in [Sockets](#sockets).
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2a.) Locate Avatar Masks in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Masks
+3.) Add Avatar Masks to the Animator component:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3a.) Locate Avatar Masks in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Masks
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="245" height="267" alt="image" src="https://github.com/user-attachments/assets/07dac400-3e8b-4f96-a6f5-117d5d17aeae" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2b.) Drag "LeftArmMask" and "UpperBodyMask" (or a duplicated copy of each) into your "Assets". Dragging the Masks folder (or a duplicate copy of it) will also work.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3b.) Drag "LeftArmMask" and "UpperBodyMask" (or a duplicated copy of each) into your "Assets". Dragging the Masks folder (or a duplicate copy of it) will also work.
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="264" height="119" alt="image" src="https://github.com/user-attachments/assets/a4b5d4a1-da4d-4cf6-b885-e3612fce9a15" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2c.) Open up the "PlayerCharacter" Animator Controller in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Animations -> PlayerCharacter (double click the AnimatorController to open the Animator) 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3c.) Open up the "PlayerCharacter" Animator Controller in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Animations -> PlayerCharacter (double click the AnimatorController to open the Animator) 
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="243" height="89" alt="image" src="https://github.com/user-attachments/assets/1bf09b45-6b2d-4e88-9001-4714f790c5b4" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2d.) Add "UpperBodyMask" to "OneHandedMeleeLayer": 1 - Click the gear icon next to "OneHandedMeleeLayer" in the Anamator. 2 - Click the dot next to "Mask". 3 - In the pop-up, select the "UpperBodyMask". 4 - Exit the pop-up.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3d.) Add "UpperBodyMask" to "OneHandedMeleeLayer": 1 - Click the gear icon next to "OneHandedMeleeLayer" in the Anamator. 2 - Click the dot next to "Mask". 3 - In the pop-up, select the "UpperBodyMask". 4 - Exit the pop-up.
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="420" height="212" alt="image" src="https://github.com/user-attachments/assets/74448e58-a7b0-46a8-8f46-c4b4f808dee0" />
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="548" height="162" alt="image" src="https://github.com/user-attachments/assets/3bd31330-710d-4e26-acf9-4bb55f0260f5" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2e.) Repeat step 2d, adding "LeftArmMask" to "DefaultLeftArmLayer" and adding "UpperBodyMask" to "PistolLayer". Do not add an AvatarMask to "MovementLayer". 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3e.) Repeat step 2d, adding "LeftArmMask" to "DefaultLeftArmLayer" and adding "UpperBodyMask" to "PistolLayer". Do not add an AvatarMask to "MovementLayer". 
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2f.) When you are finished, the layers should look like this (it is recommended to validate that other settings match as well)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3f.) When you are finished, the layers should look like this (it is recommended to validate that other settings match as well)
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="440" height="164" alt="image" src="https://github.com/user-attachments/assets/afde96fd-2fe1-4e5e-b461-6f2211182404" />
 <br>
@@ -336,6 +338,29 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="288" height="199" alt="image" src="https://github.com/user-attachments/assets/3505d3cf-5e7f-43c3-a40a-c1c08cc8b26b" />
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IMPORTANT: You MUST set the new avatar in: "Y Bot@Death", "Y Bot@Idle", "Y Bot@JumpForward", "Y Bot@JumpUp", "Y Bot@PistolAim", "Y Bot@PistolWalk", "Y Bot@Stable Sword Outward Slash", "Y Bot@StandardRun", "Y Bot@Sword And Shield Walk", and "Y Bot@Walking"
+<br>
+<br>
+4.) If you plan to reconfigure or use the Sword or Pistol prefabs that are included with Game Base, you must add a socket to the new character model with ID: PlayerRightHandWeaponSocket
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4a.) Create an empty game object as a child of the the "mixamorig:RightHand"
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="362" height="361" alt="image" src="https://github.com/user-attachments/assets/57c52bb8-29b8-4912-8a1b-dbb41d74403e" />
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4b.) Position the game object in roughly the same position as shown in the following two pictures:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="469" height="279" alt="image" src="https://github.com/user-attachments/assets/f342a802-c102-43f2-9cbb-3215dd2b8d67" />
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="518" height="239" alt="image" src="https://github.com/user-attachments/assets/c2cc93c0-07ef-459e-9948-10be9f5820f1" />
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4c.) Add a Socket Script, located in Project under: Packages -> Game Base -> Runtime -> Game Base -> Scripts -> Items -> Weapons
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="373" height="335" alt="image" src="https://github.com/user-attachments/assets/eab69efb-c6a4-46a5-8f22-759fcbbb3bef" />
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4d.) In the Inspector, set Socket ID to: PlayerRightHandWeaponSocket
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="335" height="253" alt="image" src="https://github.com/user-attachments/assets/6b68b579-104d-4a1c-b8aa-42113c966bd8" />
+
+<br>
+<br>
 
 #### To Change Existing Player Animation(s)
 (to add an animation that there is no default for, follow steps 1 and 2 and then add the new animation wherever necessary)
@@ -627,6 +652,17 @@ For an item to be saved once it has been added to the inventory certain steps MU
 
 <br>
 <br>
+
+
+
+
+
+
+## Miscellaneous
+
+### Sockets
+
+
 
 # Art Credits:
 * Credit to Mixamo for the default player model and default player animations!
