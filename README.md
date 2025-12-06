@@ -329,9 +329,11 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 <br>
 <img width="443" height="290" alt="image" src="https://github.com/user-attachments/assets/3e7bb1ec-1f08-475b-9971-53553b50c0f1" />
 <br>
+<br>
 2.) Drag new Model into "Player Character" in the "Player" prefab. (You may need to adjust the Model's position to ensure the model's feet touch the ground)
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="212" height="65" alt="image" src="https://github.com/user-attachments/assets/2bf58f21-6f93-47d3-911e-ccdcf2174f8f" />
+<br>
 <br>
 3.) For each Animation, set "source" to be the avatar of the new model.
 <br>
@@ -341,9 +343,11 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 <br>
 <br>
 4.) If you plan to reconfigure or use the Sword or Pistol prefabs that are included with Game Base, you must add a socket to the new character model with ID: PlayerRightHandWeaponSocket
+<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4a.) Create an empty game object as a child of the the "mixamorig:RightHand"
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="362" height="361" alt="image" src="https://github.com/user-attachments/assets/57c52bb8-29b8-4912-8a1b-dbb41d74403e" />
+<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4b.) Position the game object in roughly the same position as shown in the following two pictures:
 <br>
@@ -351,9 +355,11 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="518" height="239" alt="image" src="https://github.com/user-attachments/assets/c2cc93c0-07ef-459e-9948-10be9f5820f1" />
 <br>
+<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4c.) Add a Socket Script, located in Project under: Packages -> Game Base -> Runtime -> Game Base -> Scripts -> Items -> Weapons
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="373" height="335" alt="image" src="https://github.com/user-attachments/assets/eab69efb-c6a4-46a5-8f22-759fcbbb3bef" />
+<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4d.) In the Inspector, set Socket ID to: PlayerRightHandWeaponSocket
 <br>
