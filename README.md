@@ -373,15 +373,37 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 <br>
 1.) In the new animation -> Rig, set "Animation Type" to "Humanoid", "Avatar Definition" to "Copy From Other Avatar", and set the Source to your chosen avatar. If using the default avatar, set to the YBotAvatar
 <br>
-<img width="288" height="199" alt="image" src="https://github.com/user-attachments/assets/df7e6837-b3ec-4ebd-807d-248f2a75a139" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="288" height="199" alt="image" src="https://github.com/user-attachments/assets/df7e6837-b3ec-4ebd-807d-248f2a75a139" />
+<br>
 <br>
 2.) Open the Animator (which can be accessed by double clicking the "Player Character" Animator component
 <br>
-<img width="194" height="90" alt="image" src="https://github.com/user-attachments/assets/3355f4a3-c252-45e1-9b3a-6a53b7ed059b" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="194" height="90" alt="image" src="https://github.com/user-attachments/assets/3355f4a3-c252-45e1-9b3a-6a53b7ed059b" />
+<br>
 <br>
 3.) Locate and click the state you want to change. Then, drag new animation into the "Motion" feild of the state. (idle, walk, and run animations are located in the "Movement" Blend Tree)
 <br>
-<img width="296" height="77" alt="image" src="https://github.com/user-attachments/assets/712f3bec-bf02-4d2f-929b-f14ec83435bc" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="296" height="77" alt="image" src="https://github.com/user-attachments/assets/712f3bec-bf02-4d2f-929b-f14ec83435bc" />
+<br>
+<br>
+
+#### When Adding Animation Layers
+IMPORTANT: If you add one or more layers to the "PlayerCharacter" Animator Controller, it is advised to then open the "PlayerController" script, and find the methods: "SetWeapon", "OnDeath", and "OnRespawn". 
+These methods each set layer weights for the animator. It is advised to make sure that layer weights are still being assigned properly. Consider whether adding your own layers to these methods or altering the methods to prevent conflict would be benefiscial to your game. Prior to modifications:
+* LayerIndex 0 corresponds to the "MovementLayer"
+* LayerIndex 1 corresponds to the "OneHandedMeleeLayer"
+* LayerIndex 2 corresponds to the "DefaultLeftArmLayer"
+* LayerIndex 3 corresponds to the "PistolLayer"
+  <br>
+And the scripts look like this:
+<br>
+<img width="221" height="332" alt="image" src="https://github.com/user-attachments/assets/e8913639-a026-4090-8302-5ce94dfe3742" />
+<img width="188" height="148" alt="image" src="https://github.com/user-attachments/assets/61bcd539-71ca-48d1-8394-cb1cea5da9d6" />
+<img width="185" height="96" alt="image" src="https://github.com/user-attachments/assets/627f191f-e135-4326-8723-f26dd45eb8ed" />
+
+
+
+  
 
 
 
