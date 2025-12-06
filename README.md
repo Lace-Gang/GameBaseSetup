@@ -271,6 +271,7 @@ the "User Interface" object can function without requiring attatchments and refe
 * [Player Controller](#player-controller)
 * [Player Health](#player-health)
 * [Player Avatar And Animations](#player-avatar-and-animations)
+* [Player Audio](#player-audio)
 
 ### Player Set Up
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE: Do NOT add a "Player" prefab directly to the scene.
@@ -454,9 +455,17 @@ And the scripts look like this:
 <img width="188" height="148" alt="image" src="https://github.com/user-attachments/assets/61bcd539-71ca-48d1-8394-cb1cea5da9d6" />
 <img width="185" height="96" alt="image" src="https://github.com/user-attachments/assets/627f191f-e135-4326-8723-f26dd45eb8ed" />
 
+<br>
+<br>
 
 
-  
+
+### Player Audio
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="316" height="83" alt="image" src="https://github.com/user-attachments/assets/fe02c5fc-6e4f-4d4b-9fec-629a1a479b18" />
+<br>
+* Sound effects for the player being damaged and for the player dying can both be set here.
+* Here you can also toggle whether the audio will play for both
+
 
 
 
@@ -738,11 +747,15 @@ For an item to be saved once it has been added to the inventory certain steps MU
 
 ## Sound
 * [Background Music](#background-music)
+* [Player Audio](#player-audio)
 
 <br>
 
 ### Background Music
 [Information on Background Music can be found here](#game-instance-audio)
+
+### Player Audio
+[Information about Player Related Audio can be found here](#player-audio)
 
 <br>
 <br>
