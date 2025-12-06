@@ -334,24 +334,33 @@ to spawn in the correct location when loading a previous save file. The "Game In
 ### Player Controller
 Player input, actions, states, and movements are defined here
 <br>
+<br>
 <img width="226" height="329" alt="image" src="https://github.com/user-attachments/assets/bcd23709-3ee7-477c-91f2-f50e156798f0" />
 <br>
+<br>
 Note: If changing the player inputs, please try to match the input types (ie, Composit (2D Vector) -> Composit (2D Vector) || Binding -> Binding), failure to do so could lead to runtime or compiletime errors.
+<br>
 <br>
 
 To add new player inputs and actions:
 <br>
+<br>
 Use an InputAction to track player inputs and trigger action methods
 <br>
+<br>
 <img width="238" height="24" alt="image" src="https://github.com/user-attachments/assets/4a21dc76-7d56-4959-9904-b36cb3524d0a" />
+<br>
 <br>
 
 Set up action methods with "InputAction.CallbackContext ctx" as the only parameter
 <br>
+<br>
 <img width="313" height="25" alt="image" src="https://github.com/user-attachments/assets/12da8088-6add-41e5-b6c2-91e6780e57c6" />
+<br>
 <br>
 
 Bind InputAction to Action Method in the Awake method, Enable InputAction in the OnEnable method, and Disable InputAction in the OnDisable method
+<br>
 <br>
 <img width="233" height="472" alt="image" src="https://github.com/user-attachments/assets/88847128-e147-45c9-b3b1-35e0763536f1" />
 
@@ -427,6 +436,7 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 3.) Locate and click the state you want to change. Then, drag new animation into the "Motion" feild of the state. (idle, walk, and run animations are located in the "Movement" Blend Tree)
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="296" height="77" alt="image" src="https://github.com/user-attachments/assets/712f3bec-bf02-4d2f-929b-f14ec83435bc" />
+
 <br>
 <br>
 
