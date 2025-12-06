@@ -242,16 +242,15 @@ or want these components, it is avised to either set them to inactive in the Ins
 <br>
 
 ### Editing User Interface Backend Or Adding UI Elements
-When editing User Interface backend (including adding new button functionality, or new screens), it is advised to:
+Note: When editing User Interface backend (including adding new button functionality, or new screens), it is advised to:
+<br>
 <br>
   1.) Write Button Click event functions into the "UserInterface" script. From there, the User Interface can trigger functionality elsewhere. (this is advised for simplicity, so that 
 the "User Interface" object can function without requiring attatchments and references to unrelated objects.
 <br>
 <br>
-  2.) When editing values at runtime (ie healthbars, scores, etc), do so with functions written in the User Interface that can be triggered by the GameInstance. (This will allow other scripts to update the UI display as necessary without requiring a reference to anything as the GameInstance can be accessed from anywhere without a reference.)
-<br>
-<br>
-  3.) Set visibility of User Interface elements through the Game Instance. (this is advised because the GameInstance already handles all other UI visibility.)
+  2.) When editing values at runtime (ie healthbars, scores, etc), do so with functions written in the User Interface. This will allow other scripts to update the UI display as necessary without requiring a reference to anything as the UserInterface can be accessed from anywhere without a reference using: UserInterface.Instance
+
 
 <br>
 <br>
