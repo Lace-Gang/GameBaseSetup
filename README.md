@@ -81,7 +81,7 @@ loads the "Base Scene" scene additively when the project opens.
 
 ### Game Instance Set Up
 #### Step One: Adding Required Scenes
-In order to use the Game Manager, the "Base" scene should be added:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to use the Game Manager, the "Base" scene should be added:
 <br>
 <br>
 1.) Open the "Base" Scene from Packages -> Game Base -> Runtime -> Game Base -> Scenes -> "BaseScene" (double click)
@@ -141,7 +141,7 @@ onto the object, and set "Player" as the static spawn tag.
 * [Editing User Interface Backend or Adding UI Elements](#editing-user-interface-backend-or-adding-ui-elements)
 
 ### Setting Up The User Interface
-NOTE: Do NOT add a User Interface to any scene directly. There is already a User Interface present in the "Base Scene".
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE: Do NOT add a User Interface to any scene directly. There is already a User Interface present in the "Base Scene".
 <br>
 <br>
 1.) For the setup of the User Interface, and for a User Interface that is more personalized to your game, it is advised to complete the steps found in [Editing User Interface Frontend](#editing-user-interface-frontend)
@@ -232,7 +232,7 @@ the "User Interface" object can function without requiring attatchments and refe
 * [Player Avatar And Animations](#player-avatar-and-animations)
 
 ### Player Set Up
-NOTE: Do NOT add a "Player" prefab directly to the scene.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE: Do NOT add a "Player" prefab directly to the scene.
 <br>
 <br>
 1.) Ensure that a "Player Spawn Point" is present in the main gameplay scene. This is where the player will spawn (if not loading a previous save file). This will also allow the player 
