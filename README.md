@@ -218,6 +218,48 @@ to spawn in the correct location when loading a previous save file. The "Game In
 <br>
 <img width="347" height="290" alt="image" src="https://github.com/user-attachments/assets/96f7830e-4f48-45f6-ae0c-a1cdfcd8eb1d" />
 <img width="260" height="224" alt="image" src="https://github.com/user-attachments/assets/732997f9-78ca-44bb-bf66-8c0fb37a5c79" />
+<br>
+2.) Add Avatar Masks to the Animator component:
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2a.) Locate Avatar Masks in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Masks
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="245" height="267" alt="image" src="https://github.com/user-attachments/assets/07dac400-3e8b-4f96-a6f5-117d5d17aeae" />
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2b.) Drag "LeftArmMask" and "UpperBodyMask" (or a duplicated copy of each) into your "Assets". Dragging the Masks folder (or a duplicate &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy of it) will also work.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="264" height="119" alt="image" src="https://github.com/user-attachments/assets/a4b5d4a1-da4d-4cf6-b885-e3612fce9a15" />
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2c.) Open up the "PlayerCharacter" Animator Controller in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Animations &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> PlayerCharacter (double click the AnimatorController to open the Animator) 
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="243" height="89" alt="image" src="https://github.com/user-attachments/assets/1bf09b45-6b2d-4e88-9001-4714f790c5b4" />
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2d.) Add "UpperBodyMask" to "OneHandedMeleeLayer": 1 - Click the gear icon next to "OneHandedMeleeLayer" in the Anamator. 2 - Click &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the dot next to "Mask". 3 - In the pop-up, select the "UpperBodyMask". 4 - Exit the pop-up.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="420" height="212" alt="image" src="https://github.com/user-attachments/assets/74448e58-a7b0-46a8-8f46-c4b4f808dee0" />
+<img width="548" height="162" alt="image" src="https://github.com/user-attachments/assets/3bd31330-710d-4e26-acf9-4bb55f0260f5" />
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2e.) Repeat step 2d, adding "LeftArmMask" to "DefaultLeftArmLayer" and adding "UpperBodyMask" to "PistolLayer". Do not add an &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;AvatarMask to "MovementLayer". 
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2f.) When you are finished, the layers should look like this (it is recommended to validate that other settings match as well)
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="440" height="164" alt="image" src="https://github.com/user-attachments/assets/afde96fd-2fe1-4e5e-b461-6f2211182404" />
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="437" height="126" alt="image" src="https://github.com/user-attachments/assets/4ffbcde5-6dfe-48a0-99fa-c9098675a5d6" />
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="437" height="131" alt="image" src="https://github.com/user-attachments/assets/8c3c6d2e-4b20-40de-aeb5-ce0287528139" />
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="439" height="115" alt="image" src="https://github.com/user-attachments/assets/c6f4dca8-e075-4e49-8912-436204796727" />
+
+
+
+
+
+
 
 <br>
 
