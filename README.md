@@ -1,6 +1,8 @@
 # GameBaseSetup
 This is where I will be creating my capstone and running some of my testing for it.
 
+Game Base is a flexible framework designed to assist and expedite the Game Development process in Unity6. Game Base is designed to be fully extensible.
+
 ## Contents
 * [Installation and Setup Instructions](#installation-and-setup-instructions)
 * [Important Information](#important-information)
@@ -64,14 +66,16 @@ When setting up GameBase:
 <br>
 4.) Change Player [Avatar and Animations](#player-avatar-and-animations) (Advised but not required)
 
-## How To Use
-[To Be Writen]
-
-
 ## Important Information
 1.) The Game must be run from the "Base" Scene to ensure that the Game Instance and User Interface is always present. Alternatively, include a script in any other scenes that 
 loads the "Base Scene" scene additively when the project opens.
+<br> <br>
+2.) The first time you run your project, you will be prompted to import TMP Essentials (if you have not already). This package is necessary for the User Interface to function properly. Please import TMP when you are prompted to. You may be prompted to import two TMP packages. If this happens, please import both.
 
+
+
+<br>
+<br>
 
 # User Guide
 
