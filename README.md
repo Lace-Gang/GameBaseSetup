@@ -38,7 +38,7 @@ This is where I will be creating my capstone and running some of my testing for 
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="224" height="156" alt="image" src="https://github.com/user-attachments/assets/78f3deb4-3854-4b24-8cfd-5889bfbb616a" />
 
-6.) Navigate to the extracted file, then navigate to: GameBaseSetup-main>Packages>com.lace.gamebase and select "package.json", then click &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Open"
+6.) Navigate to the extracted file, then navigate to: GameBaseSetup-main>Packages>com.lace.gamebase and select "package.json", then click "Open"
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="484" height="380" alt="image" src="https://github.com/user-attachments/assets/e614fcdc-c1bf-4880-a8ad-f258bec99e15" />
 
@@ -46,7 +46,7 @@ This is where I will be creating my capstone and running some of my testing for 
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="452" height="169" alt="image" src="https://github.com/user-attachments/assets/626de6c3-4f98-46ca-b4c5-71edf1cfee17" />
 
-8.) A Game Base file will appear under "Packages" in your project window. Scripts and Prefab objects can be accessed from here in the &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"runtime" folder
+8.) A Game Base file will appear under "Packages" in your project window. Scripts and Prefab objects can be accessed from here in the "runtime" folder
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="323" height="320" alt="image" src="https://github.com/user-attachments/assets/1bf40035-0f76-4899-9237-275b81f77db3" />
 
@@ -102,7 +102,8 @@ In order to use the Game Manager, the "Base" scene should be added:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="549" height="241" alt="image" src="https://github.com/user-attachments/assets/65989697-799e-4caf-aef8-44be6ebadb9b" />
 <br>
 <br>
-4.) Repeat Steps 1, 2, and 3, for the Scenes: "UIDisplayScene", and for the scene that you intend for the main gameplay to take place in
+4.) Repeat Steps 1, 2, and 3, for the Scenes: "UIDisplayScene", and for the scene that you intend for the main 
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gameplay to take place in
 <br>
 
 #### Step Two: Game Instance Configuration
@@ -143,7 +144,7 @@ onto the object, and set "Player" as the static spawn tag.
 NOTE: Do NOT add a User Interface to any scene directly. There is already a User Interface present in the "Base Scene".
 <br>
 <br>
-1.) For the setup of the User Interface, and for a User Interface that is more personalized to your game,  it is advised to complete the steps found in [Editing User Interface Frontend](#editing-user-interface-frontend)
+1.) For the setup of the User Interface, and for a User Interface that is more personalized to your game, it is advised to complete the steps found in [Editing User Interface Frontend](#editing-user-interface-frontend)
 
 <br>
 
@@ -233,17 +234,17 @@ to spawn in the correct location when loading a previous save file. The "Game In
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="245" height="267" alt="image" src="https://github.com/user-attachments/assets/07dac400-3e8b-4f96-a6f5-117d5d17aeae" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2b.) Drag "LeftArmMask" and "UpperBodyMask" (or a duplicated copy of each) into your "Assets". Dragging the Masks folder (or a duplicate &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy of it) will also work.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2b.) Drag "LeftArmMask" and "UpperBodyMask" (or a duplicated copy of each) into your "Assets". Dragging the Masks folder (or a duplicate copy of it) will also work.
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="264" height="119" alt="image" src="https://github.com/user-attachments/assets/a4b5d4a1-da4d-4cf6-b885-e3612fce9a15" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2c.) Open up the "PlayerCharacter" Animator Controller in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Animations &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-> PlayerCharacter (double click the AnimatorController to open the Animator) 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2c.) Open up the "PlayerCharacter" Animator Controller in: Project -> GameBase -> Runtime -> GameBase -> Default Assets -> Animations -> PlayerCharacter (double click the AnimatorController to open the Animator) 
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="243" height="89" alt="image" src="https://github.com/user-attachments/assets/1bf09b45-6b2d-4e88-9001-4714f790c5b4" />
 <br>
 <br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2d.) Add "UpperBodyMask" to "OneHandedMeleeLayer": 1 - Click the gear icon next to "OneHandedMeleeLayer" in the Anamator. 2 - Click &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;the dot next to "Mask". 3 - In the pop-up, select the "UpperBodyMask". 4 - Exit the pop-up.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2d.) Add "UpperBodyMask" to "OneHandedMeleeLayer": 1 - Click the gear icon next to "OneHandedMeleeLayer" in the Anamator. 2 - Click the dot next to "Mask". 3 - In the pop-up, select the "UpperBodyMask". 4 - Exit the pop-up.
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="420" height="212" alt="image" src="https://github.com/user-attachments/assets/74448e58-a7b0-46a8-8f46-c4b4f808dee0" />
 <br>
