@@ -12,6 +12,7 @@ This is where I will be creating my capstone and running some of my testing for 
 * [Save System](#save-system)
 * [Items](#items)
 * [Inventory System](#inventory-system)
+* [Miscellaneous](#miscellaneous)
 
 ## Installation and Setup Instructions
 * [Install From Disk](#install-from-disk)
@@ -241,7 +242,9 @@ to spawn in the correct location when loading a previous save file. The "Game In
 <img width="347" height="290" alt="image" src="https://github.com/user-attachments/assets/96f7830e-4f48-45f6-ae0c-a1cdfcd8eb1d" />
 <img width="260" height="224" alt="image" src="https://github.com/user-attachments/assets/732997f9-78ca-44bb-bf66-8c0fb37a5c79" />
 <br>
+<br>
 2.) If you ever plan to have the player holding weapons or items, please see the details listed in [Sockets](#sockets).
+<br>
 <br>
 3.) Add Avatar Masks to the Animator component:
 <br>
@@ -687,9 +690,19 @@ For an item to be saved once it has been added to the inventory certain steps MU
 
 
 ## Miscellaneous
-
+* [Sockets](#sockets)
 ### Sockets
-
+A socket only includes an ID, and was developed with the intention of being used as a way for other objects to know where to "be". 
+<br>
+By setting a socket as a parent transform of an object, that object will now follow the socket whenever its transform changes. 
+<br>
+And by setting another object (ie a bone in a character rig) as the parent of the socket, both the socket and first object will follow the second object. 
+<br>
+As an example, this could be very useful for having a player or npc "hold" things such as weapons or tools.
+<br>
+Objects can be assigned to sockets at runtime, and the ID can allow objects to ensure they are being assigned to the correct socket.
+<br>
+Currently, sockets are only being used to enable equipping of weapons, but please feel free to be as creative as you'd like!
 
 
 # Art Credits:
