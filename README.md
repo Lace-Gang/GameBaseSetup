@@ -948,7 +948,10 @@ Here is an example of a configured ammunition:
 <br><br>
 
 ### Ammunition Types
-
+An Ammunition Type object only requires an AmmunitionType component, with the name of the ammuntion and a reference to the Ammunition Prefab that this AmmunitionType will represent. This IS required for full ammunition functionality. Here is an example:
+<br><br>
+<img width="614" height="182" alt="image" src="https://github.com/user-attachments/assets/7644fd21-ffcd-46bb-9275-fdbb5add7ecd" />
+<br><br>
 
 
 ### Ammunition Trackers
