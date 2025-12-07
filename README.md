@@ -436,9 +436,9 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 
 #### To Change Existing Player Animation(s)
 (to add an animation that there is no default for, follow steps 1 and 2 and then add the new animation wherever necessary)
-<br>
+<br><br>
 1.) In the new animation -> Rig, set "Animation Type" to "Humanoid", "Avatar Definition" to "Copy From Other Avatar", and set the Source to your chosen avatar. If using the default avatar, set to the YBotAvatar
-<br>
+<br><br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="288" height="199" alt="image" src="https://github.com/user-attachments/assets/df7e6837-b3ec-4ebd-807d-248f2a75a139" />
 <br>
 <br>
@@ -448,7 +448,7 @@ Game Base's damage system, uncheck "Is Damagable" in the Player Character Script
 <br>
 <br>
 3.) Locate and click the state you want to change. Then, drag new animation into the "Motion" feild of the state. (idle, walk, and run animations are located in the "Movement" Blend Tree)
-<br>
+<br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="296" height="77" alt="image" src="https://github.com/user-attachments/assets/712f3bec-bf02-4d2f-929b-f14ec83435bc" />
 
 <br>
