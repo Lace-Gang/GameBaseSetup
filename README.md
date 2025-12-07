@@ -836,7 +836,11 @@ For an item to be saved once it has been added to the inventory certain steps MU
 * [Melee Weapons](#melee-weapons)
 * [Ranged Weapons](#ranged-weapons)
 
-
+<br>
+Note: All Weapon and Ammunition related scripts can be found in: GameBase -> Scripts -> Items -> Weapons
+<br><br>
+<img width="266" height="477" alt="image" src="https://github.com/user-attachments/assets/59d6c08b-87a0-43a2-869a-6c0698c098c6" />
+<br><br>
 
 ### Included Weapon Prefabs
 * Pistol
@@ -938,6 +942,11 @@ For an item to be saved once it has been added to the inventory certain steps MU
 * [Ammunition Trackers](#ammunition-trackers)
 * [Ammunition Refills](#ammunition-refills)
 
+<br>
+Note: All Weapon and Ammunition related scripts can be found in: GameBase -> Scripts -> Items -> Weapons
+<br><br>
+<img width="266" height="477" alt="image" src="https://github.com/user-attachments/assets/59d6c08b-87a0-43a2-869a-6c0698c098c6" />
+<br><br>
 
 ### Included Ammunition Prefabs
 * Bullet
