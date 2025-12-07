@@ -513,10 +513,12 @@ However, at times you may want to tell the camera to ignore certain objects, suc
 <br>
 1.) Add a "TagManager" component to the object you want the camera to ignore. The "TagManager" script can be found in: GameBase -> Scripts -> Game
 <br>
+<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="289" height="350" alt="image" src="https://github.com/user-attachments/assets/c5ee7ebd-e16b-4e48-a6f9-ff560f308ff8" />
 <br>
 <br>
 2.) Add an&nbsp;&nbsp; IgnoredByOrbitalCamera &nbsp;&nbsp;tag to the list of tags (without any white-space). This will tell the camera to disregard this object while running its distance adjustment calculations.
+<br>
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="332" height="119" alt="image" src="https://github.com/user-attachments/assets/44cb9e0f-8f00-4529-8178-8e281706c781" />
 <br>
@@ -535,16 +537,23 @@ However, at times you may want to tell the camera to ignore certain objects, suc
 ### Health And Damage System Set Up
 To create a source of damage, add a Damage Source script to an object with a collider set to trigger.
 <br>
+<br>
 <img width="296" height="310" alt="image" src="https://github.com/user-attachments/assets/6b52ef9e-8016-4365-a592-a360040b8a7e" />
 <br>
 
 If you want an object to be damageable through the Health and Damage System, that object must have a component that includes the IDamagableInterface. This
 indicates to Damage Sources that an object can receive damage.
 <br>
+<br>
 <img width="371" height="41" alt="image" src="https://github.com/user-attachments/assets/95268ee9-2125-4dcb-8d95-14b474737e36" />
 <br>
 
-NOTE: There is a Health component as well. This component is optional, but can quickly privode basic health functionality.
+NOTE: There is a Health component as well. This component is optional, but can quickly privode basic health functionality. The Health script, DamageSource script, and IDamagableInterface script can all be found in: GameBase -> Scripts -> Damage and Health
+<br>
+<br>
+<img width="288" height="335" alt="image" src="https://github.com/user-attachments/assets/a4611672-1185-4769-b0c3-21bc6e962d52" />
+
+
 
 <br>
 <br>
