@@ -701,43 +701,44 @@ If the file is not here, you are not a Windows user, or you have a different fil
 * [Saving Inventory](#saving-inventory-items)
 
 ### Inventory Set Up
-NOTE: The Inventory is already located in the 'BaseScene' as a part of the 'GameInstance' object, and does not need to be added to any scene.
-<br>
-<img width="545" height="284" alt="image" src="https://github.com/user-attachments/assets/cb8c7a3a-66ce-4fd1-a9ae-ab303380f68a" />
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE: The Inventory is already located in the 'BaseScene' as a part of the 'GameInstance' object, and does not need to be added to any scene.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="545" height="284" alt="image" src="https://github.com/user-attachments/assets/cb8c7a3a-66ce-4fd1-a9ae-ab303380f68a" />
+<br><br>
 #### To use the Inventory System:
 1.) Ensure that "Use Inventory" is checked to "true"
-<br>
-<img width="212" height="97" alt="image" src="https://github.com/user-attachments/assets/79d72d29-2f52-48e8-9d1c-5e2e9eb6f215" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="212" height="97" alt="image" src="https://github.com/user-attachments/assets/79d72d29-2f52-48e8-9d1c-5e2e9eb6f215" />
+<br><br>
 2.) (Optional) If you want items to be automatically equipped when they are picked up and nothing else is eqiupped, ensure that "Send First Item To Equipped" is set to "true". Otherwise
 set it to "false.
-<br>
-<img width="182" height="98" alt="image" src="https://github.com/user-attachments/assets/2011e86c-42f3-4f8d-a60d-d12be9a75341" />
-<br>
-3.) Ensure that "Equipped Item Box" is NOT empty.
-<br>
-<img width="299" height="40" alt="image" src="https://github.com/user-attachments/assets/1a9d4982-bfe2-4349-a390-1ba3933a8230" />
-<br>
-  3a.) If "Equipped Item Box" IS empty, then go to "User Interface" -> "HUD", and find the "Equipped Item Box" located in the HUD. The click and drag "Equipped Item Box" object from the hierarchy into "Equipped Item Box" in the "Inventory" script.
-<br>
-<img width="545" height="244" alt="image" src="https://github.com/user-attachments/assets/2da0e2bb-1e1a-40d9-b5df-20c82253e62d" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="182" height="98" alt="image" src="https://github.com/user-attachments/assets/2011e86c-42f3-4f8d-a60d-d12be9a75341" />
+<br><br>
+3.) Ensure that "Equipped Item Box" and "Equipped Weapon Box" are NOT empty.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="299" height="40" alt="image" src="https://github.com/user-attachments/assets/1a9d4982-bfe2-4349-a390-1ba3933a8230" />
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3a.) If either ARE empty, then go to "User Interface" -> "HUD", and find the "Equipped Item Box" and/or "Equipped Weapon Box" located in the HUD. The click and drag "Equipped Item Box" object and/or "Equipped Weapon Box" object from the hierarchy into "Equipped Item Box" and/or "Equipped Weapon Box" in the "Inventory" script.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="545" height="244" alt="image" src="https://github.com/user-attachments/assets/2da0e2bb-1e1a-40d9-b5df-20c82253e62d" />
+<br><br>
 4.) (Optional) If you want the items in the inventory to save and load, follow the steps outlined [here](#saving-inventory-items)
-<br>
+<br><br>
 5.) (Optional) The "EquippedItemBox" will display the key that when pressed will use the equipped item, as shown below.
-<br>
-<img width="75" height="68" alt="image" src="https://github.com/user-attachments/assets/417ac1eb-869c-45db-88b7-dcc7c53b2a4c" />
-  5a.) The default for this key is "E". To change this key, go to "UserInterface" -> "HUD" -> "EquippedBox" and in the "EquippedItemBox" script, change the "Use Key".
-  <br>
-  <img width="543" height="200" alt="image" src="https://github.com/user-attachments/assets/066cd9a7-72de-4dd6-b391-4148260848eb" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="75" height="68" alt="image" src="https://github.com/user-attachments/assets/417ac1eb-869c-45db-88b7-dcc7c53b2a4c" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5a.) The default for this key is "E". To change this key, go to "UserInterface" -> "HUD" -> "EquippedBox" and in the "EquippedItemBox" script, change the "Use Key".
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="543" height="200" alt="image" src="https://github.com/user-attachments/assets/066cd9a7-72de-4dd6-b391-4148260848eb" />
+<br><br>
 6.) (Optional) This is the default layout and size of the Inventory when displayed in the Inventory Screen:
-<br>
-<img width="742" height="506" alt="image" src="https://github.com/user-attachments/assets/139a27fe-6402-4a5b-95da-3603d0b3ecdd" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="742" height="506" alt="image" src="https://github.com/user-attachments/assets/139a27fe-6402-4a5b-95da-3603d0b3ecdd" />
+<br><br>
 To adjust the size of the Inventory, or the dimensions or proportions of the layout, follow the steps outlined [here](#adjusting-inventory-system)
 
+<br>
   
 ### Adjusting Inventory Screen
 IMPORTANT TO NOTE: The Inventory Box is generated _at runtime!_ Adjusting the size of the "InventoryBox" will not persist at runtime, nor will any size adjustments made to the "InventoryItemBox". However, _location_ adjustments may be made to the "InventoryBox", and these adjustments will persist.
