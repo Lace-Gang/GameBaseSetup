@@ -360,7 +360,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d49e6fa450c6f2244861c511d92d5c8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_healthOwner: {fileID: 7065663312760934044}
   m_maxHealth: 100
   m_startingHealth: 100
 --- !u!114 &5054242203988588604

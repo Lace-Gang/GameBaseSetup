@@ -111,21 +111,21 @@ namespace GameBase
             if(m_weapon == null)
             {
                 m_animator.SetLayerWeight(1, 0);
-                m_animator.SetLayerWeight(4, 0);
+                m_animator.SetLayerWeight(3, 0);
             }
             else if (m_weapon.GetComponent<MeleeWeapon>() != null)
             {
-                m_animator.SetLayerWeight(4, 0);
+                m_animator.SetLayerWeight(3, 0);
                 m_animator.SetLayerWeight(1, 0.9f);
             }
             else if (m_weapon.GetComponent<ProjectileWeapon>() != null)
             {
                 m_animator.SetLayerWeight(1, 0);
-                m_animator.SetLayerWeight(4, 0.9f);
+                m_animator.SetLayerWeight(3, 0.9f);
             }
             else
             {
-                m_animator.SetLayerWeight(4, 0);
+                m_animator.SetLayerWeight(3, 0);
                 m_animator.SetLayerWeight(1, 0);
             }
 
@@ -466,7 +466,6 @@ namespace GameBase
             m_animator.SetLayerWeight(1, 0);
             m_animator.SetLayerWeight(2, 0);
             m_animator.SetLayerWeight(3, 0);
-            m_animator.SetLayerWeight(4, 0);
 
             m_animator.SetTrigger("Die");   //Sets death animation trigger in the animator
         }
@@ -481,7 +480,7 @@ namespace GameBase
 
             m_animator.SetTrigger("Jump");  //Tell animator component to jump (looks like player is getting up, and helps animator leave the "die" state)
 
-            m_animator.SetLayerWeight(3, 1); //return "DefaultLeftArmLayer" to fully visible
+            m_animator.SetLayerWeight(2, 1); //return "DefaultLeftArmLayer" to fully visible
 
             //Set weapon if a weapon is already equipped
             if (m_weapon != null)
