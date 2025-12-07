@@ -880,7 +880,9 @@ For an item to be saved once it has been added to the inventory certain steps MU
 <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<<img width="608" height="437" alt="image" src="https://github.com/user-attachments/assets/09e4a8da-26b9-4797-80cf-f28d89275505" />
 <br><br>
-5.) The AnchorPointIndicator is by no means required, but it can be very helpful for seeing where the weapon will anchor to the socket.
+5.) It is highly recommended for weapons to implement the [steps outlined here](#telling-camera-to-ignore-objects)
+<br><br>
+6.) The AnchorPointIndicator is by no means required, but it can be very helpful for seeing where the weapon will anchor to the socket.
 <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="611" height="258" alt="image" src="https://github.com/user-attachments/assets/57f3cbb3-35fa-4051-93f1-53607dde3c13" />
 
@@ -914,6 +916,22 @@ For an item to be saved once it has been added to the inventory certain steps MU
 <br><br>
 
 ### Ranged Weapons
+
+
+
+
+
+<br>
+<br>
+
+
+## Ammunition
+
+
+
+
+
+
 
 
 
