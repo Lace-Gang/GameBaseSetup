@@ -830,27 +830,6 @@ For an item to be saved once it has been added to the inventory certain steps MU
 
 
 
-## Sound
-* [Background Music](#background-music)
-* [Player Audio](#player-audio)
-* [User Interface Audio](#ui-audio)
-
-<br>
-
-### Background Music
-[Information on Background Music can be found here](#game-instance-audio)
-
-### Player Audio
-[Information about Player Related Audio can be found here](#player-audio)
-
-### UI Audio
-[Information about User Interface Audio can be found here](#user-interface-audio)
-
-<br>
-<br>
-
-
-
 ## Weapons
 * [Included Weapon Prefabs](#included-weapon-prefabs)
 * [Create New Weapon](#create-new-weapon)
@@ -1021,7 +1000,35 @@ It is highly recommended for to implement the [steps outlined here](#telling-cam
 
 
 
+## Sound
+* [Background Music](#background-music)
+* [Player Audio](#player-audio)
+* [User Interface Audio](#ui-audio)
+* [Other Sounds](#other-sounds)
+* [Spawnable Sound](#spawnable-sound)
 
+<br>
+
+### Background Music
+[Information on Background Music can be found here](#game-instance-audio)
+
+### Player Audio
+[Information about Player Related Audio can be found here](#player-audio)
+
+### UI Audio
+[Information about User Interface Audio can be found here](#user-interface-audio)
+
+### Other Sounds
+Other Audio is included in Game Base. Mostly in items and weapons. They all follow the same format:
+<br>
+1.) A check box to indicate if sound should be played
+<br>
+2.) A reference to an AudioClip of the audio that should be played
+<br>
+3.) A reference to an AudioSource to play the audio clip. This is not always present. If it is not, the item most likely plays its audio via a Spawnable Sound throught the Game Instance. For more information on Spawnable Sounds, [look here](#spawnable-sound)
+
+<br>
+<br>
 
 
 
