@@ -484,9 +484,11 @@ Features a First Person Camera and Third Person Camera that has a defined target
 
 * [Main Camera Set Up](#main-camera-set-up)
 * [First Person Vs Third Person](#first-person-vs-third-person)
+* [Telling Camera To Ignore Objects](#telling-camera-to-ignore-objects)
 
 ### Main Camera Set Up
 To add a MainCamera to the scene, add the MainCamera script to a camera object, and add the Transform of the target in the Universal Camera Settings section of the script in the editor.
+<br>
 <br>
 <img width="207" height="32" alt="image" src="https://github.com/user-attachments/assets/35876392-80d7-4230-8a55-8fc7e1ceba20" />
 
@@ -495,11 +497,30 @@ To add a MainCamera to the scene, add the MainCamera script to a camera object, 
 ### First Person Vs Third Person
 Change from First Person Camera to Third Person Camera (or from Third Person Camera to First Person Camera) in the Universal Camera Settings section of the script in the editor.
 <br>
+<br>
 <img width="214" height="22" alt="image" src="https://github.com/user-attachments/assets/c9c00fcb-67e9-411a-aad0-b63b58a925c8" />
 <br>
 
 * Camera adjustments to follow the target are defined in the MainCamera script
 * Player movement based on camera direction is defined in the PlayerController script
+
+<br>
+
+### Telling Camera To Ignore Objects
+The third person camera is able to adjust its distance from the target to keep the target in view when an object passes in between the camera and the target. 
+However, at times you may want to tell the camera to ignore certain objects, such as small items, and items that aren't visible. To do this:
+<br>
+<br>
+1.) Add a "TagManager" component to the object you want the camera to ignore. The "TagManager" script can be found in: GameBase -> Scripts -> Game
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="289" height="350" alt="image" src="https://github.com/user-attachments/assets/c5ee7ebd-e16b-4e48-a6f9-ff560f308ff8" />
+<br>
+<br>
+2.) Add an&nbsp;&nbsp; IgnoredByOrbitalCamera &nbsp;&nbsp;tag to the list of tags (without any white-space). This will tell the camera to disregard this object while running its distance adjustment calculations.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="332" height="119" alt="image" src="https://github.com/user-attachments/assets/44cb9e0f-8f00-4529-8178-8e281706c781" />
+
+
 
 <br>
 <br>
