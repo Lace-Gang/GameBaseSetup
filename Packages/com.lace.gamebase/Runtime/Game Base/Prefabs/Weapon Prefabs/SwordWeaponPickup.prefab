@@ -51,8 +51,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_renderer: {fileID: 6706184157387733068}
   m_collider: {fileID: 3911106813027796169}
-  m_name: Test Weapon
+  m_name: Sword Pickup
   m_autoPickup: 1
+  m_playAudioOnAutoPickup: 0
+  m_pickupAudio: {fileID: 0}
   m_save: 1
   m_ID: 1000
   m_saveActiveInScene: 1
