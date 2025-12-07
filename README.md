@@ -743,71 +743,72 @@ To adjust the size of the Inventory, or the dimensions or proportions of the lay
   
 ### Adjusting Inventory Screen
 IMPORTANT TO NOTE: The Inventory Box is generated _at runtime!_ Adjusting the size of the "InventoryBox" will not persist at runtime, nor will any size adjustments made to the "InventoryItemBox". However, _location_ adjustments may be made to the "InventoryBox", and these adjustments will persist.
-<br>
+<br><br>
 1.) Go to "User Interface", then find the "Inventory Screen" section of the "User Interface" script.
-<br>
-<img width="283" height="215" alt="image" src="https://github.com/user-attachments/assets/45acef7d-84b6-4e0e-bd93-854c2bf7d0b4" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="283" height="215" alt="image" src="https://github.com/user-attachments/assets/45acef7d-84b6-4e0e-bd93-854c2bf7d0b4" />
+<br><br>
   1a.) "Image Box Width" and "Image Box Height" can be used to adjust the size of the "InventoryItemBox" that are generated.
-  <br>
+  <br><br>
   1b.) "Rows" and "Columns" can be used to alter the number of "InventoryItemBox" that are generated, as well as their layout.
-  <br>
+  <br><br>
   1c.) "Margin" is the distance in between each "InventoryItemBox"
+  <br><br>
   1d.) "Padding" is the distance from the edges of the "InventoryBox" to the nearest "InventoryItemBoxes"
-<br>
+<br><br>
 
 ### Inventory Items
 1.) To create an inventory item, first follow the steps located [here](#creating-a-new-item), then configure based on the following information.
-<br>
+<br><br>
 2.) "InventoryItem" is a child class of "SavableItem", and as such shares all of the same properties in the editor. In addition to these properties, are the following:
-<br>
-<img width="281" height="122" alt="image" src="https://github.com/user-attachments/assets/2029879a-2d63-4712-a173-345347f6d98e" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="281" height="122" alt="image" src="https://github.com/user-attachments/assets/2029879a-2d63-4712-a173-345347f6d98e" />
+<br><br>
 2a.) "Inventory ID" is a failsafe method to tell two distinct items appart. This MUST be unique if _both_: 
   * Two or more items have all of the same properties but have different sprites
   * You do NOT want these items to stack. (stacking in this scenario will only display the sprite of the most recent item that was picked up)
-  <br>
-  2b.) "Inventory Sprite" if the image that will be displayed in the "InventoryScreen" and in the "EquippedBox" for this item. This must be an actual sprite, as opposed to a .JPEG, a .PNG or a material.
-  <br>
+  <br><br>
+  2b.) "Inventory Sprite" if the image that will be displayed in the "InventoryScreen" and in the "EquippedItemBox" for this item. This must be an actual sprite, as opposed to a .JPEG, a .PNG or a material.
+  <br><br>
   2c.) "Use From Inventory" - If set to "true" this item can be used directly from the "InventoryScreen" without equipping it first. If set to false, item must first be equipped before being used.
-<br>
+<br><br>
   2d.) "Equippable" - If set to "true" this item can be equipped. If set to false, this item cannot be equipped from the menu, and will not auto-equip even if the "Send First Item To Equipped" option is set to "true"
   in the Inventory.
-<br>
+<br><br>
   2e.) "Removable" - If set to "true" this item can be removed from the inventory without using the item, effectively discarding the item.
-<br>
+<br><br>
   2f.) "Consume After Use" - If set to "true" then using this item will reduce the number of this item in the inventory by one. If set to "false" then this item can be used infinitely from the inventory.
-<br>
+<br><br>
   2g.) "Stack Instances In Inventory" - If set to "true" then multiple instances of this item can be stored together and will only take up one Inventory Slot. For full instructions on setting up Item Stacking in Inventory, see the instructions [here](#stacking-inventory-items)
-<br>
+<br><br>
 
 #### Stacking Inventory Items
 When an item stacks in the inventory, that means that multiple instances of this item can be stored together and will only take up one Inventory Slot. There are a few requirements that must be met in order for items to stack in the inventory:
-<br>
+<br><br>
 1.) In the "Inventory Item Information" on that object's script, "Stack Instances In Inventory" must be set to true.
-<br>
-<img width="137" height="128" alt="image" src="https://github.com/user-attachments/assets/e6efdd3d-7c0c-4f57-a440-01c449b7e556" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="137" height="128" alt="image" src="https://github.com/user-attachments/assets/e6efdd3d-7c0c-4f57-a440-01c449b7e556" />
+<br><br>
 2.) All other settings under "Inventory Item Information" must be identical between instances of an item you want to stack (with the exception of the "Inventory Sprite"). These settings are: "Inventory ID", "Use From Inventory", "Equippable", "Removable" and "Consume After Use". Any differences will result in the item NOT stacking.
-<br>
+<br><br>
 3.) The "Name" setting in the "Basic Item Information" section must be the same between instances of the item you want to stack.
-<br>
-<img width="222" height="32" alt="image" src="https://github.com/user-attachments/assets/b9d48d35-2e50-449d-8d42-6ec08b941d0c" />
-
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="222" height="32" alt="image" src="https://github.com/user-attachments/assets/b9d48d35-2e50-449d-8d42-6ec08b941d0c" />
+<br><br>
 
 ### Saving Inventory Items
 For an item to be saved once it has been added to the inventory certain steps MUST be taken:
-<br>
+<br><br>
 1.) The item must be made into a prefab.
-<br>
+<br><br>
 2.) Go to "BaseScene" -> "Game Instance" -> "Inventory". In the Inventory script, find the "Savable Inventory Items" property.
-<br>
-<img width="181" height="151" alt="image" src="https://github.com/user-attachments/assets/201027e7-129c-466f-9973-9903f3ee1c9d" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="181" height="151" alt="image" src="https://github.com/user-attachments/assets/201027e7-129c-466f-9973-9903f3ee1c9d" />
+<br><br>
 3.) Add the prefab of the item you want to be saved to this list. This can be done by clicking and dragging the prefab onto the list from the Project Folder.
-<br>
-<img width="544" height="163" alt="image" src="https://github.com/user-attachments/assets/9d2f2a65-d083-474c-8496-779557745323" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="544" height="163" alt="image" src="https://github.com/user-attachments/assets/9d2f2a65-d083-474c-8496-779557745323" />
+
 
 
 <br>
