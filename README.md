@@ -15,6 +15,8 @@ Game Base is a flexible framework designed to assist and expedite the Game Devel
 * [Items](#items)
 * [Inventory System](#inventory-system)
 * [Sound](#sound)
+* [Weapons](#weapons)
+* [Ammunition](#ammunition)
 * [Miscellaneous](#miscellaneous)
 
 ## Installation and Setup Instructions
@@ -181,6 +183,7 @@ This is intended to allow the Player's death animation to play before transition
 * [Set Up](#setting-up-the-user-interface)
 * [Editing User Interface Frontend](#editing-user-interface-frontend)
 * [Editing User Interface Backend or Adding UI Elements](#editing-user-interface-backend-or-adding-ui-elements)
+* [User Interface Audio](#user-interface-audio)
 
 ### Setting Up The User Interface
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE: Do NOT add a User Interface to any scene directly. There is already a User Interface present in the "Base Scene".
@@ -255,6 +258,16 @@ the "User Interface" object can function without requiring attatchments and refe
 <br>
 <br>
 
+
+
+### User Interface Audio
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="324" height="224" alt="image" src="https://github.com/user-attachments/assets/a4255c4a-0618-4e74-aa3b-7f42d1462132" />
+<br>
+* When "Use Audio" is checked to true, "Button Click Sound" will be played when button is clicked
+
+
+
+<br><br>
 
 
 
@@ -665,28 +678,29 @@ If the file is not here, you are not a Windows user, or you have a different fil
 * Savable Health Recovery Item
 * Savable Score Increase Item
 * Savable Health Upgrade
+* Inventory Health Recovery Item
 
 <br>
   
 ### Creating A New Item
 1.) Make your item script a child of one of the abstract item scripts (or a child of an item script that derives from an abstact item script). For items that should appear in the inventory, use the "InventoryItem" script (these items will be able to save as well). For items that should be saved and loaded, use the "SavableItem" script. Otherwise, use the "ItemBase" script.
-<br>
+<br><br>
   1a.) Non-Saving:
-  <br>
+  <br><br>
   <img width="242" height="35" alt="image" src="https://github.com/user-attachments/assets/9942ab15-3811-4c2b-a1ed-f7cc381d4994" />
-  <br>
+  <br><br>
   1b.) Saving:
-  <br>
+  <br><br>
   <img width="240" height="24" alt="image" src="https://github.com/user-attachments/assets/b23cda58-30e9-4b78-9331-190c53b7e246" />
-  <br>
+  <br><br>
   1c.) Inventory:
-  <br>
+  <br><br>
   <img width="244" height="26" alt="image" src="https://github.com/user-attachments/assets/0a08e473-f43d-4189-91d5-5afb53595205" />
-<br>
+<br><br>
 2.) When setting up the new item, ensure that the object has a Collider component, and that the Collider is set to "Trigger
-<br>
+<br><br>
 <img width="294" height="99" alt="image" src="https://github.com/user-attachments/assets/2de013bb-d9df-4099-99a8-7310a2250dc6" />
-<br>
+<br><br>
 3.) If the item you are setting up is an Inventory Item, additional instructions may be found [here](#creating-inventory-items)
 
 <br>
@@ -701,121 +715,306 @@ If the file is not here, you are not a Windows user, or you have a different fil
 * [Saving Inventory](#saving-inventory-items)
 
 ### Inventory Set Up
-NOTE: The Inventory is already located in the 'BaseScene' as a part of the 'GameInstance' object, and does not need to be added to any scene.
-<br>
-<img width="545" height="284" alt="image" src="https://github.com/user-attachments/assets/cb8c7a3a-66ce-4fd1-a9ae-ab303380f68a" />
-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE: The Inventory is already located in the 'BaseScene' as a part of the 'GameInstance' object, and does not need to be added to any scene.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="545" height="284" alt="image" src="https://github.com/user-attachments/assets/cb8c7a3a-66ce-4fd1-a9ae-ab303380f68a" />
+<br><br>
 #### To use the Inventory System:
 1.) Ensure that "Use Inventory" is checked to "true"
-<br>
-<img width="212" height="97" alt="image" src="https://github.com/user-attachments/assets/79d72d29-2f52-48e8-9d1c-5e2e9eb6f215" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="212" height="97" alt="image" src="https://github.com/user-attachments/assets/79d72d29-2f52-48e8-9d1c-5e2e9eb6f215" />
+<br><br>
 2.) (Optional) If you want items to be automatically equipped when they are picked up and nothing else is eqiupped, ensure that "Send First Item To Equipped" is set to "true". Otherwise
 set it to "false.
-<br>
-<img width="182" height="98" alt="image" src="https://github.com/user-attachments/assets/2011e86c-42f3-4f8d-a60d-d12be9a75341" />
-<br>
-3.) Ensure that "Equipped Item Box" is NOT empty.
-<br>
-<img width="299" height="40" alt="image" src="https://github.com/user-attachments/assets/1a9d4982-bfe2-4349-a390-1ba3933a8230" />
-<br>
-  3a.) If "Equipped Item Box" IS empty, then go to "User Interface" -> "HUD", and find the "Equipped Item Box" located in the HUD. The click and drag "Equipped Item Box" object from the hierarchy into "Equipped Item Box" in the "Inventory" script.
-<br>
-<img width="545" height="244" alt="image" src="https://github.com/user-attachments/assets/2da0e2bb-1e1a-40d9-b5df-20c82253e62d" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="182" height="98" alt="image" src="https://github.com/user-attachments/assets/2011e86c-42f3-4f8d-a60d-d12be9a75341" />
+<br><br>
+3.) Ensure that "Equipped Item Box" and "Equipped Weapon Box" are NOT empty.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="299" height="40" alt="image" src="https://github.com/user-attachments/assets/1a9d4982-bfe2-4349-a390-1ba3933a8230" />
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3a.) If either ARE empty, then go to "User Interface" -> "HUD", and find the "Equipped Item Box" and/or "Equipped Weapon Box" located in the HUD. The click and drag "Equipped Item Box" object and/or "Equipped Weapon Box" object from the hierarchy into "Equipped Item Box" and/or "Equipped Weapon Box" in the "Inventory" script.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="623" height="215" alt="image" src="https://github.com/user-attachments/assets/a66d065b-d979-476a-9bf5-cade062270e4" />
+<br><br>
 4.) (Optional) If you want the items in the inventory to save and load, follow the steps outlined [here](#saving-inventory-items)
-<br>
+<br><br>
 5.) (Optional) The "EquippedItemBox" will display the key that when pressed will use the equipped item, as shown below.
-<br>
-<img width="75" height="68" alt="image" src="https://github.com/user-attachments/assets/417ac1eb-869c-45db-88b7-dcc7c53b2a4c" />
-  5a.) The default for this key is "E". To change this key, go to "UserInterface" -> "HUD" -> "EquippedBox" and in the "EquippedItemBox" script, change the "Use Key".
-  <br>
-  <img width="543" height="200" alt="image" src="https://github.com/user-attachments/assets/066cd9a7-72de-4dd6-b391-4148260848eb" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="75" height="68" alt="image" src="https://github.com/user-attachments/assets/417ac1eb-869c-45db-88b7-dcc7c53b2a4c" />
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5a.) The default for this key is "E". To change this key, go to "UserInterface" -> "HUD" -> "EquippedBox" and in the "EquippedItemBox" script, change the "Use Key".
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="543" height="200" alt="image" src="https://github.com/user-attachments/assets/066cd9a7-72de-4dd6-b391-4148260848eb" />
+<br><br>
 6.) (Optional) This is the default layout and size of the Inventory when displayed in the Inventory Screen:
-<br>
-<img width="742" height="506" alt="image" src="https://github.com/user-attachments/assets/139a27fe-6402-4a5b-95da-3603d0b3ecdd" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="742" height="506" alt="image" src="https://github.com/user-attachments/assets/139a27fe-6402-4a5b-95da-3603d0b3ecdd" />
+<br><br>
 To adjust the size of the Inventory, or the dimensions or proportions of the layout, follow the steps outlined [here](#adjusting-inventory-system)
 
+<br>
   
 ### Adjusting Inventory Screen
 IMPORTANT TO NOTE: The Inventory Box is generated _at runtime!_ Adjusting the size of the "InventoryBox" will not persist at runtime, nor will any size adjustments made to the "InventoryItemBox". However, _location_ adjustments may be made to the "InventoryBox", and these adjustments will persist.
-<br>
+<br><br>
 1.) Go to "User Interface", then find the "Inventory Screen" section of the "User Interface" script.
-<br>
-<img width="283" height="215" alt="image" src="https://github.com/user-attachments/assets/45acef7d-84b6-4e0e-bd93-854c2bf7d0b4" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="283" height="215" alt="image" src="https://github.com/user-attachments/assets/45acef7d-84b6-4e0e-bd93-854c2bf7d0b4" />
+<br><br>
   1a.) "Image Box Width" and "Image Box Height" can be used to adjust the size of the "InventoryItemBox" that are generated.
-  <br>
+  <br><br>
   1b.) "Rows" and "Columns" can be used to alter the number of "InventoryItemBox" that are generated, as well as their layout.
-  <br>
+  <br><br>
   1c.) "Margin" is the distance in between each "InventoryItemBox"
+  <br><br>
   1d.) "Padding" is the distance from the edges of the "InventoryBox" to the nearest "InventoryItemBoxes"
-<br>
+<br><br>
 
 ### Inventory Items
 1.) To create an inventory item, first follow the steps located [here](#creating-a-new-item), then configure based on the following information.
-<br>
+<br><br>
 2.) "InventoryItem" is a child class of "SavableItem", and as such shares all of the same properties in the editor. In addition to these properties, are the following:
-<br>
-<img width="281" height="122" alt="image" src="https://github.com/user-attachments/assets/2029879a-2d63-4712-a173-345347f6d98e" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="281" height="122" alt="image" src="https://github.com/user-attachments/assets/2029879a-2d63-4712-a173-345347f6d98e" />
+<br><br>
 2a.) "Inventory ID" is a failsafe method to tell two distinct items appart. This MUST be unique if _both_: 
   * Two or more items have all of the same properties but have different sprites
   * You do NOT want these items to stack. (stacking in this scenario will only display the sprite of the most recent item that was picked up)
-  <br>
-  2b.) "Inventory Sprite" if the image that will be displayed in the "InventoryScreen" and in the "EquippedBox" for this item. This must be an actual sprite, as opposed to a .JPEG, a .PNG or a material.
-  <br>
+  <br><br>
+  2b.) "Inventory Sprite" if the image that will be displayed in the "InventoryScreen" and in the "EquippedItemBox" for this item. This must be an actual sprite, as opposed to a .JPEG, a .PNG or a material.
+  <br><br>
   2c.) "Use From Inventory" - If set to "true" this item can be used directly from the "InventoryScreen" without equipping it first. If set to false, item must first be equipped before being used.
-<br>
+<br><br>
   2d.) "Equippable" - If set to "true" this item can be equipped. If set to false, this item cannot be equipped from the menu, and will not auto-equip even if the "Send First Item To Equipped" option is set to "true"
   in the Inventory.
-<br>
+<br><br>
   2e.) "Removable" - If set to "true" this item can be removed from the inventory without using the item, effectively discarding the item.
-<br>
+<br><br>
   2f.) "Consume After Use" - If set to "true" then using this item will reduce the number of this item in the inventory by one. If set to "false" then this item can be used infinitely from the inventory.
-<br>
+<br><br>
   2g.) "Stack Instances In Inventory" - If set to "true" then multiple instances of this item can be stored together and will only take up one Inventory Slot. For full instructions on setting up Item Stacking in Inventory, see the instructions [here](#stacking-inventory-items)
-<br>
+<br><br>
 
 #### Stacking Inventory Items
 When an item stacks in the inventory, that means that multiple instances of this item can be stored together and will only take up one Inventory Slot. There are a few requirements that must be met in order for items to stack in the inventory:
-<br>
+<br><br>
 1.) In the "Inventory Item Information" on that object's script, "Stack Instances In Inventory" must be set to true.
-<br>
-<img width="137" height="128" alt="image" src="https://github.com/user-attachments/assets/e6efdd3d-7c0c-4f57-a440-01c449b7e556" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="137" height="128" alt="image" src="https://github.com/user-attachments/assets/e6efdd3d-7c0c-4f57-a440-01c449b7e556" />
+<br><br>
 2.) All other settings under "Inventory Item Information" must be identical between instances of an item you want to stack (with the exception of the "Inventory Sprite"). These settings are: "Inventory ID", "Use From Inventory", "Equippable", "Removable" and "Consume After Use". Any differences will result in the item NOT stacking.
-<br>
+<br><br>
 3.) The "Name" setting in the "Basic Item Information" section must be the same between instances of the item you want to stack.
-<br>
-<img width="222" height="32" alt="image" src="https://github.com/user-attachments/assets/b9d48d35-2e50-449d-8d42-6ec08b941d0c" />
-
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="222" height="32" alt="image" src="https://github.com/user-attachments/assets/b9d48d35-2e50-449d-8d42-6ec08b941d0c" />
+<br><br>
 
 ### Saving Inventory Items
 For an item to be saved once it has been added to the inventory certain steps MUST be taken:
-<br>
+<br><br>
 1.) The item must be made into a prefab.
-<br>
+<br><br>
 2.) Go to "BaseScene" -> "Game Instance" -> "Inventory". In the Inventory script, find the "Savable Inventory Items" property.
-<br>
-<img width="181" height="151" alt="image" src="https://github.com/user-attachments/assets/201027e7-129c-466f-9973-9903f3ee1c9d" />
-<br>
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="181" height="151" alt="image" src="https://github.com/user-attachments/assets/201027e7-129c-466f-9973-9903f3ee1c9d" />
+<br><br>
 3.) Add the prefab of the item you want to be saved to this list. This can be done by clicking and dragging the prefab onto the list from the Project Folder.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="544" height="163" alt="image" src="https://github.com/user-attachments/assets/9d2f2a65-d083-474c-8496-779557745323" />
+
+
+
 <br>
-<img width="544" height="163" alt="image" src="https://github.com/user-attachments/assets/9d2f2a65-d083-474c-8496-779557745323" />
 <br>
+
+
+
+## Weapons
+* [Included Weapon Prefabs](#included-weapon-prefabs)
+* [Create New Weapon](#create-new-weapon)
+* [Melee Weapons](#melee-weapons)
+* [Ranged Weapons](#ranged-weapons)
+
+<br>
+Note: All Weapon and Ammunition related scripts can be found in: GameBase -> Scripts -> Items -> Weapons
+<br><br>
+<img width="266" height="477" alt="image" src="https://github.com/user-attachments/assets/59d6c08b-87a0-43a2-869a-6c0698c098c6" />
+<br><br>
+
+### Included Weapon Prefabs
+* Pistol
+* PistolWeaponPickup
+* Sword
+* SwordWeaponPickup
+
+<br>
+
+### Create New Weapon
+1.) First create a weapon. Game Base includes a base for [melee weapons](#melee-weapons) as well as [ranged weapons](#ranged-weapons)
+<br>
+<br>
+2.) Create a "Weapon Item". This will be used to track the weapon in the inventory. This item will use the "WeaponItem" script (or a child script).
+<br><br>
+3.) The weapon should be a child object to the Weapon Item, and it's mesh should be set as the Weapon Item's mesh in the editor.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<<img width="611" height="225" alt="image" src="https://github.com/user-attachments/assets/cd23d23f-c707-4515-b4ba-3b05744e0c9a" />
+<br><br>
+4.) The weapon must be added to the Weapon Item script in the editor as well
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<<img width="608" height="437" alt="image" src="https://github.com/user-attachments/assets/09e4a8da-26b9-4797-80cf-f28d89275505" />
+<br><br>
+5.) It is highly recommended for weapons to implement the [steps outlined here](#telling-camera-to-ignore-objects)
+<br><br>
+6.) The AnchorPointIndicator is by no means required, but it can be very helpful for seeing where the weapon will anchor to the socket.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="611" height="258" alt="image" src="https://github.com/user-attachments/assets/57f3cbb3-35fa-4051-93f1-53607dde3c13" />
+
+
+<br>
+
+
+
+### Melee Weapons
+1.) To create a new melee weapon, a script must be made for that weapon that uses "MeleeWeapon" as a parent class. Alternatively, the sword script may be used and/or modified.
+<br><br>
+2.) A hitbox with a "DamageSource" component and with a hitbox set to "Trigger" must be part of the weapon
+<br><br>
+<img width="611" height="467" alt="image" src="https://github.com/user-attachments/assets/712e360b-09f1-41a8-a774-5c299e82d2d6" />
+<br><br>
+3.) Both the collider and the DamageSource must be added to the Melee Weapon's script in the editor
+<br><br>
+<img width="617" height="380" alt="image" src="https://github.com/user-attachments/assets/f8aec798-d18d-4520-be2f-dcff77742c77" />
+<br><br>
+4.) The "Weapon Name" is the name that will be displayed for the weapon in the UI both in the Inventory, and in the Equipped Item Box
+<br><br>
+<img width="317" height="55" alt="image" src="https://github.com/user-attachments/assets/e0a0afd1-50b9-464b-9b06-6f7b9e4e1661" />
+<br><br>
+5.) A "Socket Name" MUST be added, otherwise the weapon will not be able to be equipped. It must correspond to a weapon socket present somewhere on the Player Character. For more information, see [socket details here](#socket). If you do not want to configure a new socket, use the socket name: PlayerRightHandWeaponSocket
+<br><br>
+<img width="310" height="64" alt="image" src="https://github.com/user-attachments/assets/2f26aebc-626d-4314-9430-0c20dc5f6cfa" />
+<br><br>
+6.) The "Attack Duration" is the length of time in seconds in which the hitbox will be active upon attacking. The weapon cannot attack again until after this time has lapsed.
+<br><br>
+<img width="323" height="98" alt="image" src="https://github.com/user-attachments/assets/30c1801f-055c-441a-8d07-4181f22b2c7d" />
+<br><br>
+
+### Ranged Weapons
+1.) To create a new ranged weapon, a script must be made for that weapon that uses "RangedWeapon" as a parent class. Alternatively, the pistol script may be used and/or modified.
+<br><br>
+2.) A "FirePoint" must be added to tell the weapon where projectiles will be spawned and launched from. This FirePoint only needs to have a transform.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="620" height="143" alt="image" src="https://github.com/user-attachments/assets/04114901-c16f-4217-afd6-7cad5304a77b" />
+<br><br>
+3.) The "FirePoint" must be added to the weapon component as the "Fire Point"
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="619" height="340" alt="image" src="https://github.com/user-attachments/assets/0aab2fea-4e1e-45a6-b985-d863fd91d3c1" />
+<br><br>
+4.) A weapon mesh may be added for the weapon's physical appearance, but one does not have to be added. If one is added, it should be set as the "Renderer" in the weapon component.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="609" height="223" alt="image" src="https://github.com/user-attachments/assets/9c419ddc-3a3e-4834-9169-778193d7399f" />
+<br><br>
+5.) The "Weapon Name" is the name that will be displayed for the weapon in the UI both in the Inventory, and in the Equipped Item Box
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="314" height="89" alt="image" src="https://github.com/user-attachments/assets/b3308f91-6de2-4e7f-9c11-bc5a0ddc499d" />
+<br><br>
+6.) A "Socket Name" MUST be added, otherwise the weapon will not be able to be equipped. It must correspond to a weapon socket present somewhere on the Player Character. For more information, see socket details here. If you do not want to configure a new socket, use the socket name: PlayerRightHandWeaponSocket
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="310" height="53" alt="image" src="https://github.com/user-attachments/assets/36128750-47b0-4a4c-851a-bf8e6e2c3dc9" />
+<br><br>
+7.) The "Attack Duration" is the amount of time after attacking with the ranged weapon before the weapon can attack again.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="308" height="100" alt="image" src="https://github.com/user-attachments/assets/9cf5b25f-6fd9-47bb-91c6-73a5c33f0ef9" />
+<br><br>
+
+
+
+
 
 
 <br>
 <br>
+
+
+## Ammunition
+* [Included Ammunition Prefabs](#included-ammunition-prefabs)
+* [Creating Ammunition](#creating-ammunition)
+* [Ammunition Types](#ammunition-types)
+* [Ammunition Trackers](#ammunition-trackers)
+* [Ammunition Refills](#ammunition-refills)
+
+<br>
+Note: All Weapon and Ammunition related scripts can be found in: GameBase -> Scripts -> Items -> Weapons
+<br><br>
+<img width="266" height="477" alt="image" src="https://github.com/user-attachments/assets/59d6c08b-87a0-43a2-869a-6c0698c098c6" />
+<br><br>
+
+### Included Ammunition Prefabs
+* Bullet
+* BulletAmmunitionType
+* BulletAmmunitionTracker
+* BulletAmmunitionRefill
+
+### Creating Ammunition
+Ammunition should likely have a DamageSource component, and a DamagingProjectile component. However, if this is an ammunition is NOT intended for the included RangedWeapon script, these two things are not strictly required. (they ARE required if you are using them with a weapon made with the RangedWeaponScript). It is also advised to follow the [steps outlined here](#telling-camera-to-ignore-objects). 
+<br><br>
+Here is an example of a configured ammunition:
+<br>
+<img width="335" height="560" alt="image" src="https://github.com/user-attachments/assets/ab04f95a-becd-4354-8602-79d6cb07e1a5" />
+<br><br>
+
+### Ammunition Types
+An Ammunition Type object only requires an AmmunitionType component, with the name of the ammuntion and a reference to the Ammunition Prefab that this AmmunitionType will represent. This IS required for full ammunition functionality. Here is an example:
+<br><br>
+<img width="614" height="182" alt="image" src="https://github.com/user-attachments/assets/7644fd21-ffcd-46bb-9275-fdbb5add7ecd" />
+<br><br>
+
+
+### Ammunition Trackers
+Ammunition Trackers are very important and useful. They allow ammunition amounts to be saved, and they allow multiple weapons and items to utilize the same ammunition. To set up an ammunition tracker:
+<br>
+<br>
+1.) Create an empty game object, and add an AmmunitionTracker component to it.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="612" height="114" alt="image" src="https://github.com/user-attachments/assets/b756f7c3-eac4-42c4-bd76-2af6557a3b34" />
+<br><br>
+2.) Ensure that an AmmunitionType is added to the script
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="617" height="216" alt="image" src="https://github.com/user-attachments/assets/87981c70-51ac-440b-9c16-444aa6da19a1" />
+<br><br>
+3.) Set a Starting Amount. This will be the amount of this ammunition type the player has at the start of the game (ignoring saving and loading). This amount can be zero, but does not have to be.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="326" height="101" alt="image" src="https://github.com/user-attachments/assets/7a7efa94-e835-4d1b-9841-43c255547dfd" />
+<br><br>
+4.) If you want the ammunition amount to be saved and loaded, check the "Save" box to true, and ensure that a unique ID is set.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="328" height="133" alt="image" src="https://github.com/user-attachments/assets/9e73e59d-990e-4686-9622-0175a691098e" />
+<br><br>
+5.) The tracker must be added into the BaseScene
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="293" height="128" alt="image" src="https://github.com/user-attachments/assets/30ae5bce-8185-4574-ba27-f5cf264f84f8" />
+<br><br>
+6.) The AmmunitionTracker must then be added to the Ammunition List in the GameInstance in the editor
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="613" height="157" alt="image" src="https://github.com/user-attachments/assets/8be7c0e8-000d-4ef0-afa6-7fdc40647670" />
+<br><br>
+
+
+### Ammunition Refills
+An Ammunition Refill Item is a type of Inventory Item. It requires an Ammunition Type to be added to "Ammunition", and the amount of ammunition that will be refilled for "Ammunition Amount".
+<br><br>
+<img width="608" height="160" alt="image" src="https://github.com/user-attachments/assets/4c41a8c4-26d0-4ab4-bfb7-90aeb16d74cb" />
+<br><br>
+It is highly recommended for to implement the [steps outlined here](#telling-camera-to-ignore-objects)
+<br><br>
 
 
 
 ## Sound
 * [Background Music](#background-music)
 * [Player Audio](#player-audio)
+* [User Interface Audio](#ui-audio)
+* [Other Sounds](#other-sounds)
+* [Spawnable Sound](#spawnable-sound)
 
 <br>
 
@@ -825,9 +1024,26 @@ For an item to be saved once it has been added to the inventory certain steps MU
 ### Player Audio
 [Information about Player Related Audio can be found here](#player-audio)
 
+### UI Audio
+[Information about User Interface Audio can be found here](#user-interface-audio)
+
+### Other Sounds
+Other Audio is included in Game Base. Mostly in items and weapons. They all follow the same format:
+<br>
+1.) A check box to indicate if sound should be played
+<br>
+2.) A reference to an AudioClip of the audio that should be played
+<br>
+3.) A reference to an AudioSource to play the audio clip. This is not always present. If it is not, the item most likely plays its audio via a Spawnable Sound throught the Game Instance. For more information on Spawnable Sounds, [look here](#spawnable-sound)
+
 <br>
 <br>
 
+
+
+
+<br>
+<br>
 
 ## Miscellaneous
 * [Sockets](#sockets)
