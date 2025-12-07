@@ -721,13 +721,14 @@ set it to "false.
 <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3a.) If either ARE empty, then go to "User Interface" -> "HUD", and find the "Equipped Item Box" and/or "Equipped Weapon Box" located in the HUD. The click and drag "Equipped Item Box" object and/or "Equipped Weapon Box" object from the hierarchy into "Equipped Item Box" and/or "Equipped Weapon Box" in the "Inventory" script.
 <br><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="545" height="244" alt="image" src="https://github.com/user-attachments/assets/2da0e2bb-1e1a-40d9-b5df-20c82253e62d" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="623" height="215" alt="image" src="https://github.com/user-attachments/assets/a66d065b-d979-476a-9bf5-cade062270e4" />
 <br><br>
 4.) (Optional) If you want the items in the inventory to save and load, follow the steps outlined [here](#saving-inventory-items)
 <br><br>
 5.) (Optional) The "EquippedItemBox" will display the key that when pressed will use the equipped item, as shown below.
 <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="75" height="68" alt="image" src="https://github.com/user-attachments/assets/417ac1eb-869c-45db-88b7-dcc7c53b2a4c" />
+<br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;5a.) The default for this key is "E". To change this key, go to "UserInterface" -> "HUD" -> "EquippedBox" and in the "EquippedItemBox" script, change the "Use Key".
 <br><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="543" height="200" alt="image" src="https://github.com/user-attachments/assets/066cd9a7-72de-4dd6-b391-4148260848eb" />
