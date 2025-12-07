@@ -16,6 +16,7 @@ Game Base is a flexible framework designed to assist and expedite the Game Devel
 * [Inventory System](#inventory-system)
 * [Sound](#sound)
 * [Weapons](#weapons)
+* [Ammunition](#ammunition)
 * [Miscellaneous](#miscellaneous)
 
 ## Installation and Setup Instructions
@@ -910,12 +911,38 @@ For an item to be saved once it has been added to the inventory certain steps MU
 <br><br>
 <img width="310" height="64" alt="image" src="https://github.com/user-attachments/assets/2f26aebc-626d-4314-9430-0c20dc5f6cfa" />
 <br><br>
-6.) The "Attack Duration" is the length of time in seconds in which the hitbox will be active upon attacking.
+6.) The "Attack Duration" is the length of time in seconds in which the hitbox will be active upon attacking. The weapon cannot attack again until after this time has lapsed.
 <br><br>
 <img width="323" height="98" alt="image" src="https://github.com/user-attachments/assets/30c1801f-055c-441a-8d07-4181f22b2c7d" />
 <br><br>
 
 ### Ranged Weapons
+1.) To create a new ranged weapon, a script must be made for that weapon that uses "RangedWeapon" as a parent class. Alternatively, the pistol script may be used and/or modified.
+<br><br>
+2.) A "FirePoint" must be added to tell the weapon where projectiles will be spawned and launched from. This FirePoint only needs to have a transform.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="620" height="143" alt="image" src="https://github.com/user-attachments/assets/04114901-c16f-4217-afd6-7cad5304a77b" />
+<br><br>
+3.) The "FirePoint" must be added to the weapon component as the "Fire Point"
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="619" height="340" alt="image" src="https://github.com/user-attachments/assets/0aab2fea-4e1e-45a6-b985-d863fd91d3c1" />
+<br><br>
+4.) A weapon mesh may be added for the weapon's physical appearance, but one does not have to be added. If one is added, it should be set as the "Renderer" in the weapon component.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="609" height="223" alt="image" src="https://github.com/user-attachments/assets/9c419ddc-3a3e-4834-9169-778193d7399f" />
+<br><br>
+5.) The "Weapon Name" is the name that will be displayed for the weapon in the UI both in the Inventory, and in the Equipped Item Box
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="314" height="89" alt="image" src="https://github.com/user-attachments/assets/b3308f91-6de2-4e7f-9c11-bc5a0ddc499d" />
+<br><br>
+6.) A "Socket Name" MUST be added, otherwise the weapon will not be able to be equipped. It must correspond to a weapon socket present somewhere on the Player Character. For more information, see socket details here. If you do not want to configure a new socket, use the socket name: PlayerRightHandWeaponSocket
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="310" height="53" alt="image" src="https://github.com/user-attachments/assets/36128750-47b0-4a4c-851a-bf8e6e2c3dc9" />
+<br><br>
+7.) The "Attack Duration" is the amount of time after attacking with the ranged weapon before the weapon can attack again.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="308" height="100" alt="image" src="https://github.com/user-attachments/assets/9cf5b25f-6fd9-47bb-91c6-73a5c33f0ef9" />
+<br><br>
+
 
 
 
@@ -990,7 +1017,7 @@ An Ammunition Refill Item is a type of Inventory Item. It requires an Ammunition
 <img width="608" height="160" alt="image" src="https://github.com/user-attachments/assets/4c41a8c4-26d0-4ab4-bfb7-90aeb16d74cb" />
 <br><br>
 It is highly recommended for to implement the [steps outlined here](#telling-camera-to-ignore-objects)
-<br><r>
+<br><br>
 
 
 
