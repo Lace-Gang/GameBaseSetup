@@ -926,7 +926,35 @@ For an item to be saved once it has been added to the inventory certain steps MU
 
 
 ## Ammunition
+* [Included Ammunition Prefabs](#included-ammunition-prefabs)
+* [Creating Ammunition](#creating-ammunition)
+* [Ammunition Types](#ammunition-types)
+* [Ammunition Trackers](#ammunition-trackers)
+* [Ammunition Refills](#ammunition-refills)
 
+
+### Included Ammunition Prefabs
+* Bullet
+* BulletAmmunitionType
+* BulletAmmunitionTracker
+* BulletAmmunitionRefill
+
+### Creating Ammunition
+Ammunition should likely have a DamageSource component, and a DamagingProjectile component. However, if this is an ammunition is NOT intended for the included RangedWeapon script, these two things are not strictly required. (they ARE required if you are using them with a weapon made with the RangedWeaponScript). It is also advised to follow the [steps outlined here](#telling-camera-to-ignore-objects). 
+<br><br>
+Here is an example of a configured ammunition:
+<br>
+<img width="335" height="560" alt="image" src="https://github.com/user-attachments/assets/ab04f95a-becd-4354-8602-79d6cb07e1a5" />
+<br><br>
+
+### Ammunition Types
+
+
+
+### Ammunition Trackers
+
+
+### Ammunition Refills
 
 
 
