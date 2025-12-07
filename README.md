@@ -955,6 +955,33 @@ An Ammunition Type object only requires an AmmunitionType component, with the na
 
 
 ### Ammunition Trackers
+Ammunition Trackers are very important and useful. They allow ammunition amounts to be saved, and they allow multiple weapons and items to utilize the same ammunition. To set up an ammunition tracker:
+<br>
+<br>
+1.) Create an empty game object, and add an AmmunitionTracker component to it.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="612" height="114" alt="image" src="https://github.com/user-attachments/assets/b756f7c3-eac4-42c4-bd76-2af6557a3b34" />
+<br><br>
+2.) Ensure that an AmmunitionType is added to the script
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="617" height="216" alt="image" src="https://github.com/user-attachments/assets/87981c70-51ac-440b-9c16-444aa6da19a1" />
+<br><br>
+3.) Set a Starting Amount. This will be the amount of this ammunition type the player has at the start of the game (ignoring saving and loading). This amount can be zero, but does not have to be.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="326" height="101" alt="image" src="https://github.com/user-attachments/assets/7a7efa94-e835-4d1b-9841-43c255547dfd" />
+<br><br>
+4.) If you want the ammunition amount to be saved and loaded, check the "Save" box to true, and ensure that a unique ID is set.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="328" height="133" alt="image" src="https://github.com/user-attachments/assets/9e73e59d-990e-4686-9622-0175a691098e" />
+<br><br>
+5.) The tracker must be added into the BaseScene
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="293" height="128" alt="image" src="https://github.com/user-attachments/assets/30ae5bce-8185-4574-ba27-f5cf264f84f8" />
+<br><br>
+6.) The AmmunitionTracker must then be added to the Ammunition List in the GameInstance in the editor
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="613" height="157" alt="image" src="https://github.com/user-attachments/assets/8be7c0e8-000d-4ef0-afa6-7fdc40647670" />
+<br><br>
 
 
 ### Ammunition Refills
