@@ -181,6 +181,7 @@ This is intended to allow the Player's death animation to play before transition
 * [Set Up](#setting-up-the-user-interface)
 * [Editing User Interface Frontend](#editing-user-interface-frontend)
 * [Editing User Interface Backend or Adding UI Elements](#editing-user-interface-backend-or-adding-ui-elements)
+* [User Interface Audio](#user-interface-audio)
 
 ### Setting Up The User Interface
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NOTE: Do NOT add a User Interface to any scene directly. There is already a User Interface present in the "Base Scene".
@@ -255,6 +256,16 @@ the "User Interface" object can function without requiring attatchments and refe
 <br>
 <br>
 
+
+
+### User Interface Audio
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="324" height="224" alt="image" src="https://github.com/user-attachments/assets/a4255c4a-0618-4e74-aa3b-7f42d1462132" />
+<br>
+* When "Use Audio" is checked to true, "Button Click Sound" will be played when button is clicked
+
+
+
+<br><br>
 
 
 
@@ -665,28 +676,29 @@ If the file is not here, you are not a Windows user, or you have a different fil
 * Savable Health Recovery Item
 * Savable Score Increase Item
 * Savable Health Upgrade
+* Inventory Health Recovery Item
 
 <br>
   
 ### Creating A New Item
 1.) Make your item script a child of one of the abstract item scripts (or a child of an item script that derives from an abstact item script). For items that should appear in the inventory, use the "InventoryItem" script (these items will be able to save as well). For items that should be saved and loaded, use the "SavableItem" script. Otherwise, use the "ItemBase" script.
-<br>
+<br><br>
   1a.) Non-Saving:
-  <br>
+  <br><br>
   <img width="242" height="35" alt="image" src="https://github.com/user-attachments/assets/9942ab15-3811-4c2b-a1ed-f7cc381d4994" />
-  <br>
+  <br><br>
   1b.) Saving:
-  <br>
+  <br><br>
   <img width="240" height="24" alt="image" src="https://github.com/user-attachments/assets/b23cda58-30e9-4b78-9331-190c53b7e246" />
-  <br>
+  <br><br>
   1c.) Inventory:
-  <br>
+  <br><br>
   <img width="244" height="26" alt="image" src="https://github.com/user-attachments/assets/0a08e473-f43d-4189-91d5-5afb53595205" />
-<br>
+<br><br>
 2.) When setting up the new item, ensure that the object has a Collider component, and that the Collider is set to "Trigger
-<br>
+<br><br>
 <img width="294" height="99" alt="image" src="https://github.com/user-attachments/assets/2de013bb-d9df-4099-99a8-7310a2250dc6" />
-<br>
+<br><br>
 3.) If the item you are setting up is an Inventory Item, additional instructions may be found [here](#creating-inventory-items)
 
 <br>
@@ -819,6 +831,7 @@ For an item to be saved once it has been added to the inventory certain steps MU
 ## Sound
 * [Background Music](#background-music)
 * [Player Audio](#player-audio)
+* [User Interface Audio](#ui-audio)
 
 <br>
 
@@ -827,6 +840,9 @@ For an item to be saved once it has been added to the inventory certain steps MU
 
 ### Player Audio
 [Information about Player Related Audio can be found here](#player-audio)
+
+### UI Audio
+[Information about User Interface Audio can be found here](#user-interface-audio)
 
 <br>
 <br>
