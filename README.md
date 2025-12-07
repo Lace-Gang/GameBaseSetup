@@ -566,26 +566,33 @@ NOTE: There is a Health component as well. This component is optional, but can q
 * [Add To Scene](#add-to-scene)
 * [Save Data From Objects](#save-data-from-objects)
 * [File Data Handler](#file-data-handler)
+* [Encryption and Decryption](#encryption-and-decryption)
 
 ### Add To Scene
 1.) Do NOT add the Data Persistence Manager to a scene directly. There is already a Data Persistence Manager present in the "Base Scene".
-
+<br>
+<br>
 2.) Open the "Base Scene". Ensure that at least one save condition is selected, and at least one load condition is selected on either the "Data Persistence Manager" script located in the Data Persistence Manager (prefab or the object that is a child to the Game Instance object) and/or the "Game Instance" script on the "Game Instance" object.
 <br>
-<img width="623" height="362" alt="image" src="https://github.com/user-attachments/assets/d990d7f1-8715-4449-84b6-88fa7e7865d1" />
 <br>
-There are alternative save and load conditions present in the "Game Instance" script.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="602" height="320" alt="image" src="https://github.com/user-attachments/assets/1974126d-0d44-4249-8955-13a0b977b276" />
 <br>
-<img width="293" height="114" alt="image" src="https://github.com/user-attachments/assets/05946424-7be5-4e83-811f-c203aeedb787" />
+<br>
+These are the alternative save and load conditions present in the "Game Instance" script.
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="293" height="114" alt="image" src="https://github.com/user-attachments/assets/05946424-7be5-4e83-811f-c203aeedb787" />
 
 <br>
 
 ### Save Data From Objects
 1.) Ensure that there is a SerializableDictionary in the GameData object with the correct value type for the data you are planning to save.
 <br>
+<br>
 <img width="575" height="190" alt="image" src="https://github.com/user-attachments/assets/fd7a5abe-7adf-461e-ad9c-1dc81c0920cb" />
 <br>
-2.) To save the data in any class, ensure that the IDataInterface is added to the class.
+<br>
+2.) To save the data in any class, ensure that the IDataPersistence interface is added to the class, or that save and load functions can be called through another script with the IDataPersistence interface.
+<br>
 <br>
 <img width="404" height="28" alt="image" src="https://github.com/user-attachments/assets/189e12fb-65fa-4216-86c8-3b33b8111fc2" />
 <br>
@@ -593,7 +600,9 @@ There are alternative save and load conditions present in the "Game Instance" sc
 3.) In the SaveData method (required by IDataInterface), check the SerializableDictionary with the correct value type in the GameData object for your desired key for the
 value. If the key already exists, update it's value, otherwise add and new key/value pair with your desired key and value.
 <br>
+<br>
 This is the suggested way to structure this:
+<br>
 <br>
 <img width="500" height="101" alt="image" src="https://github.com/user-attachments/assets/4a33d002-298e-4566-8bef-c984a14e7539" />
 <br>
@@ -601,19 +610,45 @@ This is the suggested way to structure this:
 4.) In the LoadData method (required by IDataInterface), check the SerializableDictionary with the correct value type in the GameData object for the key of the data you want to load.
 If the key exists, load data from the SerializableDictionary using the key.
 <br>
+<br>
 This is the suggested way to structure this:
+<br>
 <br>
 <img width="386" height="56" alt="image" src="https://github.com/user-attachments/assets/fbb061cc-3668-400c-8446-aa5924e09c34" />
 <br>
 <br>
-Note: If you plan to have more than one instance of a savable object, it is highly advised to use an ID system, with the ID added into each key when saving and loading, as the examples above show.
+Note: If you plan to have more than one instance of a savable object, it is highly advised to use an ID system, with the ID added into each key when saving and loading, as the examples above and the example below show.
+<br>
 <br>
 <img width="275" height="47" alt="image" src="https://github.com/user-attachments/assets/83e61e6e-3b71-45b2-8d40-deb17c13a806" />
 
 <br>
 
+### Encryption and Decryption
+Note: If you check or uncheck "Use Encryption" while you have an existing save file, and then run the game, and error will be thrown the first time the game tries to load the file, however a new save file will be made, and the game will function as normal.
+The same thing happens if you change the Encryption Code Word when you have an existing save file.
+<br>
+<br>
+Encryption and decryption is handled by the File Data Handler. If you want additional security, you are encouraged to edit the method of encryption, however, you are advised to only do this if you are familiar with the mechanics of data encryption AND decryption.
+
+<br>
+
 ### File Data Handler
 Modifications to the Data Serialization/Deserialization and Encryption/Decryption or to the File Read/Write system must be made in the FileDataHandler. It is advised not to do this if you are not familiar JSON
+
+<br>
+
+### Save Files
+If you want to change the location that save files are saved to, the file path can be specified in the DataPersistenceManager script in the Start method here:
+<br>
+<br>
+<img width="659" height="157" alt="image" src="https://github.com/user-attachments/assets/32617888-8a8f-492b-8f6a-89f8b751b089" />
+<br>
+<br>
+If you have not changed the file path, and you need to delete to open the save file directly at any time, you may be able to find it in your File Explorer in: This PC -> Windows(C:) -> Users -> [You] -> AppData -> LocalLow -> DefaultCompany -> [YourProjectName]
+<br>
+<br>
+If the file is not here, you are not a Windows user, or you have a different file structure, then I apologize that I do not know where your save file will be located.
 
 <br>
 <br>
@@ -623,7 +658,7 @@ Modifications to the Data Serialization/Deserialization and Encryption/Decryptio
 * [Included Prefabs](#included-item-prefabs)
 * [Create New Item](#creating-a-new-item)
 
-### Inluded Item Prefabs
+### Included Item Prefabs
 * Basic Health Recovery Item
 * Basic Score Increase Item
 * Basic Health Upgrade
