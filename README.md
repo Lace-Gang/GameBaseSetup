@@ -519,6 +519,9 @@ However, at times you may want to tell the camera to ignore certain objects, suc
 2.) Add an&nbsp;&nbsp; IgnoredByOrbitalCamera &nbsp;&nbsp;tag to the list of tags (without any white-space). This will tell the camera to disregard this object while running its distance adjustment calculations.
 <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="332" height="119" alt="image" src="https://github.com/user-attachments/assets/44cb9e0f-8f00-4529-8178-8e281706c781" />
+<br>
+<br>
+[Additional information about the TagManager](#tag-manager)
 
 
 
@@ -785,6 +788,7 @@ For an item to be saved once it has been added to the inventory certain steps MU
 ## Miscellaneous
 * [Sockets](#sockets)
 * [Spawnable Sound](#spawnable-sound)
+* [Tag Manager](#tag-manager)
 ### Sockets
 A socket only includes an ID, and was developed with the intention of being used as a way for other objects to know where to "be". 
 <br>
@@ -817,6 +821,25 @@ GameInstance.Instance.SpawnSoundAtLocation(audio clip, location);
 <br>
 <br>
 This function will also return the spawnable sound object if you need a reference to it for any reason.
+
+<br>
+<br>
+
+### Tag Manager
+The tag manager allows an object to have multiple tags.
+<br>
+This can have a number of applications and offer additional flexibility when trying to communicate between scripts.
+<br>
+One example is that the TagManager componenet is used to tell the camera when an object is allowed to pass between the camera and the player.
+<br>
+The TagManager script can search its list of tags for a specific tag (string), or other scripts can access the list directly.
+<br>
+The TagManager can also Add or Remove tags at runtime, and can save and load its list of tags in the even that runtime changes need to be persistent.
+
+
+<br>
+<br>
+
 
 
 # Art Credits:
