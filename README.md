@@ -15,6 +15,7 @@ Game Base is a flexible framework designed to assist and expedite the Game Devel
 * [Items](#items)
 * [Inventory System](#inventory-system)
 * [Sound](#sound)
+* [Weapons](#weapons)
 * [Miscellaneous](#miscellaneous)
 
 ## Installation and Setup Instructions
@@ -863,7 +864,7 @@ For an item to be saved once it has been added to the inventory certain steps MU
 * Sword
 * SwordWeaponPickup
 
-  <br>
+<br>
 
 ### Create New Weapon
 1.) First create a weapon. Game Base includes a base for [melee weapons](#melee-weapons) as well as [ranged weapons](#ranged-weapons)
@@ -889,8 +890,28 @@ For an item to be saved once it has been added to the inventory certain steps MU
 
 
 ### Melee Weapons
-
-
+1.) To create a new melee weapon, a script must be made for that weapon that uses "MeleeWeapon" as a parent class. Alternatively, the sword script may be used and/or modified.
+<br><br>
+2.) A hitbox with a "DamageSource" component and with a hitbox set to "Trigger" must be part of the weapon
+<br><br>
+<img width="611" height="467" alt="image" src="https://github.com/user-attachments/assets/712e360b-09f1-41a8-a774-5c299e82d2d6" />
+<br><br>
+3.) Both the collider and the DamageSource must be added to the Melee Weapon's script in the editor
+<br><br>
+<img width="617" height="380" alt="image" src="https://github.com/user-attachments/assets/f8aec798-d18d-4520-be2f-dcff77742c77" />
+<br><br>
+4.) The "Weapon Name" is the name that will be displayed for the weapon in the UI both in the Inventory, and in the Equipped Item Box
+<br><br>
+<img width="317" height="55" alt="image" src="https://github.com/user-attachments/assets/e0a0afd1-50b9-464b-9b06-6f7b9e4e1661" />
+<br><br>
+5.) A "Socket Name" MUST be added, otherwise the weapon will not be able to be equipped. It must correspond to a weapon socket present somewhere on the Player Character. For more information, see [socket details here](#socket). If you do not want to configure a new socket, use the socket name: PlayerRightHandWeaponSocket
+<br><br>
+<img width="310" height="64" alt="image" src="https://github.com/user-attachments/assets/2f26aebc-626d-4314-9430-0c20dc5f6cfa" />
+<br><br>
+6.) The "Attack Duration" is the length of time in seconds in which the hitbox will be active upon attacking.
+<br><br>
+<img width="323" height="98" alt="image" src="https://github.com/user-attachments/assets/30c1801f-055c-441a-8d07-4181f22b2c7d" />
+<br><br>
 
 ### Ranged Weapons
 
