@@ -848,6 +848,58 @@ For an item to be saved once it has been added to the inventory certain steps MU
 <br>
 
 
+
+## Weapons
+* [Included Weapon Prefabs](#included-weapon-prefabs)
+* [Create New Weapon](#create-new-weapon)
+* [Melee Weapons](#melee-weapons)
+* [Ranged Weapons](#ranged-weapons)
+
+
+
+### Included Weapon Prefabs
+* Pistol
+* PistolWeaponPickup
+* Sword
+* SwordWeaponPickup
+
+  <br>
+
+### Create New Weapon
+1.) First create a weapon. Game Base includes a base for [melee weapons](#melee-weapons) as well as [ranged weapons](#ranged-weapons)
+<br>
+<br>
+2.) Create a "Weapon Item". This will be used to track the weapon in the inventory. This item will use the "WeaponItem" script (or a child script).
+<br><br>
+3.) The weapon should be a child object to the Weapon Item, and it's mesh should be set as the Weapon Item's mesh in the editor.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<<img width="611" height="225" alt="image" src="https://github.com/user-attachments/assets/cd23d23f-c707-4515-b4ba-3b05744e0c9a" />
+<br><br>
+4.) The weapon must be added to the Weapon Item script in the editor as well
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<<img width="608" height="437" alt="image" src="https://github.com/user-attachments/assets/09e4a8da-26b9-4797-80cf-f28d89275505" />
+<br><br>
+5.) The AnchorPointIndicator is by no means required, but it can be very helpful for seeing where the weapon will anchor to the socket.
+<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img width="611" height="258" alt="image" src="https://github.com/user-attachments/assets/57f3cbb3-35fa-4051-93f1-53607dde3c13" />
+
+
+<br>
+
+
+
+### Melee Weapons
+
+
+
+### Ranged Weapons
+
+
+
+
+<br>
+<br>
+
 ## Miscellaneous
 * [Sockets](#sockets)
 * [Spawnable Sound](#spawnable-sound)
