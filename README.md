@@ -985,7 +985,12 @@ Ammunition Trackers are very important and useful. They allow ammunition amounts
 
 
 ### Ammunition Refills
-
+An Ammunition Refill Item is a type of Inventory Item. It requires an Ammunition Type to be added to "Ammunition", and the amount of ammunition that will be refilled for "Ammunition Amount".
+<br><br>
+<img width="608" height="160" alt="image" src="https://github.com/user-attachments/assets/4c41a8c4-26d0-4ab4-bfb7-90aeb16d74cb" />
+<br><br>
+It is highly recommended for to implement the [steps outlined here](#telling-camera-to-ignore-objects)
+<br><r>
 
 
 
